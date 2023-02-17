@@ -3,9 +3,8 @@
     windows_subsystem = "linux"
 )]
 
-mod minecraft {
-    pub mod get_minecraft;
-}
+mod minecraft;
+mod tools;
 
 #[tauri::command]
 fn greet(name: &str) -> String {

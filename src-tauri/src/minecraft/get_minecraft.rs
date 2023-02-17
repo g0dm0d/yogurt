@@ -2,15 +2,16 @@ use reqwest::Error;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Download {
+pub struct Download {
+    pub path: String,
     sha1: String,
     size: i32,
-    url: String,
+    pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct LibraryDownloads {
-    artifact: Download,
+pub struct LibraryDownloads {
+    pub artifact: Download,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,8 +26,8 @@ struct LibraryRule {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Library {
-    downloads: LibraryDownloads,
+pub struct Library {
+    pub downloads: LibraryDownloads,
     name: String,
     rules: Option<Vec<LibraryRule>>,
 }
@@ -34,14 +35,16 @@ struct Library {
 #[derive(Debug, Serialize, Deserialize)]
 struct JavaVersion {
     component: String,
-    majorVersion: i32,
+    #[serde(rename = "majorVersion")]
+    major_version: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Package {
     downloads: serde_json::Value,
     id: String,
-    javaVersion: JavaVersion,
+    #[serde(rename = "javaVersion")]
+    java_version: JavaVersion,
     libraries: Vec<Library>,
 }
 
@@ -50,17 +53,17 @@ async fn fetch_dependency(url: String) -> Result<Package, Error> {
     Ok(response)
 }
 
+use crate::minecraft::library::download_library;
+
 #[tauri::command(async)]
-pub async fn get_minecraft(url: String) -> String {
-    println!("{}", url);
-    let test = "xdd".to_string();
+pub async fn get_minecraft(url: String) {
     match fetch_dependency(url).await {
         Ok(package) => {
-            println!("Dependency name: {}", package.javaVersion.majorVersion);
+            println!("{}", package.java_version.major_version);
+            download_library(package.libraries).await;
         }
         Err(error) => {
             println!("Error message: {}", error);
         }
     }
-    return test;
 }
