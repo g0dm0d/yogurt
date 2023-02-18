@@ -36,7 +36,7 @@ pub async fn download_assets(assets_url: String) {
     for (_, asset) in &assets.objects {
         println!("{}", asset.hash);
         download(
-            format!(
+            &format!(
                 "https://resources.download.minecraft.net/{}/{}",
                 &asset.hash[0..2],
                 &asset.hash

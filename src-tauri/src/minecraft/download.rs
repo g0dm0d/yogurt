@@ -2,7 +2,7 @@ extern crate reqwest;
 use std::fs;
 use std::fs::File;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::tools::parse_path::parse_path;
 use crate::tools::request;
@@ -13,13 +13,9 @@ const PATH: &str = ".yogurt";
 /// This func download file and save
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
-pub async fn download(url: String, path: &Path, sha1sum: &String) {
-    let home_dir = match home::home_dir() {
-        Some(path) => path,
-        None => panic!("Failed to get home directory"),
-    };
+pub async fn download(url: &String, file_path: &Path, sha1sum: &String) {
+    let path = get_path(file_path);
 
-    let path = Path::new(&home_dir).join(PATH).join(path);
     if path.exists() {
         if verify_sha1sum(&path, sha1sum) {
             println!("File {} alredy exist", &path.display().to_string());
@@ -64,4 +60,14 @@ pub async fn download(url: String, path: &Path, sha1sum: &String) {
             }
         }
     }
+}
+
+/// add to path ~/.yogurt/{path}
+pub fn get_path(path: &Path) -> PathBuf {
+    let home_dir = match home::home_dir() {
+        Some(path) => path,
+        None => panic!("Failed to get home directory"),
+    };
+
+    return Path::new(&home_dir).join(PATH).join(path);
 }
