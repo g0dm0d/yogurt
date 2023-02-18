@@ -21,7 +21,7 @@ tokio = "1.25.0"
 home = "0.5.4"
 sha1 = "0.10.5"
 bytes = "1.4.0"
-async-recursion = "1.0.2"
+tauri-api = "0.7.6"
 
 [features]
 # by default Tauri runs in production mode

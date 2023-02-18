@@ -72,8 +72,14 @@ pub struct AssetIndex {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct Client {
+    pub sha1: String,
+    pub url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Downloads {
-    client: Download,
+    client: Client,
 }
 
 /// Json with version information
@@ -89,7 +95,7 @@ pub struct Downloads {
 struct Package {
     #[serde(rename = "assetIndex")]
     asset_index: AssetIndex,
-    // downloads: Downloads,
+    downloads: Downloads,
     id: String,
     #[serde(rename = "javaVersion")]
     java_version: JavaVersion,

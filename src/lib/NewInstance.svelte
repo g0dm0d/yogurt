@@ -1,28 +1,34 @@
 <script>
     import { fade } from "svelte/transition";
     import { invoke } from "@tauri-apps/api/tauri";
-
     import VersionList from "./dropdown.svelte";
 
-    import { selectedVersion } from "./dropdown.svelte";
+    import { playNotificationSound } from "./NotifySound" // not work, tauri block sound
 
     function overlay_click(e) {
         if ("close" in e.target.dataset) show = false;
     }
 
     let name = "";
-    let test = "";
 
     export let show = false;
 
     import * as tauri from "@tauri-apps/api";
-
+    import { toast } from '@zerodevx/svelte-toast'
+    
     async function get_minecraft() {
         try {
-            const minecraft = await tauri.invoke("get_minecraft", {
-                url: selectedVersion,
-            });
-            console.log(minecraft);
+            //await tauri.invoke("get_minecraft", {
+            //    url: selectedVersion,
+            //});
+            playNotificationSound();
+            toast.push('Minecraft downloaded successfully!', {
+                theme: {
+                  '--toastColor': 'mintcream',
+                  '--toastBackground': 'rgba(72,187,120,0.9)',
+                  '--toastBarBackground': '#2F855A'
+                }
+            })
         } catch (error) {
             console.error(error);
         }
@@ -31,6 +37,7 @@
 
 {#if show}
     <div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
             class="modal-overlay"
             data-close
@@ -49,7 +56,6 @@
                 <div style="display: flex; justify-content: center; ">
                     <button on:click={get_minecraft}>Create</button>
                 </div>
-                <p>{test}</p>
             </div>
         </div>
     </div>
