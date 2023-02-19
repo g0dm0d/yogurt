@@ -106,7 +106,7 @@ struct Package {
     libraries: Vec<Library>,
 }
 
-async fn fetch_dependency(url: &String, id: &String) -> Result<Package, Error> {
+async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     let str_path = format!("version/{}/{}.json", id, id);
     let path = Path::new(&str_path);
     download(url, path, &"".to_string()).await;
@@ -129,12 +129,12 @@ use super::{
 
 #[tauri::command(async)]
 pub async fn get_minecraft(url: String, id: String, name: String, java_args: String) {
-    match fetch_dependency(&url, &id).await {
+    match fetch_dependency(url.as_str(), id.as_str()).await {
         Ok(package) => {
             // Downloading the library for the selected version of minecraft
             download_library(package.libraries).await;
             // Downloading the assets for the selected version of minecraft
-            download_assets(package.asset_index.url).await;
+            download_assets(package.asset_index.url.as_str()).await;
             // Downloading the client jar for the selected version of minecraft
             download(
                 &package.downloads.client.url,
@@ -142,7 +142,13 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
                 &package.downloads.client.sha1,
             )
             .await;
-            create_config(name, id, "/usr/bin/java".to_string(), java_args).await;
+            create_config(
+                name.as_str(),
+                id.as_str(),
+                "/usr/bin/java",
+                java_args.as_str(),
+            )
+            .await;
         }
         Err(error) => {
             println!("Error message: {}", error);

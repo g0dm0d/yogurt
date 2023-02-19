@@ -13,7 +13,7 @@ const PATH: &str = ".yogurt";
 /// This func download file and save
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
-pub async fn download(url: &String, file_path: &Path, sha1sum: &String) {
+pub async fn download(url: &str, file_path: &Path, sha1sum: &String) {
     let path = get_path(file_path);
 
     if path.exists() {
@@ -42,7 +42,7 @@ pub async fn download(url: &String, file_path: &Path, sha1sum: &String) {
     };
 
     loop {
-        match request::get(&url).await {
+        match request::get(url).await {
             Ok(mut content) => {
                 io::copy(&mut content, &mut file).expect("Failed to read response body");
                 let result = std::io::copy(&mut content, &mut file);

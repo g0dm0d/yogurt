@@ -4,7 +4,7 @@ use std::path::Path;
 
 use super::download::get_path;
 
-pub async fn create_config(name: String, version: String, java_path: String, arguments: String) {
+pub async fn create_config(name: &str, version: &str, java_path: &str, arguments: &str) {
     let path = get_path(Path::new("configs"));
     if !path.exists() {
         match std::fs::create_dir_all(&path) {
