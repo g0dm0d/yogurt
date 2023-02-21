@@ -1,7 +1,7 @@
 use reqwest::{Error, StatusCode};
 use std::{io, time::Duration};
 
-pub async fn get(url: &String) -> Result<io::Cursor<bytes::Bytes>, Error> {
+pub async fn get(url: &str) -> Result<io::Cursor<bytes::Bytes>, Error> {
     let mut response = reqwest::get(url).await.expect("request failed");
     loop {
         match response.status() {

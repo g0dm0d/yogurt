@@ -1,3 +1,7 @@
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
+
 use reqwest::Error;
 use serde::{Deserialize, Serialize};
 
@@ -102,21 +106,50 @@ struct Package {
     libraries: Vec<Library>,
 }
 
-async fn fetch_dependency(url: String) -> Result<Package, Error> {
-    let response: Package = reqwest::Client::new().get(url).send().await?.json().await?;
-    Ok(response)
+use crate::tools::path;
+
+async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
+    let str_path = format!("version/{}/{}.json", id, id);
+    let path = Path::new(&str_path);
+    download(url, path, &"".to_string()).await;
+
+    let mut file = File::open(path::get_path(path)).unwrap();
+    let mut buff = String::new();
+    file.read_to_string(&mut buff).unwrap();
+
+    let package: Package = serde_json::from_str(&buff).unwrap();
+    Ok(package)
 }
 
-use crate::minecraft::assets::download_assets;
-use crate::minecraft::library::download_library;
+use crate::minecraft::{
+    config::create_config,
+    download::download,
+    library::download_library,
+    assets::download_assets
+};
 
 #[tauri::command(async)]
-pub async fn get_minecraft(url: String) {
-    match fetch_dependency(url).await {
+pub async fn get_minecraft(url: String, id: String, name: String, java_args: String) {
+    match fetch_dependency(url.as_str(), id.as_str()).await {
         Ok(package) => {
-            println!("{}", package.java_version.major_version);
+            // Downloading the library for the selected version of minecraft
             download_library(package.libraries).await;
-            download_assets(package.asset_index.url).await;
+            // Downloading the assets for the selected version of minecraft
+            download_assets(package.asset_index.url.as_str()).await;
+            // Downloading the client jar for the selected version of minecraft
+            download(
+                &package.downloads.client.url,
+                Path::new(&format!("version/{}/{}.jar", &id, &id)),
+                &package.downloads.client.sha1,
+            )
+            .await;
+            create_config(
+                name.as_str(),
+                id.as_str(),
+                "/usr/bin/java",
+                java_args.as_str(),
+            )
+            .await;
         }
         Err(error) => {
             println!("Error message: {}", error);

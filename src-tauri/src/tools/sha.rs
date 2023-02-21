@@ -4,7 +4,7 @@ use std::io::Read;
 use std::path::PathBuf;
 
 /// Verify sha1 sum of file
-pub fn verify_sha1sum(path: &PathBuf, expected_sha1sum: &String) -> bool {
+pub fn verify_sha1sum(path: &PathBuf, expected_sha1sum: &str) -> bool {
     if expected_sha1sum == "" {
         return true;
     }

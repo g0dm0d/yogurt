@@ -5,7 +5,7 @@
   };
 
   let versions: Version[] = [];
-  export let selectedVersion = "";
+  export let selectedVersion: Version;
 
   async function fetchVersions(): Promise<Version[]> {
     return fetch(
@@ -32,12 +32,12 @@
 
   fetchVersions().then((data) => {
     versions = data;
-    selectedVersion = versions[0].url;
+    selectedVersion = versions[0];
   });
 </script>
 
 <select bind:value={selectedVersion}>
   {#each versions as version}
-    <option value={version.url}>{version.id}</option>
+    <option value={version}>{version.id}</option>
   {/each}
 </select>

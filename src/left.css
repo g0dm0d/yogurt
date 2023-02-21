@@ -8,6 +8,13 @@
     margin-top: 8px;
 }
 
+.invincible-btn {
+    background-color: rgba(0, 0, 0, 0.0);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.0);
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;

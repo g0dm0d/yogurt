@@ -20,7 +20,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Games",
       "copyright": "",
       "deb": {
         "depends": []
@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.godmod.yogurt",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

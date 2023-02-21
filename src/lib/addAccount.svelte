@@ -1,8 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
     import { invoke } from "@tauri-apps/api/tauri";
-    import VersionList from "./version_list.svelte";
-    import { selectedVersion } from "./version_list.svelte";
 
     import { playNotificationSound } from "./NotifySound" // not work, tauri block sound
 
@@ -11,21 +9,25 @@
     }
 
     let name = "";
-    let java_args = "";
 
     export let show = false;
 
     import * as tauri from "@tauri-apps/api";
     import { toast } from '@zerodevx/svelte-toast'
-    
+
+    import { open } from '@tauri-apps/api/shell';
+    const signin_url = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=d8e1d9bf-287f-4773-a176-e012722257f4&response_type=code&redirect_uri=http://localhost:9397&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED"
+    const openLogin = () => {
+        open(signin_url);
+    }
+
     async function get_minecraft() {
         try {
-            await tauri.invoke("get_minecraft", {
-                url: selectedVersion.url,
-                id: selectedVersion.id,
-                name: name,
-                java_args: java_args
-            });
+            //await tauri.invoke("get_minecraft", {
+            //    url: selectedVersion,
+            //});
+            openLogin();
+            await tauri.invoke("add_account");
             playNotificationSound();
             toast.push('Minecraft downloaded successfully!', {
                 theme: {
@@ -53,13 +55,8 @@
                 <main>
                     <input
                         id="instance-name"
-                        placeholder="Enter a name..."
+                        placeholder="XDDD..."
                         bind:value={name}/>
-                    <input
-                        id="instance-args"
-                        placeholder="Enter java args..."
-                        bind:value={java_args}/>
-                    <VersionList />
                 </main>
                 <div style="display: flex; justify-content: center; ">
                     <button on:click={get_minecraft}>Create</button>
