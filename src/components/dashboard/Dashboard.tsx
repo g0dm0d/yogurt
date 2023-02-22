@@ -12,6 +12,7 @@ import {
     IconSwitchHorizontal,
     TablerIconsProps,
 } from '@tabler/icons-react';
+import { PlayerHead } from '../ui/playerHead';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -24,7 +25,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
 
         '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[0],
         },
     },
 
@@ -38,18 +39,18 @@ const useStyles = createStyles((theme) => ({
 
 
 interface DashboardButtonProps {
+    Icon: TablerIconsProps;
     label: string;
     active?: boolean;
     onClick?(): void;
-    children: {};
 }
 
-function DashboardButton({ label, active, onClick }: DashboardButtonProps) {
+function DashboardButton({ Icon: Icon, label, active, onClick }: DashboardButtonProps) {
     const { classes, cx } = useStyles();
     return (
         <Tooltip label={label} position="right" transitionDuration={0}>
             <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
-
+                <Icon stroke={1.5} />
             </UnstyledButton>
         </Tooltip>
     );
@@ -59,22 +60,20 @@ export function Dashboard() {
     const [active, setActive] = useState(2);
     const { classes } = useStyles();
     return (
-        <Navbar height={750} width={{ base: 80 }} p="md">
-            <Navbar.Section grow mt={50}>
-                <Stack justify="center" spacing={0}>
-                    <DashboardButton label='Home' active={active === 1} onClick={() => setActive(1)}>
-                        <IconHome2 />
-                    </DashboardButton>
+        <Navbar height="100vh" width={{ base: 80 }} p="md">
+            <Navbar.Section>
+                <PlayerHead />
+            </Navbar.Section>
+            <Navbar.Section grow mt={32}>
+                <Stack justify="center" spacing={8}>
+                    <DashboardButton Icon={IconHome2} label='Home' active={active === 1} onClick={() => setActive(1)}/>
+                    <DashboardButton Icon={IconSettings} label='Home' active={active === 2} onClick={() => setActive(2)}/>
                 </Stack>
             </Navbar.Section>
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
-                    <DashboardButton label="Change account" >
-                        <IconSwitchHorizontal className={classes.link} />
-                    </DashboardButton>
-                    <DashboardButton label="Logout" >
-                        <IconLogout />
-                    </DashboardButton>
+                    <DashboardButton Icon={IconSwitchHorizontal} label="Change account" />
+                    <DashboardButton Icon={IconLogout} label="Logout" />
                 </Stack>
             </Navbar.Section>
         </Navbar>

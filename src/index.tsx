@@ -6,7 +6,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles withNormalizeCSS>
+    <MantineProvider theme={{ colorScheme: 'dark', primaryColor: 'cyan' }} withGlobalStyles withNormalizeCSS>
         <NotificationsProvider>
             <App />
         </NotificationsProvider>
