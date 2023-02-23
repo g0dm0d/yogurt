@@ -52,14 +52,11 @@
             transition:fade={{ duration: 150 }}
         >
             <div class="modal-container">
-                <main>
-                    <input
-                        id="instance-name"
-                        placeholder="XDDD..."
-                        bind:value={name}/>
-                </main>
+                <div>
+                    
+                </div>
                 <div style="display: flex; justify-content: center; ">
-                    <button on:click={get_minecraft}>Create</button>
+                    <button on:click={get_minecraft}>Add account</button>
                 </div>
             </div>
         </div>

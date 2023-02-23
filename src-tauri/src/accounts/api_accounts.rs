@@ -1,13 +1,14 @@
 // Thank you https://gist.github.com/OverHash/a71b32846612ba09d8f79c9d775bfadf
 
-use std::collections::HashMap;
+use std::{collections::HashMap, time::{SystemTime, UNIX_EPOCH}};
 
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
+use crate::accounts::account::User;
 
-    // id_token: String, LEGACY???
+// id_token: String, LEGACY???
 
 /// The response from authenticating with Microsoft OAuth flow
 #[derive(Deserialize, Serialize)]
@@ -17,7 +18,7 @@ struct AuthorizationTokenResponse {
     /// The scope we have access to
     scope: String,
     /// Seconds until the authentication token expires
-    expires_in: u32,
+    expires_in: u64,
     /// Seconds until the authentication token expires
     ext_expires_in: u32,
     /// The authentication token itself
@@ -51,21 +52,12 @@ struct MinecraftAuthenticationResponse {
     /// The type of access token
     token_type: String,
     /// How many seconds until the token expires
-    expires_in: u32,
-}
-
-/// The response from Minecraft when attempting to retrieve a users profile
-#[derive(Serialize, Deserialize, Debug)]
-struct MinecraftProfileResponse {
-    /// The UUID of the account
-    id: String,
-    /// The name of the user
-    name: String,
+    expires_in: u64,
 }
 
 const CLIENT_ID: &str = "d8e1d9bf-287f-4773-a176-e012722257f4";
 
-pub async fn get_minecraft_token(code: &str) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new();
 
     // step 2: convert authorization code into authorization token
@@ -145,23 +137,20 @@ pub async fn get_minecraft_token(code: &str) -> Result<String, Box<dyn std::erro
         .json()
         .await?;
 
-    let minecraft_token = &minecraft_resp.access_token;
-    println!("{:#?}", minecraft_resp);
-    println!("done");
+    let mut user = User {
+        uuid: String::new(),
+        username: String::new(),
+        refresh_token: authorization_token.refresh_token,
+        access_token: authorization_token.access_token,
+        // Holly crap, it looks disgusting, yeah I know. But according to the documentation as I understand it comes back as long as the token lives.
+        // So in order to use this information I add the lifetime to the time now in the unix time stamp
+        access_exp: (authorization_token.expires_in + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+        minecraft_token: minecraft_resp.access_token,
+        minecraft_exp: (minecraft_resp.expires_in  + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+    };
 
-    Ok(minecraft_token.to_owned())
-}
+    user.get_info().await?;
+    user.save();
 
-async fn get_user_info(code: &str) -> Result<&str, Box<dyn std::error::Error>> {
-    let client = Client::new();
-    let minecraft_profile_resp: MinecraftProfileResponse = client
-        .get("https://api.minecraftservices.com/minecraft/profile")
-        .bearer_auth(code)
-        .send()
-        .await?
-        .json()
-        .await?;
-        serde_json::to_string(&minecraft_profile_resp)?;
-        println!("{:#?}", minecraft_profile_resp);
-    Ok(&"in progress")
+    Ok(())
 }

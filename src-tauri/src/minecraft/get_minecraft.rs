@@ -7,9 +7,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Download {
+    /// Path is always a relative parent folder ($HOME/.yogurt)
     pub path: String,
+    /// sha1 sum for verify
     pub sha1: String,
+    /// file size
     size: i32,
+    /// download url
     pub url: String,
 }
 
@@ -25,6 +29,7 @@ pub struct LibraryDownloads {
 /// └── name: String
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LibraryOs {
+    /// name of os type
     pub name: String,
 }
 
@@ -71,13 +76,17 @@ struct JavaVersion {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AssetIndex {
     id: String,
+    /// sha1 sum for verify
     sha1: String,
+    /// download url
     pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Client {
+    /// sha1 sum for verify
     pub sha1: String,
+    /// download url
     pub url: String,
 }
 
