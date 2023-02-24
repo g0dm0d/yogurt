@@ -12,7 +12,7 @@ pub struct Download {
     /// sha1 sum for verify
     pub sha1: String,
     /// file size
-    size: i32,
+    pub size: i32,
     /// download url
     pub url: String,
 }
@@ -41,7 +41,7 @@ pub struct LibraryOs {
 /// └── rules:      Vec<LibraryOs>
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LibraryRule {
-    action: String,
+    pub action: String,
     pub os: Option<LibraryOs>,
 }
 
@@ -79,15 +79,15 @@ pub struct AssetIndex {
     /// sha1 sum for verify
     sha1: String,
     /// download url
-    pub url: String,
+    url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Client {
     /// sha1 sum for verify
-    pub sha1: String,
+    sha1: String,
     /// download url
-    pub url: String,
+    url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -115,6 +115,7 @@ struct Package {
     libraries: Vec<Library>,
 }
 
+use crate::tools::download::download;
 use crate::tools::path;
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
@@ -132,7 +133,6 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
 
 use crate::minecraft::{
     config::create_config,
-    download::download,
     library::download_library,
     assets::download_assets
 };

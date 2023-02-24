@@ -45,6 +45,9 @@ pub async fn get_all_users() -> Vec<String> {
 }
 
 impl User {
+    pub fn new(uuid: String, username: String, refresh_token: String, access_token: String, access_exp: String, minecraft_token: String, minecraft_exp: String) -> Self {
+        User { uuid, username, refresh_token, access_token, access_exp, minecraft_token, minecraft_exp}
+    }
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let mut config_file = OpenOptions::new()
             .read(true)

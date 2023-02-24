@@ -137,17 +137,18 @@ pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::E
         .json()
         .await?;
 
-    let mut user = User {
-        uuid: String::new(),
-        username: String::new(),
-        refresh_token: authorization_token.refresh_token,
-        access_token: authorization_token.access_token,
+    let mut user = User::new(
+        String::new(),
+        String::new(),
+        authorization_token.refresh_token,
+        authorization_token.access_token,
         // Holly crap, it looks disgusting, yeah I know. But according to the documentation as I understand it comes back as long as the token lives.
         // So in order to use this information I add the lifetime to the time now in the unix time stamp
-        access_exp: (authorization_token.expires_in + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
-        minecraft_token: minecraft_resp.access_token,
-        minecraft_exp: (minecraft_resp.expires_in  + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
-    };
+        (authorization_token.expires_in + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+        minecraft_resp.access_token,
+        (minecraft_resp.expires_in  + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+    );
+    
 
     user.get_info().await?;
     user.save();

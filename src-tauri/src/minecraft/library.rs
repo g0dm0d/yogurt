@@ -1,4 +1,4 @@
-use crate::minecraft::download::download;
+use crate::tools::download::download;
 use std::env;
 use std::path::Path;
 
