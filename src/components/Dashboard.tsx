@@ -2,17 +2,13 @@ import { useState } from 'react';
 import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
 import {
     IconHome2,
-    IconGauge,
-    IconDeviceDesktopAnalytics,
-    IconFingerprint,
-    IconCalendarStats,
-    IconUser,
     IconSettings,
     IconLogout,
     IconSwitchHorizontal,
     TablerIconsProps,
 } from '@tabler/icons-react';
-import { PlayerHead } from '../ui/playerHead';
+import { PlayerHead } from './ui/playerHead';
+import { Link } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -62,20 +58,26 @@ export function Dashboard() {
     return (
         <Navbar height="100vh" width={{ base: 80 }} p="md">
             <Navbar.Section>
-                <PlayerHead />
+                <Link to='/account'>
+                    <PlayerHead />
+                </Link>
             </Navbar.Section>
             <Navbar.Section grow mt={32}>
                 <Stack justify="center" spacing={8}>
-                    <DashboardButton Icon={IconHome2} label='Home' active={active === 1} onClick={() => setActive(1)}/>
-                    <DashboardButton Icon={IconSettings} label='Home' active={active === 2} onClick={() => setActive(2)}/>
+                    <Link to=''>
+                        <DashboardButton Icon={IconHome2} label='Home' active={active === 1} onClick={() => setActive(1)} />
+                    </Link>
+                    <Link to='settings'>
+                        <DashboardButton Icon={IconSettings} label='Settings' active={active === 2} onClick={() => setActive(2)} />
+                    </Link>
                 </Stack>
             </Navbar.Section>
-            <Navbar.Section>
+            {/* <Navbar.Section>
                 <Stack justify="center" spacing={0}>
                     <DashboardButton Icon={IconSwitchHorizontal} label="Change account" />
                     <DashboardButton Icon={IconLogout} label="Logout" />
                 </Stack>
-            </Navbar.Section>
-        </Navbar>
+            </Navbar.Section> */}
+        </Navbar >
     );
 }

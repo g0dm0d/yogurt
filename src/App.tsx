@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
-import { Dashboard } from "./components/dashboard/Dashboard";
+import { Container, Flex } from "@mantine/core";
+import { BrowserRouter } from "react-router-dom";
+import { Dashboard } from "./components/Dashboard";
+import AppRoutes from "./Routes";
 
 function App() {
 
     return (
-        <div className="container">
-            <Dashboard />
-        </div>
+        <BrowserRouter>
+            <Flex direction="row">
+                <Dashboard />
+                <AppRoutes />
+            </Flex>
+        </BrowserRouter>
     );
 }
 

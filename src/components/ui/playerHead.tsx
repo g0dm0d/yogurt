@@ -4,13 +4,15 @@ import steveHead from '/SteveHead.png';
 
 export function PlayerHead() {
     const [head, setHead] = useState();
-    const [uuid, setUuid] = useState();
+    const [uuid, setUuid] = useState('ModerNik');
 
     const fetchImage = async () => {
-        if (uuid) {
-            const response = await fetch(`https://mc-heads.net/avatar/${uuid}/50/nohelm.png`);
-            const data = await response.json();
-            setHead(data.results[0].picture.large);
+        if (uuid && !head) {
+            const response = await fetch(`https://mc-heads.net/avatar/${uuid}/50`);
+            const data = await response.blob();
+            const imageHead = URL.createObjectURL(data);
+            console.log(imageHead);
+            setHead(imageHead);
         }
     };
 
