@@ -2,7 +2,7 @@ extern crate reqwest;
 use std::fs;
 use std::fs::File;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::tools::path;
 use crate::tools::request;
@@ -58,4 +58,14 @@ pub async fn download(url: &str, file_path: &Path, sha1sum: &String) {
             }
         }
     }
+}
+
+/// add to path ~/.yogurt/{path}
+pub fn get_path(path: &Path) -> PathBuf {
+    let home_dir = match home::home_dir() {
+        Some(path) => path,
+        None => panic!("Failed to get home directory"),
+    };
+
+    return Path::new(&home_dir).join(PATH).join(path);
 }

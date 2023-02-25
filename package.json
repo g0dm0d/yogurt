@@ -1,29 +1,38 @@
 {
-  "name": "yogurt",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "tauri": "tauri"
-  },
-  "dependencies": {
-    "@tauri-apps/api": "^1.2.0"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.0.0",
-    "@tauri-apps/cli": "^1.2.2",
-    "@tsconfig/svelte": "^3.0.0",
-    "@types/node": "^18.7.10",
-    "@zerodevx/svelte-toast": "^0.8.2",
-    "svelte": "^3.54.0",
-    "svelte-check": "^3.0.0",
-    "svelte-preprocess": "^5.0.0",
-    "tslib": "^2.4.1",
-    "typescript": "^4.6.4",
-    "vite": "^4.0.0"
-  }
+    "name": "yogurt",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "tauri": "tauri"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.10.6",
+        "@mantine/core": "^5.10.4",
+        "@mantine/dates": "^5.10.4",
+        "@mantine/ds": "^5.10.4",
+        "@mantine/form": "^5.10.4",
+        "@mantine/hooks": "^5.10.4",
+        "@mantine/notifications": "^5.10.4",
+        "@mantine/nprogress": "^5.10.4",
+        "@tabler/icons-react": "^2.4.0",
+        "@tauri-apps/api": "^1.2.0",
+        "dayjs": "^1.11.7",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.8.1",
+        "tabler-icons-react": "^1.56.0"
+    },
+    "devDependencies": {
+        "@tauri-apps/cli": "^1.2.2",
+        "@types/node": "^18.7.10",
+        "@types/react": "^18.0.15",
+        "@types/react-dom": "^18.0.6",
+        "@vitejs/plugin-react": "^3.0.0",
+        "typescript": "^4.6.4",
+        "vite": "^4.0.0"
+    }
 }

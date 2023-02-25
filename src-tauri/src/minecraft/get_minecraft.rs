@@ -137,6 +137,11 @@ use crate::minecraft::{
     assets::download_assets
 };
 
+use super::{
+    config::create_config,
+    download::{download, get_path},
+};
+
 #[tauri::command(async)]
 pub async fn get_minecraft(url: String, id: String, name: String, java_args: String) {
     match fetch_dependency(url.as_str(), id.as_str()).await {
