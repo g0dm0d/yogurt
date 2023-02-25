@@ -4,17 +4,15 @@ use std::fs::File;
 use std::io;
 use std::path::{Path, PathBuf};
 
-use crate::tools::parse_path::parse_path;
+use crate::tools::path;
 use crate::tools::request;
 use crate::tools::sha::verify_sha1sum;
-
-const PATH: &str = ".yogurt";
 
 /// This func download file and save
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
 pub async fn download(url: &str, file_path: &Path, sha1sum: &String) {
-    let path = get_path(file_path);
+    let path = path::get_path(file_path);
 
     if path.exists() {
         if verify_sha1sum(&path, sha1sum) {
@@ -31,7 +29,7 @@ pub async fn download(url: &str, file_path: &Path, sha1sum: &String) {
         };
     }
 
-    let result = fs::create_dir_all(parse_path(&path));
+    let result = fs::create_dir_all(path::parse_path(&path));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }

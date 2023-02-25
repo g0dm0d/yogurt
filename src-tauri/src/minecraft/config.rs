@@ -2,10 +2,10 @@ use std::fs;
 use std::io::Write;
 use std::path::Path;
 
-use super::download::get_path;
+use crate::tools::path;
 
 pub async fn create_config(name: &str, version: &str, java_path: &str, arguments: &str) {
-    let path = get_path(Path::new("configs"));
+    let path = path::get_path(Path::new("configs"));
     if !path.exists() {
         match std::fs::create_dir_all(&path) {
             Ok(_) => {}
@@ -15,7 +15,7 @@ pub async fn create_config(name: &str, version: &str, java_path: &str, arguments
         }
     }
 
-    let mut file = fs::File::create(get_path(&path.join(format!("{}.toml", &name)))).unwrap();
+    let mut file = fs::File::create(path::get_path(&path.join(format!("{}.toml", &name)))).unwrap();
 
     let toml = toml::toml! {
         [instance]

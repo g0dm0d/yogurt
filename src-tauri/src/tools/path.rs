@@ -1,5 +1,16 @@
-use std::path::Path;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+
+
+const PATH: &str = ".yogurt";
+/// add to path ~/.yogurt/{path}
+pub fn get_path(path: &Path) -> PathBuf {
+    let home_dir = match home::home_dir() {
+        Some(path) => path,
+        None => panic!("Failed to get home directory"),
+    };
+
+    return Path::new(&home_dir).join(PATH).join(path);
+}
 
 /// Parse path in Json of version
 ///

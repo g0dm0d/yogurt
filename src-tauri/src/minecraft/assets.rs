@@ -18,7 +18,7 @@ async fn fetch_assets(url: &str) -> Result<Package, Box<dyn std::error::Error>> 
     Ok(response)
 }
 
-use crate::minecraft::download::download;
+use crate::tools::download::download;
 
 /// Parses json and download resource from json version of assetIndex[url] files are saved under their hash name, in a folder of 2 hash characters
 ///

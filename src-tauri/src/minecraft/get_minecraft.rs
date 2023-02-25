@@ -7,9 +7,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Download {
+    /// Path is always a relative parent folder ($HOME/.yogurt)
     pub path: String,
+    /// sha1 sum for verify
     pub sha1: String,
-    size: i32,
+    /// file size
+    pub size: i32,
+    /// download url
     pub url: String,
 }
 
@@ -25,6 +29,7 @@ pub struct LibraryDownloads {
 /// └── name: String
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LibraryOs {
+    /// name of os type
     pub name: String,
 }
 
@@ -36,7 +41,7 @@ pub struct LibraryOs {
 /// └── rules:      Vec<LibraryOs>
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LibraryRule {
-    action: String,
+    pub action: String,
     pub os: Option<LibraryOs>,
 }
 
@@ -71,14 +76,18 @@ struct JavaVersion {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AssetIndex {
     id: String,
+    /// sha1 sum for verify
     sha1: String,
-    pub url: String,
+    /// download url
+    url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Client {
-    pub sha1: String,
-    pub url: String,
+    /// sha1 sum for verify
+    sha1: String,
+    /// download url
+    url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -106,12 +115,15 @@ struct Package {
     libraries: Vec<Library>,
 }
 
+use crate::tools::download::download;
+use crate::tools::path;
+
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     let str_path = format!("version/{}/{}.json", id, id);
     let path = Path::new(&str_path);
     download(url, path, &"".to_string()).await;
 
-    let mut file = File::open(get_path(path)).unwrap();
+    let mut file = File::open(path::get_path(path)).unwrap();
     let mut buff = String::new();
     file.read_to_string(&mut buff).unwrap();
 
@@ -119,8 +131,11 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     Ok(package)
 }
 
-use crate::minecraft::assets::download_assets;
-use crate::minecraft::library::download_library;
+use crate::minecraft::{
+    config::create_config,
+    library::download_library,
+    assets::download_assets
+};
 
 use super::{
     config::create_config,
