@@ -21,25 +21,25 @@
         open(signin_url);
     }
 
-    async function get_minecraft() {
+    async function add_account() {
         try {
-            //await tauri.invoke("get_minecraft", {
-            //    url: selectedVersion,
-            //});
             openLogin();
             await tauri.invoke("add_account");
             playNotificationSound();
-            toast.push('Minecraft downloaded successfully!', {
-                theme: {
-                  '--toastColor': 'mintcream',
-                  '--toastBackground': 'rgba(72,187,120,0.9)',
-                  '--toastBarBackground': '#2F855A'
-                }
-            })
         } catch (error) {
             console.error(error);
         }
     }
+
+    async function get_accounts() {
+        try {
+            const users = await invoke("get_all_users", {});
+            return users
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    console.log(get_accounts());
 </script>
 
 {#if show}
@@ -56,7 +56,7 @@
                     
                 </div>
                 <div style="display: flex; justify-content: center; ">
-                    <button on:click={get_minecraft}>Add account</button>
+                    <button on:click={add_account}>Add account</button>
                 </div>
             </div>
         </div>
