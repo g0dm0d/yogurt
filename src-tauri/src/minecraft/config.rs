@@ -4,7 +4,7 @@ use std::path::Path;
 
 use crate::tools::path;
 
-pub async fn create_config(name: &str, version: &str, java_path: &str, arguments: &str) {
+pub async fn create_config(name: &str, version: &str, client: &str, java_path: &str, arguments: &str) {
     let path = path::get_path(Path::new("configs"));
     if !path.exists() {
         match std::fs::create_dir_all(&path) {
@@ -21,6 +21,7 @@ pub async fn create_config(name: &str, version: &str, java_path: &str, arguments
         [instance]
         name = name
         version = version
+        client = client
         java_path = java_path
         arguments = arguments
     };

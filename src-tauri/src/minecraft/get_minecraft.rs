@@ -155,6 +155,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
             create_config(
                 name.as_str(),
                 id.as_str(),
+                format!("{}.jar", id).as_str(),
                 "/usr/bin/java",
                 java_args.as_str(),
             )

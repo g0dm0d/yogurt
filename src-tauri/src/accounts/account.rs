@@ -33,6 +33,7 @@ pub struct User {
     pub minecraft_exp: String
 }
 
+/// get all user names from the accounts.toml file
 pub async fn get_all_users() -> Vec<String> {
     let config_file = fs::read_to_string(crate::tools::path::get_path(Path::new("accounts.toml"))).unwrap();
     let toml: Value = config_file.parse().unwrap();
@@ -48,6 +49,8 @@ impl User {
     pub fn new(uuid: String, username: String, refresh_token: String, access_token: String, access_exp: String, minecraft_token: String, minecraft_exp: String) -> Self {
         User { uuid, username, refresh_token, access_token, access_exp, minecraft_token, minecraft_exp}
     }
+
+    /// save user to accounts.toml in launcher default foldert
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let mut config_file = OpenOptions::new()
             .read(true)
@@ -86,6 +89,8 @@ impl User {
         Ok(())
     }
 
+    /// get user uuid and username by minecraft bearer token
+    /// https://wiki.vg/Microsoft_Authentication_Scheme#Getting_the_profile
     pub async fn get_info(&mut self) -> Result<&mut User, Box<dyn std::error::Error>> {
         let client = Client::new();
         let minecraft_profile_resp: MinecraftProfileResponse = client

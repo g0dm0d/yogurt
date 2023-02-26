@@ -57,6 +57,8 @@ struct MinecraftAuthenticationResponse {
 
 const CLIENT_ID: &str = "d8e1d9bf-287f-4773-a176-e012722257f4";
 
+/// get minecraft bearer/access token
+/// https://wiki.vg/Microsoft_Authentication_Scheme
 pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new();
 

@@ -3,6 +3,9 @@ use hyper::{server::conn::Http, service::service_fn, Body};
 use std::{net::SocketAddr, convert::Infallible};
 use tokio::net::TcpListener;
 
+/// This function starts the http server and waits for a response to localhost:9397 with the "code" parameter.
+/// This is necessary to obtain a token to access the ms account
+/// After that, the server stops and starts the function to get the minecraft token, user name, uuid
 #[tauri::command(async)]
 pub async fn add_account() {
     let addr: SocketAddr = ([127, 0, 0, 1], 9397).into();
@@ -19,6 +22,9 @@ pub async fn add_account() {
         });
 }
 
+/// This function is performed after receiving a get request
+/// And get the "code" from the url parameter
+/// https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#request-an-authorization-code
 async fn code_grab(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     if let Some(query) = req.uri().query() {
         for (k, v) in form_urlencoded::parse(query.as_bytes()) {
