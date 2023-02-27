@@ -1,4 +1,4 @@
-use std::{fs::{OpenOptions, self}, path::Path, io::{Read, Write}};
+use std::{fs::{OpenOptions, self}, io::{Read, Write}};
 
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -35,7 +35,7 @@ pub struct User {
 
 /// get all user names from the accounts.toml file
 pub async fn get_all_users() -> Vec<String> {
-    let config_file = fs::read_to_string(crate::tools::path::get_path(Path::new("accounts.toml"))).unwrap();
+    let config_file = fs::read_to_string(crate::tools::path::get_path("accounts.toml")).unwrap();
     let toml: Value = config_file.parse().unwrap();
 
     let mut accounts = Vec::new();
@@ -56,7 +56,7 @@ impl User {
             .read(true)
             .write(true)
             .create(true)
-            .open(path::get_path(Path::new("accounts.toml")))?;
+            .open(path::get_path("accounts.toml"))?;
 
         let mut config_contents = String::new();
         config_file.read_to_string(&mut config_contents)?;
@@ -83,7 +83,7 @@ impl User {
         account_table
             .insert("minecraft_exp".to_owned(), Value::String(self.minecraft_exp.to_owned()));
 
-        let mut config_file = OpenOptions::new().write(true).open(path::get_path(Path::new("accounts.toml")))?;
+        let mut config_file = OpenOptions::new().write(true).open(path::get_path("accounts.toml"))?;
         config_file.write_all(toml::to_string(&config).unwrap().as_bytes())?;
 
         Ok(())

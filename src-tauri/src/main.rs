@@ -3,14 +3,14 @@
     windows_subsystem = "linux"
 )]
 
-use std::{path::Path, fs};
+use std::fs;
 
 mod minecraft;
 mod accounts;
 mod tools;
 
 fn main() {
-    let result = fs::create_dir_all(tools::path::get_path(Path::new("")));
+    let result = fs::create_dir_all(tools::path::get_path(""));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }

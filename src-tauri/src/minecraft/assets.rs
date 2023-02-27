@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::path::Path;
 
 #[derive(Serialize, Deserialize)]
 struct Object {
@@ -41,9 +40,7 @@ pub async fn download_assets(assets_url: &str) {
                 &asset.hash[0..2],
                 &asset.hash
             ),
-            &Path::new("assets/objects")
-                .join(&asset.hash[0..2])
-                .join(&asset.hash),
+            &format!("assets/objects/{}/{}", &asset.hash[0..2], &asset.hash),
             &asset.hash,
         )
         .await

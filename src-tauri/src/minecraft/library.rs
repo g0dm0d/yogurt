@@ -1,6 +1,5 @@
 use crate::tools::download::download;
 use std::env;
-use std::path::Path;
 
 /// Downloading all the necessary libraries for the selected version of minecraft
 ///
@@ -14,7 +13,7 @@ pub async fn download_library(libraries: Vec<crate::minecraft::get_minecraft::Li
         }
         download(
             &file.downloads.artifact.url,
-            &Path::new("library").join(file.downloads.artifact.path),
+            &format!("library/{}", file.downloads.artifact.path),
             &file.downloads.artifact.sha1,
         )
         .await;
@@ -22,7 +21,7 @@ pub async fn download_library(libraries: Vec<crate::minecraft::get_minecraft::Li
 }
 
 /// This is a function that this library is suitable for the current OS
-fn lib_os(file: &crate::minecraft::get_minecraft::Library) -> bool {
+pub fn lib_os(file: &crate::minecraft::get_minecraft::Library) -> bool {
     if let Some(rules) = &file.rules {
         if let Some(rule) = rules.get(0) {
             if let Some(os) = &rule.os {

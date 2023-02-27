@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 const PATH: &str = ".yogurt";
 /// add to path ~/.yogurt/{path}
-pub fn get_path(path: &Path) -> PathBuf {
+pub fn get_path(path: &str) -> PathBuf {
     let home_dir = match home::home_dir() {
         Some(path) => path,
         None => panic!("Failed to get home directory"),

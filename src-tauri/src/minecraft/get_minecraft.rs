@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::fs::{File, self};
 use std::io::Read;
 use std::path::Path;
 
@@ -60,7 +60,7 @@ pub struct Library {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct JavaVersion {
+pub struct JavaVersion {
     component: String,
     #[serde(rename = "majorVersion")]
     major_version: i32,
@@ -75,11 +75,11 @@ struct JavaVersion {
 /// └── url:    String
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AssetIndex {
-    id: String,
+    pub id: String,
     /// sha1 sum for verify
-    sha1: String,
+    pub sha1: String,
     /// download url
-    url: String,
+    pub url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -105,25 +105,24 @@ pub struct Downloads {
 /// ├── java_version:   String    
 /// └── libraries:      Vec<Library>
 #[derive(Debug, Serialize, Deserialize)]
-struct Package {
+pub struct Package {
     #[serde(rename = "assetIndex")]
-    asset_index: AssetIndex,
-    downloads: Downloads,
-    id: String,
+    pub asset_index: AssetIndex,
+    pub downloads: Downloads,
+    pub id: String,
     #[serde(rename = "javaVersion")]
-    java_version: JavaVersion,
-    libraries: Vec<Library>,
+    pub java_version: JavaVersion,
+    pub libraries: Vec<Library>,
 }
 
 use crate::tools::download::download;
 use crate::tools::path;
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
-    let str_path = format!("version/{}/{}.json", id, id);
-    let path = Path::new(&str_path);
-    download(url, path, &"".to_string()).await;
+    let path = format!("version/{}/{}.json", id, id);
+    download(url, path.as_str(), &"".to_string()).await;
 
-    let mut file = File::open(path::get_path(path)).unwrap();
+    let mut file = File::open(path::get_path(path.as_str())).unwrap();
     let mut buff = String::new();
     file.read_to_string(&mut buff).unwrap();
 
@@ -148,7 +147,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
             // Downloading the client jar for the selected version of minecraft
             download(
                 &package.downloads.client.url,
-                Path::new(&format!("version/{}/{}.jar", &id, &id)),
+                format!("version/{}/{}.jar", &id, &id).as_str(),
                 &package.downloads.client.sha1,
             )
             .await;
@@ -160,6 +159,11 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
                 java_args.as_str(),
             )
             .await;
+            // Create instance folder
+            let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instance/{}", name))));
+            if result.is_err() {
+                panic!("Failed to create directory: {:?}", result.err());
+            }
         }
         Err(error) => {
             println!("Error message: {}", error);
