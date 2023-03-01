@@ -7,6 +7,16 @@ import {
 } from '@mantine/core';
 import { Login } from './popups/Login';
 import { Account } from './ui/account';
+import { invoke } from '@tauri-apps/api/tauri'
+
+async function addAccount() {
+    try {
+        await invoke('add_account');
+        console.log(Response);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export function Accounts() {
     const [openPopup, setOpenPopup] = useState(false);
@@ -34,8 +44,8 @@ export function Accounts() {
                     direction='column'
                     sx={{ width: '100%' }}
                 >
-                    <Account nickname={accounts[0]}/>
-                    <Account nickname={accounts[1]}/>
+                    <Account nickname={accounts[0]} />
+                    <Account nickname={accounts[1]} />
                 </Flex>
                 <Button variant='outline' onClick={() => setOpenPopup(true)}>+</Button>
             </Flex>
