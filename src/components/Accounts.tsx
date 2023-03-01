@@ -27,12 +27,12 @@ export function Accounts() {
                 justify='space-between'
                 align='flex-start'
                 direction='column'
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', padding: '16px' }}
             >
                 <Flex
                     gap='md'
                     direction='column'
-                    wrap='wrap'
+                    sx={{ width: '100%' }}
                 >
                     <Account nickname={accounts[0]}/>
                     <Account nickname={accounts[1]}/>

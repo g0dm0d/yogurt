@@ -1,5 +1,5 @@
-import { Box, Flex } from '@mantine/core';
-import { useState } from 'react';
+import { Flex } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 import { PlayerHead } from './playerHead';
 
 interface AccountProps {
@@ -9,9 +9,13 @@ interface AccountProps {
 export function Account({ nickname }: AccountProps) {
 
     return (
-        <Flex direction='row' gap='16px' >
-            <PlayerHead nickname={nickname} size={30} />
-            {nickname ? nickname : 'undefined'}
+        <Flex direction='row' justify='space-between' sx={{ width: '100%' }}>
+            <Flex gap='16px'>
+                <PlayerHead nickname={nickname} size={30} />
+                {nickname ? nickname : 'undefined'}
+            </Flex>
+            <IconX cursor='pointer'/>
+            {/* onClick={deleteAccount(nickname)} */}
         </Flex>
     );
 }
