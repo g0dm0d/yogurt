@@ -5,7 +5,6 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { Link } from 'react-router-dom';
 
 const MICROSOFT_LINK = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=d8e1d9bf-287f-4773-a176-e012722257f4&response_type=code&redirect_uri=http://localhost:9397&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED'
-const mock = ''
 
 async function addAccount() {
     try {
@@ -24,7 +23,7 @@ export function Login() {
                 <Title order={1}>
                     Login with your Microsoft account
                 </Title>
-                <Button onClick={addAccount} variant='outline' target="_blank" component={Link} to={mock} >
+                <Button onClick={addAccount} variant='outline' target="_blank" component={Link} to={MICROSOFT_LINK} >
                     Login
                 </Button>
             </Flex>

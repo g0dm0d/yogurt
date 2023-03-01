@@ -18,6 +18,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             minecraft::get_minecraft::get_minecraft,
             accounts::add_account::add_account,
+            accounts::account::get_all_users,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

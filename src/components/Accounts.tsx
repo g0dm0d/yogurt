@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -22,7 +22,16 @@ export function Accounts() {
     const [openPopup, setOpenPopup] = useState(false);
     const closePopup = () => setOpenPopup(false);
 
-    const [accounts, setAccounts] = useState(['ModerNik', 'STN0WHERE']);
+    const [accounts, setAccounts] = useState([]);
+
+    useEffect(() => {
+      async function fetchAccounts() {
+        const users = await invoke('get_all_users');
+        setAccounts(users);
+      }
+  
+      fetchAccounts();
+    }, []);
 
     return (
         <Box sx={{
@@ -44,8 +53,9 @@ export function Accounts() {
                     direction='column'
                     sx={{ width: '100%' }}
                 >
-                    <Account nickname={accounts[0]} />
-                    <Account nickname={accounts[1]} />
+                    {accounts.map((account) =>
+                        <Account nickname={account} key={account} />
+                    )}
                 </Flex>
                 <Button variant='outline' onClick={() => setOpenPopup(true)}>+</Button>
             </Flex>

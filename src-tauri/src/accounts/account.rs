@@ -4,7 +4,7 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use toml::Value;
 
-use crate::tools::path;
+use crate::tools::path::{self, get_path};
 
 /// The response from Minecraft when attempting to retrieve a users profile
 #[derive(Serialize, Deserialize, Debug)]
@@ -34,8 +34,13 @@ pub struct User {
 }
 
 /// get all user names from the accounts.toml file
-pub async fn get_all_users() -> Vec<String> {
-    let config_file = fs::read_to_string(crate::tools::path::get_path("accounts.toml")).unwrap();
+#[tauri::command]
+pub fn get_all_users() -> Vec<String> {
+    let path = path::get_path("accounts.toml");
+    if !path.exists() {
+        return Vec::new();
+    }
+    let config_file = fs::read_to_string(path).unwrap();
     let toml: Value = config_file.parse().unwrap();
 
     let mut accounts = Vec::new();
