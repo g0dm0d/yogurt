@@ -37,7 +37,7 @@ export function Accounts() {
                     <Account nickname={accounts[0]}/>
                     <Account nickname={accounts[1]}/>
                 </Flex>
-                <Button onClick={() => setOpenPopup(true)}>+</Button>
+                <Button variant='outline' onClick={() => setOpenPopup(true)}>+</Button>
             </Flex>
         </Box >
     );
