@@ -2,9 +2,13 @@ import { Box } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import steveHead from '/SteveHead.png';
 
-export function PlayerHead() {
+interface PlayerHeadProps {
+    nickname?: string;
+}
+
+export function PlayerHead({nickname}: PlayerHeadProps) {
     const [head, setHead] = useState();
-    const [uuid, setUuid] = useState('ModerNik');
+    const [uuid, setUuid] = useState(nickname ? nickname : undefined);
 
     const fetchImage = async () => {
         if (uuid && !head) {
@@ -28,3 +32,4 @@ export function PlayerHead() {
         </Box>
     );
 }
+
