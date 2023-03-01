@@ -1,17 +1,17 @@
-import { Box } from '@mantine/core';
+import { Box, Flex } from '@mantine/core';
 import { useState } from 'react';
 import { PlayerHead } from './playerHead';
 
 interface AccountProps {
-    nickname: string;
+    nickname?: string;
 }
 
-export function Account({nickname}: AccountProps)  {
-    
+export function Account({ nickname }: AccountProps) {
+
     return (
-        <Box>
-            <PlayerHead nickname={nickname}/>
-            {nickname}
-        </Box>
+        <Flex direction='row' gap='16px' >
+            <PlayerHead nickname={nickname} size={30} />
+            {nickname ? nickname : 'undefined'}
+        </Flex>
     );
 }

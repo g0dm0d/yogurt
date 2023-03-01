@@ -56,7 +56,7 @@ export function Dashboard() {
     return (
         <Navbar height="100vh" width={{ base: 80 }} p="md" sx={{border: 'none'}}>
             <Navbar.Section>
-                <Link to='/account'>
+                <Link to='/account' onClick={() => setActive(0)}>
                     <PlayerHead />
                 </Link>
             </Navbar.Section>
