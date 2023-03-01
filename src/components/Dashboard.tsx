@@ -3,8 +3,6 @@ import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/c
 import {
     IconHome2,
     IconSettings,
-    IconLogout,
-    IconSwitchHorizontal,
     TablerIconsProps,
 } from '@tabler/icons-react';
 import { PlayerHead } from './ui/playerHead';
@@ -19,7 +17,7 @@ const useStyles = createStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-
+        transition: '300ms',
         '&:hover': {
             backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[0],
         },
@@ -53,10 +51,10 @@ function DashboardButton({ Icon: Icon, label, active, onClick }: DashboardButton
 }
 
 export function Dashboard() {
-    const [active, setActive] = useState(2);
+    const [active, setActive] = useState(1);
     const { classes } = useStyles();
     return (
-        <Navbar height="100vh" width={{ base: 80 }} p="md">
+        <Navbar height="100vh" width={{ base: 80 }} p="md" sx={{border: 'none'}}>
             <Navbar.Section>
                 <Link to='/account'>
                     <PlayerHead />

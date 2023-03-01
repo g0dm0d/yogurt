@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export function Settings() {
 
     return (
-        <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             settings
         </Box>
     );
