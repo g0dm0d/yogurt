@@ -22,6 +22,15 @@ type Version = {
     value: string;
 };
 
+async function createInstance() {
+    try {
+        await invoke('create_instance');
+        console.log(Response);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export function AddInstance() {
 
     const [versions, setVersions] = useState<Version[]>([]);
@@ -54,7 +63,7 @@ export function AddInstance() {
                     transition='fade'
                     transitionDuration={200}
                 />
-                <Button onClick={addInstance} variant='outline' >
+                <Button onClick={createInstance} variant='outline' >
                     Create
                 </Button>
             </Flex>
