@@ -19,18 +19,16 @@ async function addAccount() {
 }
 
 export function Accounts() {
-    const [openPopup, setOpenPopup] = useState(false);
-    const closePopup = () => setOpenPopup(false);
+    const [openModal, setOpenModal] = useState(false);
 
     const [accounts, setAccounts] = useState([]);
-
-    useEffect(() => {
-      async function fetchAccounts() {
+    async function getAccounts() {
         const users = await invoke('get_all_users');
         setAccounts(users);
-      }
-  
-      fetchAccounts();
+    }
+
+    useEffect(() => {
+        getAccounts();
     }, []);
 
     return (
@@ -38,7 +36,7 @@ export function Accounts() {
             display: 'flex', justifyContent: 'center',
             minHeight: '60vh', maxWidth: '40vh', width: '100%'
         }}>
-            <Modal opened={openPopup} onClose={closePopup} title='Login'>
+            <Modal opened={openModal} onClose={() => setOpenModal(false)} title='Login'>
                 <Login />
             </Modal>
 
@@ -57,7 +55,7 @@ export function Accounts() {
                         <Account nickname={account} key={account} />
                     )}
                 </Flex>
-                <Button variant='outline' onClick={() => setOpenPopup(true)}>+</Button>
+                <Button variant='outline' onClick={() => setOpenModal(true)}>+</Button>
             </Flex>
         </Box >
     );

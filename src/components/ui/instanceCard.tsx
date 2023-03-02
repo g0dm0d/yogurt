@@ -22,6 +22,7 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
     const useStyles = createStyles((theme) => ({
         card: {
             minWidth: '200px',
+            minHeight: '160px',
             backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
         },
 
@@ -30,7 +31,6 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: `${theme.spacing.sm}px ${theme.spacing.lg}px`,
-            borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
         },
 
         image: {
@@ -57,7 +57,7 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
     const [openPopover, setOpenPopover] = useState(false)
     return (
         <Popover opened={openPopover} onChange={setOpenPopover}>
-            <Card withBorder p="lg" className={classes.card}>
+            <Card p="lg" className={classes.card}>
                 <Card.Section>
                     <Box ref={ref} display='flex' sx={{ justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} >
                         <Image className={classes.image} src={bg} alt={title} height={100} />
@@ -85,7 +85,7 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
                         </Text>
                     </Box>
                     <Box>
-                        <IconAdjustmentsHorizontal cursor='pointer' onClick={() => { console.log('instance') }} />
+                        <IconAdjustmentsHorizontal cursor='pointer' onClick={() => setOpenPopover(true)} />
                     </Box>
                 </Card.Section>
             </Card>
