@@ -1,10 +1,12 @@
 import {
-    Box, Button, Flex, NativeSelect, Select, Title
+    Box,
+    Button,
+    Flex,
+    Select,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 async function addInstance() {
     try {
