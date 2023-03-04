@@ -14,7 +14,7 @@
         "@mantine/core": "^5.10.4",
         "@mantine/dates": "^5.10.4",
         "@mantine/ds": "^5.10.4",
-        "@mantine/form": "^5.10.4",
+        "@mantine/form": "^5.10.5",
         "@mantine/hooks": "^5.10.4",
         "@mantine/notifications": "^5.10.4",
         "@mantine/nprogress": "^5.10.4",
