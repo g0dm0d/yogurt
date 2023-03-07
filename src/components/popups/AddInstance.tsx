@@ -1,12 +1,17 @@
 import {
     Box,
     Button,
+    Center,
     Flex,
+    SegmentedControl,
     Select,
+    Image,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState, useEffect } from 'react';
+import FabricIcon from '../ui/icons/FabricIcon.svg'
+import MinecraftIcon from '../ui/icons/MinecraftIcon.svg'
 
 type Version = {
     label: string;
@@ -30,6 +35,8 @@ async function createInstance(label: string, value: string) {
 }
 
 export function AddInstance() {
+
+    const [type, setType] = useState('minecraft');
 
     const [versions, setVersions] = useState<Version[]>([]);
     const [value, setValue] = useState<string>('');
@@ -65,6 +72,30 @@ export function AddInstance() {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
             <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
+                <SegmentedControl
+                    value={type}
+                    onChange={(value: 'minecraft' | 'fabric') => setType(value)}
+                    data={[
+                        {
+                            value: 'minecraft',
+                            label: (
+                                <Center>
+                                    <img width={24} height={24} src={MinecraftIcon} alt="Minecraft Icon" />
+                                    <Box ml={10}>Minecraft</Box>
+                                </Center>
+                            ),
+                        },
+                        {
+                            value: 'fabric',
+                            label: (
+                                <Center>
+                                    <Image width={24} height={24} src={FabricIcon} alt="Fabric Icon" />
+                                    <Box ml={10}>Fabric</Box>
+                                </Center>
+                            ),
+                        },
+                    ]}
+                />
                 <Select
                     data={versions}
                     value={value}

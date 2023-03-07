@@ -1,7 +1,6 @@
-import { Box, Container, Flex } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
 import { Dashboard } from "./components/Dashboard";
-import { TopBar } from "./components/TopBar";
 import AppRoutes from "./Routes";
 
 function App() {

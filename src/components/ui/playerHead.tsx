@@ -1,6 +1,6 @@
 import { Box } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import steveHead from '/SteveHead.png';
+import steveHead from './icons/SteveHead.png';
 
 interface PlayerHeadProps {
     nickname?: string;
