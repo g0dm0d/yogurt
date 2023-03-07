@@ -8,6 +8,7 @@ import {
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { IconAdjustmentsHorizontal, IconPlayerPlay } from '@tabler/icons-react';
+import { invoke } from '@tauri-apps/api';
 import { useState } from 'react';
 import bg from '/bg.png';
 
@@ -15,6 +16,22 @@ interface InstanceCardProps {
     title: string;
     version: string;
     type: string;
+}
+
+async function startInstance(instance: string) {
+    if (instance) {
+        try {
+            await invoke('run_minecraft', {
+                username: '',
+                uuid: '',
+                token: '',
+                instance: instance
+            });
+            console.log(Response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export function InstanceCard({ title, version, type }: InstanceCardProps) {
@@ -59,7 +76,12 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
         <Popover opened={openPopover} onChange={setOpenPopover}>
             <Card p="lg" className={classes.card}>
                 <Card.Section>
-                    <Box ref={ref} display='flex' sx={{ justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} >
+                    <Box ref={ref} display='flex' onClick={() => startInstance(title)}
+                        sx={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            cursor: 'pointer'
+                        }} >
                         <Image className={classes.image} src={bg} alt={title} height={100} />
                         <Text size="sm" weight={700} className={classes.title}>
                             {title}
