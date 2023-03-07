@@ -4,7 +4,6 @@ import {
     Flex,
     Select,
 } from '@mantine/core';
-import { useForm } from '@mantine/form';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState, useEffect } from 'react';
@@ -33,7 +32,7 @@ async function createInstance(label: string, value: string) {
 export function AddInstance() {
 
     const [versions, setVersions] = useState<Version[]>([]);
-    const [value, setValue] = useState<string>();
+    const [value, setValue] = useState<string>('');
     const label = versions.find((item) => item.value === value)?.label
     async function getVersions() {
         const response = await fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
@@ -53,24 +52,24 @@ export function AddInstance() {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
             <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
-                    <Select
-                        data={versions}
-                        value={value}
-                        onChange={setValue}
-                        color='white'
-                        description="Version"
-                        variant="filled"
-                        size="md"
-                        placeholder="Version"
-                        searchable
-                        nothingFound="No such version"
-                        rightSection={<IconChevronDown size="1rem" />}
-                        transition='fade'
-                        transitionDuration={200}
-                    />
-                    <Button onClick={() => createInstance(value, label)} variant='outline' >
-                        Create
-                    </Button>
+                <Select
+                    data={versions}
+                    value={value}
+                    onChange={setValue}
+                    color='white'
+                    description="Version"
+                    variant="filled"
+                    size="md"
+                    placeholder="Version"
+                    searchable
+                    nothingFound="No such version"
+                    rightSection={<IconChevronDown size="1rem" />}
+                    transition='fade'
+                    transitionDuration={200}
+                />
+                <Button onClick={() => createInstance(label, value)} variant='outline' >
+                    Create
+                </Button>
             </Flex>
         </Box>
     );

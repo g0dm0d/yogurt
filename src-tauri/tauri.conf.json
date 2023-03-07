@@ -60,10 +60,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
         "resizable": true,
         "title": "yogurt",
-        "width": 800
+        "width": 960,
+        "minWidth": 960,
+        "height": 540,
+        "minHeight": 540
       }
     ]
   }
