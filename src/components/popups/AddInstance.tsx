@@ -34,14 +34,27 @@ export function AddInstance() {
     const [versions, setVersions] = useState<Version[]>([]);
     const [value, setValue] = useState<string>('');
     const label = versions.find((item) => item.value === value)?.label
+
+    const [loading, setLoading] = useState(false);
     async function getVersions() {
-        const response = await fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
-        const data = await response.json();
-        for (let i = 0; i < data.versions.length; i++) {
-            const versionObj: Version = { label: data.versions[i].id, value: data.versions[i].url };
-            versions.push(versionObj);
-            // setVersions([...versions, versionObj]);
-        }
+        setLoading(true);
+        fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    setLoading(false);
+                    for (let i = 0; i < result.versions.length; i++) {
+                        const versionObj: Version = { label: result.versions[i].id, value: result.versions[i].url };
+                        versions.push(versionObj);
+                        // setVersions([...versions, versionObj]);
+                    }
+                },
+                (error) => {
+                    setLoading(false);
+                    console.error(error);
+                    setValue('error');
+                }
+            )
     }
 
     useEffect(() => {
@@ -62,7 +75,7 @@ export function AddInstance() {
                     size="md"
                     placeholder="Version"
                     searchable
-                    nothingFound="No such version"
+                    nothingFound="Error"
                     rightSection={<IconChevronDown size="1rem" />}
                     transition='fade'
                     transitionDuration={200}
