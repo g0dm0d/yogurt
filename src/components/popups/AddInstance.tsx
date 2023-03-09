@@ -39,11 +39,13 @@ export function AddInstance() {
     const [type, setType] = useState('minecraft');
 
     const [versions, setVersions] = useState<Version[]>([]);
+    const [fabricVersions, setFabricVersions] = useState<Version[]>([]);
+
     const [value, setValue] = useState<string>('');
     const label = versions.find((item) => item.value === value)?.label
 
     const [loading, setLoading] = useState(false);
-    async function getVersions() {
+    async function getDefaultVersions() {
         setLoading(true);
         fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
             .then(response => response.json())
@@ -64,8 +66,30 @@ export function AddInstance() {
             )
     }
 
+    async function getFabcricVersions() {
+        setLoading(true);
+        fetch('https://meta.fabricmc.net/v2/versions/game')
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    setLoading(false);
+                    for (let i = 0; i < result.length; i++) {
+                        const versionObj: Version = { label: result[i].version, value: result[i].version };
+                        fabricVersions.push(versionObj);
+                        // setFabricVersions([...fabricVersions, versionObj]);
+                    }
+                },
+                (error) => {
+                    setLoading(false);
+                    console.error(error);
+                    setValue('error');
+                }
+            )
+    }
+
     useEffect(() => {
-        getVersions();
+        getDefaultVersions();
+        getFabcricVersions();
     }, []);
 
 
@@ -97,14 +121,14 @@ export function AddInstance() {
                     ]}
                 />
                 <Select
-                    data={versions}
+                    data={type === 'minecraft' ? versions : fabricVersions}
                     value={value}
                     onChange={setValue}
                     color='white'
                     description="Version"
                     variant="filled"
                     size="md"
-                    placeholder="Version"
+                    placeholder='Version'
                     searchable
                     nothingFound="Error"
                     rightSection={<IconChevronDown size="1rem" />}
