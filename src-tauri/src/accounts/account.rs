@@ -4,7 +4,7 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use toml::Value;
 
-use crate::tools::path::{self, get_path};
+use crate::tools::path;
 
 /// The response from Minecraft when attempting to retrieve a users profile
 #[derive(Serialize, Deserialize, Debug)]

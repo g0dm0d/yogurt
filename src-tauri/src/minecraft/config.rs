@@ -1,3 +1,4 @@
+
 use std::fs;
 use std::io::Write;
 use serde::Deserialize;
@@ -35,10 +36,25 @@ pub async fn create_config(name: &str, version: &str, client: &str, java_path: &
     write!(file, "{}", toml.to_string()).unwrap();
 }
 
+#[tauri::command]
+pub fn get_all_instance() -> Vec<String> {
+    let files = fs::read_dir(get_path("configs")).unwrap()
+        .filter_map(Result::ok)
+        .map(|entry| entry.path())
+        .filter(|path| path.is_file() && path.extension().unwrap_or_default() == "toml");
+
+    let mut instances = Vec::new();
+    for file in files {
+        instances.push(file.display().to_string());
+
+    }
+    return instances
+}
+
 pub fn get_config(name: &str) -> Instance {
     let path = get_path(format!("configs/{}.toml", name).as_str());
     let file = std::fs::read_to_string(path).unwrap();
     let data: Instance = toml::from_str(&file).expect("Error parsing TOML");
     return data
-
 }
+
