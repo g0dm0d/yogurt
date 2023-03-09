@@ -1,11 +1,11 @@
 
 use std::fs;
 use std::io::Write;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
 use crate::tools::path::{self, get_path};
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Instance {
     pub version: String,
     pub client: String,
@@ -37,15 +37,15 @@ pub async fn create_config(name: &str, version: &str, client: &str, java_path: &
 }
 
 #[tauri::command]
-pub fn get_all_instance() -> Vec<String> {
+pub fn get_all_instance() -> Vec<Instance> {
     let files = fs::read_dir(get_path("configs")).unwrap()
         .filter_map(Result::ok)
         .map(|entry| entry.path())
         .filter(|path| path.is_file() && path.extension().unwrap_or_default() == "toml");
 
-    let mut instances = Vec::new();
+    let mut instances: Vec<Instance> = Vec::new();
     for file in files {
-        instances.push(file.display().to_string());
+        instances.push(get_config(file.display().to_string().as_str()));
 
     }
     return instances
