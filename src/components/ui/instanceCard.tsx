@@ -4,10 +4,10 @@ import {
     Image,
     Text,
     Box,
-    Popover,
+    Menu,
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { IconAdjustmentsHorizontal, IconPlayerPlay } from '@tabler/icons-react';
+import { IconAdjustmentsHorizontal, IconPlayerPlay, IconSettings, IconTrash } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api';
 import { useState } from 'react';
 import bg from '/bg.png';
@@ -18,13 +18,11 @@ interface InstanceCardProps {
     type: string;
 }
 
-async function startInstance(instance: string) {
+async function startInstance(instance: string, username: string) {
     if (instance) {
         try {
             await invoke('run_minecraft', {
-                username: '',
-                uuid: '',
-                token: '',
+                username: username,
                 instance: instance
             });
             console.log(Response);
@@ -70,12 +68,13 @@ export function InstanceCard({ name, version, type }: InstanceCardProps) {
         },
     }));
     const { classes } = useStyles();
-    const [openPopover, setOpenPopover] = useState(false)
+    const [openMenu, setOpenMenu] = useState(false)
+    const [username, setUsername] = useState('');
     return (
-        <Popover opened={openPopover} onChange={setOpenPopover}>
+        <Menu opened={openMenu} onChange={setOpenMenu} withArrow>
             <Card p="lg" className={classes.card}>
                 <Card.Section>
-                    <Box ref={ref} display='flex' onClick={() => startInstance(name)}
+                    <Box ref={ref} display='flex' onClick={() => startInstance(name, username)}
                         sx={{
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -106,11 +105,22 @@ export function InstanceCard({ name, version, type }: InstanceCardProps) {
                         </Text>
                     </Box>
                     <Box>
-                        <IconAdjustmentsHorizontal cursor='pointer' onClick={() => setOpenPopover(true)} />
+                        <Menu.Target>
+                            <IconAdjustmentsHorizontal cursor='pointer' onClick={() => setOpenMenu(true)} />
+                        </Menu.Target>
                     </Box>
                 </Card.Section>
             </Card>
-            <Popover.Dropdown />
-        </Popover>
+            <Menu.Dropdown >
+                <Menu.Label>Application</Menu.Label>
+                <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
+                
+                <Menu.Divider />
+
+                <Menu.Label>Danger zone</Menu.Label>
+                <Menu.Item icon={<IconSettings size={14} />}>SMTHG</Menu.Item>
+                <Menu.Item color="red" icon={<IconTrash size={14} />}>Delete instance</Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
     );
 }
