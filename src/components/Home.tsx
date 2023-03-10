@@ -38,7 +38,7 @@ export function Home() {
     const [openModal, setOpenModal] = useState(false);
 
     const [instances, setInstances] = useState([
-        { name: 'test', version: 'test', type: 'test' },
+        { name: 'test', version: '1.19.4-pre2', type: 'fabric' },
     ]);
     const instancesList = instances.map((instance) =>
         <Grid.Col span='content' key={instance.name}>

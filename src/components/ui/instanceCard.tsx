@@ -26,12 +26,38 @@ interface InstanceCardProps {
     type: string;
 }
 
-async function startInstance(instance: string, username: string) {
-    if (instance) {
+async function startInstance(name: string, username: string) {
+    if (name) {
         try {
             await invoke('run_minecraft', {
                 username: username,
-                instance: instance
+                instance: name
+            });
+            console.log(Response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+async function deleteInstance(name: string, username: string) {
+    if (name) {
+        try {
+            await invoke('delete_minecraft', {
+                instance: name
+            });
+            console.log(Response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+async function openFolder(name: string) {
+    if (name) {
+        try {
+            await invoke('open_instance_folder', {
+                instance: name
             });
             console.log(Response);
         } catch (error) {

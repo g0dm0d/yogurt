@@ -15,26 +15,49 @@ import FabricIcon from '../ui/icons/FabricIcon.svg'
 import MinecraftIcon from '../ui/icons/MinecraftIcon.svg'
 
 type Version = {
-    label: string;
-    value: string;
+    label: string | undefined;
+    value: string | undefined;
 };
 
-export async function createInstance(name: string, version: string, type: string, url?: string) {
-    console.log('Creating instance:', name, version, type, url)
-    if (type === 'fabric') {
-
+export async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
+    if (!url) {
+        fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    for (let i = 0; i < result.versions.length; i++) {
+                        if (result.versions[i].id === version) {
+                            url = result.versions[i].url;
+                        }
+                    }
+                    name = name + ' copy'
+                },
+                (error) => {
+                    console.error(error);
+                }
+            )
+            .then(() => {
+                console.log('Creating copy:', name, version, type, url)
+                getMinecraft();
+            })
+    } else {
+        console.log('Creating instance:', name, version, type, url)
+        getMinecraft();
     }
-    // try {
-    //     await invoke('get_minecraft', {
-    //         url: url,
-    //         id: version,
-    //         name: name,
-    //         javaArgs: '-Xmx4G'
-    //     });
-    //     console.log(Response);
-    // } catch (error) {
-    //     console.error(error);
-    // }
+
+    async function getMinecraft() {
+        try {
+            await invoke('get_minecraft', {
+                url: url,
+                id: version,
+                name: name,
+                javaArgs: '-Xmx4G'
+            });
+            console.log(Response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 export function AddInstance() {
@@ -43,10 +66,12 @@ export function AddInstance() {
     const [name, setName] = useState('');
 
     const [versions, setVersions] = useState<Version[]>([]);
-    const [fabricVersions, setFabricVersions] = useState<Version[]>([]);
-
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string | null>(null);
     const label = versions.find((item) => item.value === value)?.label
+
+    const [fabricVersions, setFabricVersions] = useState<Version[]>([]);
+    const [fabricValue, setFabricValue] = useState<string | null>(null);
+    const fabricLabel = fabricVersions.find((item) => item.value === fabricValue)?.label
 
     const [loading, setLoading] = useState(false);
     async function getDefaultVersions() {
@@ -79,8 +104,8 @@ export function AddInstance() {
                 (result) => {
                     setLoading(false);
                     for (let i = 0; i < result.length; i++) {
-                        const versionObj: Version = { label: result[i].version, value: versions.find(result[i].version) };
-                        fabricVersions.push(versionObj);
+                        const fabricVersionObj: Version = { label: result[i].version, value: versions.find((version) => version.label === result[i].version)?.value };
+                        fabricVersions.push(fabricVersionObj);
                         // setFabricVersions([...fabricVersions, versionObj]);
                     }
                 },
@@ -99,7 +124,12 @@ export function AddInstance() {
     return (
         <form onSubmit={(e) => {
             e.preventDefault();
-            createInstance(name, label, type, value);
+            if (type === 'minecraft') {
+                createInstance(name, label, type, value);
+            }
+            if (type === 'fabric') {
+                createInstance(name, fabricLabel, type, fabricValue);
+            }
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
                 <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
@@ -135,8 +165,7 @@ export function AddInstance() {
                         ]}
                     />
                     <Select
-                        required
-                        data={type === 'minecraft' ? versions : fabricVersions}
+                        data={versions}
                         value={value}
                         onChange={setValue}
                         description="Version"
@@ -146,6 +175,22 @@ export function AddInstance() {
                         rightSection={<IconChevronDown size="1rem" />}
                         transition='fade'
                         transitionDuration={200}
+                        required={type === 'minecraft' ? true : false}
+                        sx={{ display: type == 'minecraft' ? 'visible' : 'none' }}
+                    />
+                    <Select
+                        data={fabricVersions}
+                        value={fabricValue}
+                        onChange={setFabricValue}
+                        description="Fabric version"
+                        placeholder='Version'
+                        searchable
+                        nothingFound="Error"
+                        rightSection={<IconChevronDown size="1rem" />}
+                        transition='fade'
+                        transitionDuration={200}
+                        required={type === 'fabric' ? true : false}
+                        sx={{ display: type == 'fabric' ? 'visible' : 'none' }}
                     />
                     <Button type='submit' variant='outline' >
                         Create
