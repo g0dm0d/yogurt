@@ -143,7 +143,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
             // Downloading the library for the selected version of minecraft
             download_library(package.libraries).await;
             // Downloading the assets for the selected version of minecraft
-            download_assets(package.asset_index.url.as_str()).await;
+            download_assets(package.asset_index).await;
             // Downloading the client jar for the selected version of minecraft
             download(
                 &package.downloads.client.url,
