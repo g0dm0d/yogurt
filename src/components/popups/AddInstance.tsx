@@ -19,21 +19,22 @@ type Version = {
     value: string;
 };
 
-async function createInstance(label: string, value: string, name: string) {
-    console.log('Creating instance:', label, value, name);
-    if (label && value && name === 'start') {
-        try {
-            await invoke('get_minecraft', {
-                url: value,
-                id: label,
-                name: name,
-                javaArgs: '-Xmx4G'
-            });
-            console.log(Response);
-        } catch (error) {
-            console.error(error);
-        }
+export async function createInstance(name: string, version: string, type: string, url?: string) {
+    console.log('Creating instance:', name, version, type, url)
+    if (type === 'fabric') {
+
     }
+    // try {
+    //     await invoke('get_minecraft', {
+    //         url: url,
+    //         id: version,
+    //         name: name,
+    //         javaArgs: '-Xmx4G'
+    //     });
+    //     console.log(Response);
+    // } catch (error) {
+    //     console.error(error);
+    // }
 }
 
 export function AddInstance() {
@@ -60,6 +61,7 @@ export function AddInstance() {
                         versions.push(versionObj);
                         // setVersions([...versions, versionObj]);
                     }
+                    getFabcricVersions();
                 },
                 (error) => {
                     setLoading(false);
@@ -77,7 +79,7 @@ export function AddInstance() {
                 (result) => {
                     setLoading(false);
                     for (let i = 0; i < result.length; i++) {
-                        const versionObj: Version = { label: result[i].version, value: result[i].version };
+                        const versionObj: Version = { label: result[i].version, value: versions.find(result[i].version) };
                         fabricVersions.push(versionObj);
                         // setFabricVersions([...fabricVersions, versionObj]);
                     }
@@ -92,13 +94,12 @@ export function AddInstance() {
 
     useEffect(() => {
         getDefaultVersions();
-        getFabcricVersions();
     }, []);
 
     return (
         <form onSubmit={(e) => {
             e.preventDefault();
-            createInstance(label, value, name)
+            createInstance(name, label, type, value);
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
                 <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
@@ -138,7 +139,6 @@ export function AddInstance() {
                         data={type === 'minecraft' ? versions : fabricVersions}
                         value={value}
                         onChange={setValue}
-                        color='white'
                         description="Version"
                         placeholder='Version'
                         searchable

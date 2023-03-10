@@ -7,9 +7,17 @@ import {
     Menu,
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { IconAdjustmentsHorizontal, IconPlayerPlay, IconSettings, IconTrash } from '@tabler/icons-react';
+import {
+    IconAdjustmentsHorizontal,
+    IconCopy,
+    IconFolder,
+    IconPlayerPlay,
+    IconSettings,
+    IconTrash
+} from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api';
 import { useState } from 'react';
+import { createInstance } from '../popups/AddInstance';
 import bg from '/bg.png';
 
 interface InstanceCardProps {
@@ -112,13 +120,10 @@ export function InstanceCard({ name, version, type }: InstanceCardProps) {
                 </Card.Section>
             </Card>
             <Menu.Dropdown >
-                <Menu.Label>Application</Menu.Label>
                 <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
-                
+                <Menu.Item icon={<IconFolder size={14} />}>Folder</Menu.Item>
+                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, type)}>Make copy</Menu.Item>
                 <Menu.Divider />
-
-                <Menu.Label>Danger zone</Menu.Label>
-                <Menu.Item icon={<IconSettings size={14} />}>SMTHG</Menu.Item>
                 <Menu.Item color="red" icon={<IconTrash size={14} />}>Delete instance</Menu.Item>
             </Menu.Dropdown>
         </Menu>

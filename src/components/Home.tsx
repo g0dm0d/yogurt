@@ -41,7 +41,7 @@ export function Home() {
         { name: 'test', version: 'test', type: 'test' },
     ]);
     const instancesList = instances.map((instance) =>
-        <Grid.Col span='content'>
+        <Grid.Col span='content' key={instance.name}>
             <InstanceCard
                 key={instance.name}
                 name={instance.name}
