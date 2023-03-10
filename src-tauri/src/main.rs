@@ -5,13 +5,11 @@
 
 use std::fs;
 
-mod minecraft;
 mod accounts;
+mod minecraft;
 mod tools;
 
 fn main() {
-    // crate::minecraft::run_minecraft::run("STN0WHERE", "xdd", "xdd", "test");
-    // print!("DONE!");
     let result = fs::create_dir_all(tools::path::get_path(""));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
