@@ -6,6 +6,7 @@ import {
     SegmentedControl,
     Select,
     Image,
+    TextInput,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
@@ -18,14 +19,15 @@ type Version = {
     value: string;
 };
 
-async function createInstance(label: string, value: string) {
-    if (label && value) {
+async function createInstance(label: string, value: string, name: string) {
+    console.log('Creating instance:', label, value, name);
+    if (label && value && name === 'start') {
         try {
             await invoke('get_minecraft', {
                 url: value,
                 id: label,
-                name: '',
-                javaArgs: ''
+                name: name,
+                javaArgs: '-Xmx4G'
             });
             console.log(Response);
         } catch (error) {
@@ -37,6 +39,7 @@ async function createInstance(label: string, value: string) {
 export function AddInstance() {
 
     const [type, setType] = useState('minecraft');
+    const [name, setName] = useState('');
 
     const [versions, setVersions] = useState<Version[]>([]);
     const [fabricVersions, setFabricVersions] = useState<Version[]>([]);
@@ -92,53 +95,63 @@ export function AddInstance() {
         getFabcricVersions();
     }, []);
 
-
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
-            <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
-                <SegmentedControl
-                    value={type}
-                    onChange={(value: 'minecraft' | 'fabric') => setType(value)}
-                    data={[
-                        {
-                            value: 'minecraft',
-                            label: (
-                                <Center>
-                                    <img width={24} height={24} src={MinecraftIcon} alt="Minecraft Icon" />
-                                    <Box ml={10}>Minecraft</Box>
-                                </Center>
-                            ),
-                        },
-                        {
-                            value: 'fabric',
-                            label: (
-                                <Center>
-                                    <Image width={24} height={24} src={FabricIcon} alt="Fabric Icon" />
-                                    <Box ml={10}>Fabric</Box>
-                                </Center>
-                            ),
-                        },
-                    ]}
-                />
-                <Select
-                    data={type === 'minecraft' ? versions : fabricVersions}
-                    value={value}
-                    onChange={setValue}
-                    color='white'
-                    description="Version"
-                    variant="filled"
-                    size="md"
-                    placeholder='Version'
-                    searchable
-                    nothingFound="Error"
-                    rightSection={<IconChevronDown size="1rem" />}
-                    transition='fade'
-                    transitionDuration={200}
-                />
-                <Button onClick={() => createInstance(label, value)} variant='outline' >
-                    Create
-                </Button>
-            </Flex>
-        </Box>
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            createInstance(label, value, name)
+        }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', height: '100%', width: '100%' }}>
+                <Flex direction='column' gap='lg' justify='space-between' sx={{ height: '100%', width: '100%' }}>
+                    <TextInput
+                        placeholder="Name"
+                        label="Instance name"
+                        value={name}
+                        onChange={(event) => setName(event.currentTarget.value)}
+                        required
+                    />
+                    <SegmentedControl
+                        value={type}
+                        onChange={(value: 'minecraft' | 'fabric') => setType(value)}
+                        data={[
+                            {
+                                value: 'minecraft',
+                                label: (
+                                    <Center>
+                                        <img width={24} height={24} src={MinecraftIcon} alt="Minecraft Icon" />
+                                        <Box ml={10}>Minecraft</Box>
+                                    </Center>
+                                ),
+                            },
+                            {
+                                value: 'fabric',
+                                label: (
+                                    <Center>
+                                        <Image width={24} height={24} src={FabricIcon} alt="Fabric Icon" />
+                                        <Box ml={10}>Fabric</Box>
+                                    </Center>
+                                ),
+                            },
+                        ]}
+                    />
+                    <Select
+                        required
+                        data={type === 'minecraft' ? versions : fabricVersions}
+                        value={value}
+                        onChange={setValue}
+                        color='white'
+                        description="Version"
+                        placeholder='Version'
+                        searchable
+                        nothingFound="Error"
+                        rightSection={<IconChevronDown size="1rem" />}
+                        transition='fade'
+                        transitionDuration={200}
+                    />
+                    <Button type='submit' variant='outline' >
+                        Create
+                    </Button>
+                </Flex>
+            </Box >
+        </form >
     );
 }

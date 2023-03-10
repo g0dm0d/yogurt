@@ -13,7 +13,7 @@ import { useState } from 'react';
 import bg from '/bg.png';
 
 interface InstanceCardProps {
-    title: string;
+    name: string;
     version: string;
     type: string;
 }
@@ -34,12 +34,12 @@ async function startInstance(instance: string) {
     }
 }
 
-export function InstanceCard({ title, version, type }: InstanceCardProps) {
+export function InstanceCard({ name, version, type }: InstanceCardProps) {
     const { hovered, ref } = useHover();
     const useStyles = createStyles((theme) => ({
         card: {
-            minWidth: '200px',
-            minHeight: '160px',
+            width: '216px',
+            height: '164px',
             backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
         },
 
@@ -53,7 +53,6 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
         image: {
             transition: '300ms',
             filter: hovered ? 'brightness(0.7) blur(2px)' : 'brightness(1) blur(2px)',
-
         },
 
         playIcon: {
@@ -62,7 +61,7 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
             opacity: hovered ? 1 : 0,
         },
 
-        title: {
+        name: {
             color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[1],
             fontSize: theme.fontSizes.lg,
             transition: '300ms',
@@ -76,15 +75,15 @@ export function InstanceCard({ title, version, type }: InstanceCardProps) {
         <Popover opened={openPopover} onChange={setOpenPopover}>
             <Card p="lg" className={classes.card}>
                 <Card.Section>
-                    <Box ref={ref} display='flex' onClick={() => startInstance(title)}
+                    <Box ref={ref} display='flex' onClick={() => startInstance(name)}
                         sx={{
                             justifyContent: 'center',
                             alignItems: 'center',
                             cursor: 'pointer'
                         }} >
-                        <Image className={classes.image} src={bg} alt={title} height={100} />
-                        <Text size="sm" weight={700} className={classes.title}>
-                            {title}
+                        <Image className={classes.image} src={bg} alt={name} height={100} />
+                        <Text size="sm" weight={700} className={classes.name}>
+                            {name}
                         </Text>
                         <IconPlayerPlay className={classes.playIcon} />
                     </Box>
