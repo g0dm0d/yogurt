@@ -119,7 +119,7 @@ use crate::tools::download::download;
 use crate::tools::path;
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
-    let path = format!("version/{}/{}.json", id, id);
+    let path = format!("versions/{}/{}.json", id, id);
     download(url, path.as_str(), &"".to_string()).await;
 
     let mut file = File::open(path::get_path(path.as_str())).unwrap();
@@ -144,7 +144,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
     // Downloading the client jar for the selected version of minecraft
     download(
         &package.downloads.client.url,
-        format!("version/{}/{}.jar", &id, &id).as_str(),
+        format!("versions/{}/{}.jar", &id, &id).as_str(),
         &package.downloads.client.sha1,
     )
     .await;
@@ -160,7 +160,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
     )
     .await;
     // Create instance folder
-    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instance/{}", name))));
+    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instances/{}", name))));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }
