@@ -3,7 +3,7 @@ import {
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { IconSquarePlus } from '@tabler/icons-react';
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import { InstanceCard } from './ui/instanceCard';
 import { AddInstance } from './popups/AddInstance';
 import { invoke } from '@tauri-apps/api';
@@ -11,14 +11,14 @@ import { invoke } from '@tauri-apps/api';
 interface Instance {
     name: string;
     version: string;
-    type: string;
+    gameType: string;
 }
 
 async function getInstances(setInstances: React.Dispatch<React.SetStateAction<Instance[]>>) {
     try {
-        const response = await invoke('get_all_instances');
+        const response = await invoke<Instance[]>('get_all_instances');
         console.log(response);
-        // setInstances(response.instances);
+        setInstances(response);
     } catch (error) {
         console.error(error);
     }
@@ -48,9 +48,7 @@ export function Home() {
     const { classes } = useStyles();
     const [openModal, setOpenModal] = useState(false);
 
-    const [instances, setInstances] = useState([
-        { name: 'test', version: '1.19.4-pre2', type: 'fabric' },
-    ]);
+    const [instances, setInstances] = useState([]);
 
     useEffect(() => {
         getInstances(setInstances);
@@ -62,7 +60,7 @@ export function Home() {
                 key={instance.name}
                 name={instance.name}
                 version={instance.version}
-                type={instance.type}
+                gameType={instance.gameType}
             />
         </Grid.Col>
     );

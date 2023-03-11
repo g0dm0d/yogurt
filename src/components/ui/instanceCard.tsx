@@ -23,7 +23,7 @@ import bg from '/bg.png';
 interface InstanceCardProps {
     name: string;
     version: string;
-    type: string;
+    gameType: string;
 }
 
 async function startInstance(name: string, username: string) {
@@ -66,7 +66,7 @@ async function openFolder(name: string) {
     }
 }
 
-export function InstanceCard({ name, version, type }: InstanceCardProps) {
+export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
     const { hovered, ref } = useHover();
     const useStyles = createStyles((theme) => ({
         card: {
@@ -135,7 +135,7 @@ export function InstanceCard({ name, version, type }: InstanceCardProps) {
                             Type
                         </Text>
                         <Text weight={500} size="sm">
-                            {type}
+                            {gameType}
                         </Text>
                     </Box>
                     <Box>
@@ -148,7 +148,7 @@ export function InstanceCard({ name, version, type }: InstanceCardProps) {
             <Menu.Dropdown >
                 <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
                 <Menu.Item icon={<IconFolder size={14} />}>Folder</Menu.Item>
-                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, type)}>Make copy</Menu.Item>
+                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, gameType)}>Make copy</Menu.Item>
                 <Menu.Divider />
                 <Menu.Item color="red" icon={<IconTrash size={14} />}>Delete instance</Menu.Item>
             </Menu.Dropdown>
