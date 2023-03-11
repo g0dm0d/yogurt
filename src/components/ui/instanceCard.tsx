@@ -57,7 +57,7 @@ async function openFolder(name: string) {
     if (name) {
         try {
             await invoke('open_instance_folder', {
-                instance: name
+                name: name
             });
             console.log(Response);
         } catch (error) {
@@ -146,10 +146,17 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
                 </Card.Section>
             </Card>
             <Menu.Dropdown >
-                <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
-                <Menu.Item icon={<IconFolder size={14} />}>Folder</Menu.Item>
-                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, gameType)}>Make copy</Menu.Item>
+                <Menu.Item icon={<IconSettings size={14} />}>
+                    Settings
+                </Menu.Item>
+                <Menu.Item icon={<IconFolder size={14} />} onClick={() => openFolder(name)} >
+                    Folder
+                </Menu.Item>
+                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, gameType)}>
+                    Make copy
+                </Menu.Item>
                 <Menu.Divider />
+
                 <Menu.Item color="red" icon={<IconTrash size={14} />}>Delete instance</Menu.Item>
             </Menu.Dropdown>
         </Menu>
