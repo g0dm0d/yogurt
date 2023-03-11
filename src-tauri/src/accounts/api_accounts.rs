@@ -62,7 +62,7 @@ const CLIENT_ID: &str = "d8e1d9bf-287f-4773-a176-e012722257f4";
 
 /// get minecraft bearer/access token
 /// https://wiki.vg/Microsoft_Authentication_Scheme
-pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn get_access_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new();
 
     // step 2: convert authorization code into authorization token
@@ -78,15 +78,25 @@ pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::E
         .await?
         .json::<AuthorizationTokenResponse>()
         .await?;
-
-    println!("Access token: {:?}", &authorization_token.access_token);
-
+    get_minecraft_token(
+        authorization_token.access_token,
+        authorization_token.expires_in,
+        authorization_token.refresh_token,
+    )
+    .await
+}
+pub async fn get_minecraft_token(
+    access_token: String,
+    access_exp: u64,
+    refresh_token: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
     // step 3: authenticate with xbox live
     let xbox_authenticate_json = json!({
         "Properties": {
             "AuthMethod": "RPS",
             "SiteName": "user.auth.xboxlive.com",
-            "RpsTicket": &format!("d={}", authorization_token.access_token)
+            "RpsTicket": &format!("d={}", access_token)
         },
         "RelyingParty": "http://auth.xboxlive.com",
         "TokenType": "JWT"
@@ -145,23 +155,21 @@ pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::E
     let mut user = User::new(
         String::new(),
         String::new(),
-        authorization_token.refresh_token,
-        authorization_token.access_token,
+        refresh_token,
+        access_token,
         // Holly crap, it looks disgusting, yeah I know. But according to the documentation as I understand it comes back as long as the token lives.
         // So in order to use this information I add the lifetime to the time now in the unix time stamp
-        (authorization_token.expires_in
+        (access_exp
             + SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .expect("error while generate unix time stamp")
-                .as_secs())
-        .to_string(),
+                .as_secs()) as i64,
         minecraft_resp.access_token,
         (minecraft_resp.expires_in
             + SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .expect("error while generate unix time stamp")
-                .as_secs())
-        .to_string(),
+                .as_secs()) as i64,
     );
 
     user.get_info().await?;

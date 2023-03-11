@@ -20,6 +20,7 @@ fn main() {
             accounts::add_account::add_account,
             accounts::account::get_all_users,
             minecraft::config::get_all_instances,
+            minecraft::run_minecraft::run_minecraft,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

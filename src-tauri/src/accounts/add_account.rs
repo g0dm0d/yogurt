@@ -1,6 +1,6 @@
 use http::{Request, Response};
 use hyper::{server::conn::Http, service::service_fn, Body};
-use std::{net::SocketAddr, convert::Infallible};
+use std::{convert::Infallible, net::SocketAddr};
 use tokio::net::TcpListener;
 
 /// This function starts the http server and waits for a response to localhost:9397 with the "code" parameter.
@@ -10,16 +10,17 @@ use tokio::net::TcpListener;
 pub async fn add_account() {
     let addr: SocketAddr = ([127, 0, 0, 1], 9397).into();
     let tcp_listener = TcpListener::bind(addr).await.unwrap();
-        let (tcp_stream, _) = tcp_listener.accept().await.unwrap();
-        tokio::task::spawn(async move {
-            if let Err(http_err) = Http::new()
-                    .http1_only(true)
-                    .http1_keep_alive(true)
-                    .serve_connection(tcp_stream, service_fn(code_grab))
-                    .await {
-                eprintln!("Error while serving HTTP connection: {}", http_err);
-            }
-        });
+    let (tcp_stream, _) = tcp_listener.accept().await.unwrap();
+    tokio::task::spawn(async move {
+        if let Err(http_err) = Http::new()
+            .http1_only(true)
+            .http1_keep_alive(true)
+            .serve_connection(tcp_stream, service_fn(code_grab))
+            .await
+        {
+            eprintln!("Error while serving HTTP connection: {}", http_err);
+        }
+    });
 }
 
 /// This function is performed after receiving a get request
@@ -31,14 +32,15 @@ async fn code_grab(req: Request<Body>) -> Result<Response<Body>, Infallible> {
             if k == "code" {
                 let code = v.into_owned();
                 println!("{}", code);
-                match crate::accounts::api_accounts::get_minecraft_token(&code).await {
-                    Ok(_) => {println!("account added!")}
-                    Err(err) => println!("{}", err)
+                match crate::accounts::api_accounts::get_access_token(&code).await {
+                    Ok(_) => {
+                        println!("account added!")
+                    }
+                    Err(err) => println!("{}", err),
                 }
             }
         }
     }
 
-
-   Ok(Response::new(Body::from("U can close browser")))
+    Ok(Response::new(Body::from("U can close browser")))
 }
