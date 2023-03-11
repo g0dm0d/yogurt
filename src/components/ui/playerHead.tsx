@@ -8,12 +8,12 @@ interface PlayerHeadProps {
 }
 
 export function PlayerHead({nickname, size = 50}: PlayerHeadProps) {
-    const [head, setHead] = useState('');
+    const [head, setHead] = useState<string>();
     const [uuid, setUuid] = useState(nickname ? nickname : undefined);
 
     const fetchImage = async () => {
-        if (uuid && !head) {
-            const response = await fetch(`https://mc-heads.net/avatar/${uuid}/${size}`);
+        if (nickname && !head) {
+            const response = await fetch(`https://mc-heads.net/avatar/${nickname}/${size}`);
             const data = await response.blob();
             const imageHead = URL.createObjectURL(data);
             // console.log(imageHead);
@@ -25,7 +25,7 @@ export function PlayerHead({nickname, size = 50}: PlayerHeadProps) {
         if (!head) {
             fetchImage();
         }
-    }, []);
+    }, [nickname]);
 
     return (
         <Box>

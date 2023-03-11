@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, createContext, useContext } from 'react';
 import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
 import {
     IconHome2,
@@ -6,6 +6,7 @@ import {
 } from '@tabler/icons-react';
 import { PlayerHead } from './ui/playerHead';
 import { Link } from 'react-router-dom';
+import { selectedAccount } from '../context/AccountContext';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -18,7 +19,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
         transition: '300ms',
         '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[0],
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
         },
     },
 
@@ -51,6 +52,7 @@ function DashboardButton({ Icon, label, active, onClick }: DashboardButtonProps)
 
 export function Dashboard() {
     const [active, setActive] = useState(0);
+    const { nickname } = useContext(selectedAccount)
 
     function setActiveLocation(){
         if (window.location.pathname === '/accounts') {
@@ -67,6 +69,7 @@ export function Dashboard() {
 
     useEffect(() => {
         setActiveLocation();
+        console.log(nickname);
     });
 
     const { classes } = useStyles();
@@ -74,7 +77,7 @@ export function Dashboard() {
         <Navbar height="100vh" width={{ base: 80 }} p="md" sx={{ border: 'none' }}>
             <Navbar.Section>
                 <Link to='/accounts' onClick={() => setActive(0)}>
-                    <PlayerHead />
+                    <PlayerHead nickname={nickname} />
                 </Link>
             </Navbar.Section>
             <Navbar.Section grow mt={32}>

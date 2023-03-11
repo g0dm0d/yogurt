@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -9,6 +9,7 @@ import { Login } from './popups/Login';
 import { Account } from './ui/account';
 import { invoke } from '@tauri-apps/api/tauri'
 import { IconPlus } from '@tabler/icons-react';
+import { selectedAccount } from '../context/AccountContext';
 
 async function addAccount() {
     try {
@@ -23,9 +24,14 @@ export function Accounts() {
 
     const [accounts, setAccounts] = useState<string[]>([]);
     async function getAccounts() {
-        const users = await invoke<string[]>('get_all_users');
-        setAccounts(users);
+        const accounts = await invoke<string[]>('get_all_users');
+        setAccounts(accounts);
+        if (!nickname) {
+            changeNickname(accounts[0]);
+        }
     }
+
+    const { nickname, changeNickname } = useContext(selectedAccount)
 
     useEffect(() => {
         getAccounts();
@@ -34,7 +40,7 @@ export function Accounts() {
     return (
         <Box sx={{
             display: 'flex', justifyContent: 'center',
-            minHeight: '60vh', maxWidth: '40vh', width: '100%'
+            minHeight: '60vh', maxWidth: '40vh', width: '100%',
         }}>
             <Modal opened={openModal} onClose={() => setOpenModal(false)} title='Login'>
                 <Login />
