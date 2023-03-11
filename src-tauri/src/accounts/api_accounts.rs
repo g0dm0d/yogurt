@@ -1,6 +1,9 @@
 // Thank you https://gist.github.com/OverHash/a71b32846612ba09d8f79c9d775bfadf
 
-use std::{collections::HashMap, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    collections::HashMap,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -146,14 +149,30 @@ pub async fn get_minecraft_token(code: &str) -> Result<(), Box<dyn std::error::E
         authorization_token.access_token,
         // Holly crap, it looks disgusting, yeah I know. But according to the documentation as I understand it comes back as long as the token lives.
         // So in order to use this information I add the lifetime to the time now in the unix time stamp
-        (authorization_token.expires_in + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+        (authorization_token.expires_in
+            + SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("error while generate unix time stamp")
+                .as_secs())
+        .to_string(),
         minecraft_resp.access_token,
-        (minecraft_resp.expires_in  + SystemTime::now().duration_since(UNIX_EPOCH).expect("error while generate unix time stamp").as_secs()).to_string(),
+        (minecraft_resp.expires_in
+            + SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("error while generate unix time stamp")
+                .as_secs())
+        .to_string(),
     );
-    
 
     user.get_info().await?;
-    user.save();
+    match user.save() {
+        Ok(_) => {
+            println!("Account added!")
+        }
+        Err(_) => {
+            println!("Error while save account")
+        }
+    }
 
     Ok(())
 }
