@@ -1,4 +1,4 @@
-use std::fs::{File, self};
+use std::fs::{self, File};
 use std::io::Read;
 use std::path::Path;
 
@@ -130,43 +130,38 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     Ok(package)
 }
 
-use crate::minecraft::{
-    config::create_config,
-    library::download_library,
-    assets::download_assets
-};
+use crate::minecraft::{assets::download_assets, config::create_config, library::download_library};
+
+use super::config::Instance;
 
 #[tauri::command(async)]
-pub async fn get_minecraft(url: String, id: String, name: String, java_args: String) {
-    match fetch_dependency(url.as_str(), id.as_str()).await {
-        Ok(package) => {
-            // Downloading the library for the selected version of minecraft
-            download_library(package.libraries).await;
-            // Downloading the assets for the selected version of minecraft
-            download_assets(package.asset_index).await;
-            // Downloading the client jar for the selected version of minecraft
-            download(
-                &package.downloads.client.url,
-                format!("version/{}/{}.jar", &id, &id).as_str(),
-                &package.downloads.client.sha1,
-            )
-            .await;
-            create_config(
-                name.as_str(),
-                id.as_str(),
-                format!("{}.jar", id).as_str(),
-                "/usr/bin/java",
-                java_args.as_str(),
-            )
-            .await;
-            // Create instance folder
-            let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instance/{}", name))));
-            if result.is_err() {
-                panic!("Failed to create directory: {:?}", result.err());
-            }
-        }
-        Err(error) => {
-            println!("Error message: {}", error);
-        }
+pub async fn get_minecraft(url: String, id: String, name: String, java_args: String, fabric: bool) {
+    let package = fetch_dependency(url.as_str(), id.as_str()).await.unwrap();
+    // Downloading the library for the selected version of minecraft
+    download_library(package.libraries).await;
+    // Downloading the assets for the selected version of minecraft
+    download_assets(package.asset_index).await;
+    // Downloading the client jar for the selected version of minecraft
+    download(
+        &package.downloads.client.url,
+        format!("version/{}/{}.jar", &id, &id).as_str(),
+        &package.downloads.client.sha1,
+    )
+    .await;
+    create_config(
+        Instance {
+            version: id.clone(),
+            client: format!("{}.jar", id),
+            java_path: "java".to_owned(),
+            arguments: java_args,
+            fabric: fabric,
+        },
+        name.as_str(),
+    )
+    .await;
+    // Create instance folder
+    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instance/{}", name))));
+    if result.is_err() {
+        panic!("Failed to create directory: {:?}", result.err());
     }
 }

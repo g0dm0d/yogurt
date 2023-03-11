@@ -1,25 +1,31 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Write;
+use toml::to_string_pretty;
 
 use crate::tools::path::{self, get_path};
 
+/// Structure for real config
 #[derive(Serialize, Deserialize)]
 pub struct Instance {
     pub version: String,
     pub client: String,
     pub java_path: String,
     pub arguments: String,
+    pub fabric: bool,
+}
+
+/// Structure for the front, to display the instance in the Launcher
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FrontInstance {
+    pub name: String,
+    pub version: String,
+    pub game_type: String,
 }
 
 /// generate default config
-pub async fn create_config(
-    name: &str,
-    version: &str,
-    client: &str,
-    java_path: &str,
-    arguments: &str,
-) {
+pub async fn create_config(config: Instance, name: &str) {
     let path = path::get_path("configs");
     if !path.exists() {
         match std::fs::create_dir_all(&path) {
@@ -31,30 +37,29 @@ pub async fn create_config(
     }
 
     let mut file = fs::File::create(&path.join(format!("{}.toml", &name))).unwrap();
-
-    let toml = toml::toml! {
-        version = version
-        client = client
-        java_path = java_path
-        arguments = arguments
-    };
-    write!(file, "{}", toml.to_string()).unwrap();
+    let toml_string = to_string_pretty(&config).unwrap();
+    file.write_all(toml_string.as_bytes()).unwrap();
 }
 
 /// returns the names of all files in the configs folder (file name = instance name)
 #[tauri::command]
-pub fn get_all_instances() -> Vec<Instance> {
+pub fn get_all_instances() -> Vec<FrontInstance> {
     let files = fs::read_dir(get_path("configs"))
         .unwrap()
         .filter_map(Result::ok)
         .map(|entry| entry.path())
         .filter(|path| path.is_file() && path.extension().unwrap_or_default() == "toml");
 
-    let mut instances: Vec<Instance> = Vec::new();
+    let mut instances: Vec<FrontInstance> = Vec::new();
     for file in files {
         if let Some(file_name) = file.file_stem() {
             if let Some(file_name_str) = file_name.to_str() {
-                instances.push(get_config(file_name_str));
+                let config = get_config(file_name_str);
+                instances.push(FrontInstance {
+                    name: file_name_str.to_owned(),
+                    version: config.version,
+                    game_type: version_convector(config.fabric),
+                });
             } else {
                 println!("Could not convert file name to string");
             }
@@ -63,6 +68,13 @@ pub fn get_all_instances() -> Vec<Instance> {
         }
     }
     return instances;
+}
+
+fn version_convector(version: bool) -> String {
+    if version {
+        return "fabric".to_owned();
+    }
+    return "minecraft".to_owned();
 }
 
 /// return info about instance by name
