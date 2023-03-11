@@ -51,7 +51,8 @@ export async function createInstance(name: string, version: string | undefined, 
                 url: url,
                 id: version,
                 name: name,
-                javaArgs: '-Xmx4G'
+                javaArgs: '-Xmx4G',
+                fabric: type === 'fabric' ? true : false
             });
             console.log(Response);
         } catch (error) {
