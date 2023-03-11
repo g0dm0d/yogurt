@@ -48,7 +48,7 @@ export function Home() {
     const { classes } = useStyles();
     const [openModal, setOpenModal] = useState(false);
 
-    const [instances, setInstances] = useState([]);
+    const [instances, setInstances] = useState<Instance[]>([]);
 
     useEffect(() => {
         getInstances(setInstances);

@@ -8,11 +8,11 @@ import {
 import { Login } from './popups/Login';
 import { Account } from './ui/account';
 import { invoke } from '@tauri-apps/api/tauri'
+import { IconPlus } from '@tabler/icons-react';
 
 async function addAccount() {
     try {
         await invoke('add_account');
-        console.log(Response);
     } catch (error) {
         console.error(error);
     }
@@ -21,10 +21,10 @@ async function addAccount() {
 export function Accounts() {
     const [openModal, setOpenModal] = useState(false);
 
-    const [accounts, setAccounts] = useState([]);
+    const [accounts, setAccounts] = useState<string[]>([]);
     async function getAccounts() {
-        const users = await invoke('get_all_users');
-        //setAccounts(users);
+        const users = await invoke<string[]>('get_all_users');
+        setAccounts(users);
     }
 
     useEffect(() => {
@@ -54,8 +54,10 @@ export function Accounts() {
                     {accounts.map((account) =>
                         <Account nickname={account} key={account} />
                     )}
+                    <Button sx={{width: '100%', height: 40}} variant='outline' onClick={() => setOpenModal(true)}>
+                        <IconPlus />
+                    </Button>
                 </Flex>
-                <Button variant='outline' onClick={() => setOpenModal(true)}>+</Button>
             </Flex>
         </Box >
     );
