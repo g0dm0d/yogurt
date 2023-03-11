@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
 import {
     IconHome2,
@@ -33,18 +33,18 @@ const useStyles = createStyles((theme) => ({
 
 
 interface DashboardButtonProps {
-    Icon: TablerIconsProps;
+    Icon: ReactNode;
     label: string;
     active?: boolean;
     onClick?(): void;
 }
 
-function DashboardButton({ Icon: Icon, label, active, onClick }: DashboardButtonProps) {
+function DashboardButton({ Icon, label, active, onClick }: DashboardButtonProps) {
     const { classes, cx } = useStyles();
     return (
         <Tooltip label={label} position="right" transitionDuration={0}>
             <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
-                <Icon stroke={1.5} />
+                {Icon}
             </UnstyledButton>
         </Tooltip>
     );
@@ -63,10 +63,10 @@ export function Dashboard() {
             <Navbar.Section grow mt={32}>
                 <Stack justify="center" spacing={8}>
                     <Link to=''>
-                        <DashboardButton Icon={IconHome2} label='Home' active={active === 1} onClick={() => setActive(1)} />
+                        <DashboardButton Icon={<IconHome2 />} label='Home' active={active === 1} onClick={() => setActive(1)} />
                     </Link>
                     <Link to='settings'>
-                        <DashboardButton Icon={IconSettings} label='Settings' active={active === 2} onClick={() => setActive(2)} />
+                        <DashboardButton Icon={<IconSettings />} label='Settings' active={active === 2} onClick={() => setActive(2)} />
                     </Link>
                 </Stack>
             </Navbar.Section>

@@ -15,8 +15,8 @@ import FabricIcon from '../ui/icons/FabricIcon.svg'
 import MinecraftIcon from '../ui/icons/MinecraftIcon.svg'
 
 type Version = {
-    label: string | undefined;
-    value: string | undefined;
+    label: string;
+    value: string;
 };
 
 export async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
@@ -104,7 +104,8 @@ export function AddInstance() {
                 (result) => {
                     setLoading(false);
                     for (let i = 0; i < result.length; i++) {
-                        const fabricVersionObj: Version = { label: result[i].version, value: versions.find((version) => version.label === result[i].version)?.value };
+                        const findVersion = versions.find((version) => version.label === result[i].version)?.value
+                        const fabricVersionObj: Version = { label: result[i].version, value: findVersion ? findVersion : '' };
                         fabricVersions.push(fabricVersionObj);
                         // setFabricVersions([...fabricVersions, versionObj]);
                     }

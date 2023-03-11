@@ -24,7 +24,7 @@ export function Accounts() {
     const [accounts, setAccounts] = useState([]);
     async function getAccounts() {
         const users = await invoke('get_all_users');
-        setAccounts(users);
+        //setAccounts(users);
     }
 
     useEffect(() => {

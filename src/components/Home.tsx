@@ -3,14 +3,25 @@ import {
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { IconSquarePlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { InstanceCard } from './ui/instanceCard';
 import { AddInstance } from './popups/AddInstance';
+import { invoke } from '@tauri-apps/api';
 
 interface Instance {
     name: string;
     version: string;
     type: string;
+}
+
+async function getInstances(setInstances: React.Dispatch<React.SetStateAction<Instance[]>>) {
+    try {
+        const response = await invoke('get_instances');
+        console.log(response);
+        // setInstances(response.instances);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export function Home() {
@@ -40,6 +51,11 @@ export function Home() {
     const [instances, setInstances] = useState([
         { name: 'test', version: '1.19.4-pre2', type: 'fabric' },
     ]);
+
+    useEffect(() => {
+        getInstances(setInstances);
+    }, []);
+
     const instancesList = instances.map((instance) =>
         <Grid.Col span='content' key={instance.name}>
             <InstanceCard

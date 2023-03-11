@@ -8,7 +8,7 @@ interface PlayerHeadProps {
 }
 
 export function PlayerHead({nickname, size = 50}: PlayerHeadProps) {
-    const [head, setHead] = useState();
+    const [head, setHead] = useState('');
     const [uuid, setUuid] = useState(nickname ? nickname : undefined);
 
     const fetchImage = async () => {
