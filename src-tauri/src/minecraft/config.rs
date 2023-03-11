@@ -12,6 +12,7 @@ pub struct Instance {
     pub arguments: String,
 }
 
+/// generate default config
 pub async fn create_config(
     name: &str,
     version: &str,
@@ -40,8 +41,9 @@ pub async fn create_config(
     write!(file, "{}", toml.to_string()).unwrap();
 }
 
+/// returns the names of all files in the configs folder (file name = instance name)
 #[tauri::command]
-pub fn get_all_instance() -> Vec<Instance> {
+pub fn get_all_instances() -> Vec<Instance> {
     let files = fs::read_dir(get_path("configs"))
         .unwrap()
         .filter_map(Result::ok)
@@ -55,6 +57,7 @@ pub fn get_all_instance() -> Vec<Instance> {
     return instances;
 }
 
+/// return info about instance by name
 pub fn get_config(name: &str) -> Instance {
     let path = get_path(format!("configs/{}.toml", name).as_str());
     let file = std::fs::read_to_string(path).unwrap();
