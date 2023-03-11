@@ -23,7 +23,7 @@ export function Login() {
                 <Title order={1}>
                     Login with your Microsoft account
                 </Title>
-                <Button onClick={addAccount} variant='outline' target="_blank" component={Link} to={MICROSOFT_LINK} >
+                <Button onClick={addAccount} variant='outline' target="_blank" component="a" href={MICROSOFT_LINK} >
                     Login
                 </Button>
             </Flex>

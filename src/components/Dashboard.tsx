@@ -1,9 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
 import {
     IconHome2,
     IconSettings,
-    TablerIconsProps,
 } from '@tabler/icons-react';
 import { PlayerHead } from './ui/playerHead';
 import { Link } from 'react-router-dom';
@@ -51,12 +50,30 @@ function DashboardButton({ Icon, label, active, onClick }: DashboardButtonProps)
 }
 
 export function Dashboard() {
-    const [active, setActive] = useState(1);
+    const [active, setActive] = useState(0);
+
+    function setActiveLocation(){
+        if (window.location.pathname === '/accounts') {
+            setActive(0);
+        }
+        if (window.location.pathname === '/') {
+            setActive(1);
+        }
+        if (window.location.pathname === '/settings') {
+            setActive(2);
+        }
+        console.log(window.location.pathname)
+    }
+
+    useEffect(() => {
+        setActiveLocation();
+    });
+
     const { classes } = useStyles();
     return (
-        <Navbar height="100vh" width={{ base: 80 }} p="md" sx={{border: 'none'}}>
+        <Navbar height="100vh" width={{ base: 80 }} p="md" sx={{ border: 'none' }}>
             <Navbar.Section>
-                <Link to='/account' onClick={() => setActive(0)}>
+                <Link to='/accounts' onClick={() => setActive(0)}>
                     <PlayerHead />
                 </Link>
             </Navbar.Section>

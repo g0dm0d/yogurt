@@ -7,7 +7,7 @@ export default function AppRoutes() {
     return (
         <Routes>
             <Route index element={<Home />} />
-            <Route path="/account" element={<Accounts />} />
+            <Route path="/accounts" element={<Accounts />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<Home />} />
         </Routes>
