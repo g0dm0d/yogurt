@@ -52,7 +52,15 @@ pub fn get_all_instances() -> Vec<Instance> {
 
     let mut instances: Vec<Instance> = Vec::new();
     for file in files {
-        instances.push(get_config(file.display().to_string().as_str()));
+        if let Some(file_name) = file.file_name() {
+            if let Some(file_name_str) = file_name.to_str() {
+                instances.push(get_config(file_name_str));
+            } else {
+                println!("Could not convert file name to string");
+            }
+        } else {
+            println!("Could not get file name");
+        }
     }
     return instances;
 }
