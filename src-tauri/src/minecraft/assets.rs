@@ -12,12 +12,7 @@ struct Package {
     objects: HashMap<String, Object>,
 }
 
-async fn fetch_assets(url: &str) -> Result<Package, Box<dyn std::error::Error>> {
-    let response = reqwest::get(url).await?.json::<Package>().await?;
-    Ok(response)
-}
-
-use crate::tools::download::download;
+use crate::tools::{download::download, path::get_path};
 
 use super::get_minecraft::AssetIndex;
 
@@ -29,7 +24,8 @@ use super::get_minecraft::AssetIndex;
 pub async fn download_assets(assets_index: AssetIndex) {
     let assets_path = format!("assets/indexes/{}.json", assets_index.id);
     download(&assets_index.url, &assets_path, &assets_index.sha1).await;
-    let file = std::fs::read_to_string(assets_path).expect("could not open the file with the index asstes");
+    let file = std::fs::read_to_string(get_path(&assets_path))
+        .expect("could not open the file with the index asstes");
     let assets: Package = serde_json::from_str(&file).expect("error json parsing");
     for (_, asset) in &assets.objects {
         println!("{}", asset.hash);
