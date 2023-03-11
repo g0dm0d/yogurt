@@ -15,7 +15,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     let config = get_config(instance);
 
     // Open version json file
-    let mut file = File::open(get_path(&format!("version/{}/{}.json",config.version, config.version))).unwrap();
+    let mut file = File::open(get_path(&format!("versions/{}/{}.json",config.version, config.version))).unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
     let data: Package = from_str(&contents).unwrap();
@@ -27,13 +27,13 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
             continue;
         }
         // create array for -cp arg
-        let path: String = get_path(&format!("library/{}", file.downloads.artifact.path)).display().to_string();
+        let path: String = get_path(&format!("libraries/{}", file.downloads.artifact.path)).display().to_string();
         libraries.push(path)
     }
-    libraries.push(get_path(&format!("version/{}/{}",config.version,config.client)).display().to_string());
+    libraries.push(get_path(&format!("versions/{}/{}",config.version,config.client)).display().to_string());
 
     let mut minecraft = Command::new(config.java_path);
-    minecraft.arg("-Djava.library.path=".to_owned() + get_path(&format!("version/{}/natives", config.version)).to_str().unwrap())
+    minecraft.arg("-Djava.library.path=".to_owned() + get_path(&format!("versions/{}/natives", config.version)).to_str().unwrap())
         .arg("-Dminecraft.launcher.brand=yogurt")
         .arg("-Dminecraft.launcher.version=0.1")
         .arg("-cp")
@@ -44,7 +44,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         .arg("--version")
         .arg(config.version)
         .arg("--gameDir")
-        .arg(get_path(&format!("instance/{}", instance)))
+        .arg(get_path(&format!("instances/{}", instance)))
         .arg("--assetsDir")
         .arg(get_path("assets"))
         .arg("--assetIndex")
