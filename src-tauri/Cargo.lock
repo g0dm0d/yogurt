@@ -3947,7 +3947,7 @@ dependencies = [
 
 [[package]]
 name = "yogurt"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "bytes",
  "form_urlencoded",
