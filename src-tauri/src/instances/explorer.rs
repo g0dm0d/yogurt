@@ -11,7 +11,7 @@ const OPEN_COMMAND: &str = "explorer";
 #[cfg(target_os = "linux")]
 const OPEN_COMMAND: &str = "xdg-open";
 
-/// Open the data folder from the game
+/// Open the folder with the game files of this instance
 #[tauri::command(async)]
 pub async fn open_instance_folder(name: String) {
     Command::new(OPEN_COMMAND)
@@ -19,4 +19,3 @@ pub async fn open_instance_folder(name: String) {
         .spawn()
         .unwrap();
 }
-

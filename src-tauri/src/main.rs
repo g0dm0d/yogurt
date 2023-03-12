@@ -25,6 +25,7 @@ fn main() {
             minecraft::run_minecraft::run_minecraft,
             instances::explorer::open_instance_folder,
             mods::fabric::install_fabric,
+            instances::config::make_copy_instance,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
