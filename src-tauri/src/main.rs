@@ -7,6 +7,7 @@ use std::fs;
 
 mod accounts;
 mod minecraft;
+mod mods;
 mod tools;
 
 fn main() {

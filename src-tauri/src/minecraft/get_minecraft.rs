@@ -155,6 +155,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
             java_path: "java".to_owned(),
             arguments: java_args,
             fabric: fabric,
+            fabric_version: None,
         },
         name.as_str(),
     )

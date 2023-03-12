@@ -13,6 +13,17 @@ pub struct Instance {
     pub java_path: String,
     pub arguments: String,
     pub fabric: bool,
+    pub fabric_version: Option<String>,
+}
+
+impl Instance {
+    pub fn set_fabric_version(&mut self, version: String) {
+        self.fabric_version = Some(version);
+    }
+
+    pub fn set_fabric_status(&mut self, status: bool) {
+        self.fabric = status;
+    }
 }
 
 /// Structure for the front, to display the instance in the Launcher
