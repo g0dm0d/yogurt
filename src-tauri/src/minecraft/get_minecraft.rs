@@ -130,9 +130,9 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     Ok(package)
 }
 
-use crate::minecraft::{assets::download_assets, config::create_config, library::download_library};
+use crate::minecraft::{assets::download_assets, library::download_library};
 
-use super::config::Instance;
+use crate::instances::config::{Instance, create_config};
 
 #[tauri::command(async)]
 pub async fn get_minecraft(url: String, id: String, name: String, java_args: String, fabric: bool) {

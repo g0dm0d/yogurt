@@ -7,7 +7,7 @@ use crate::accounts::account::get_user;
 use crate::minecraft::get_minecraft::Package;
 use crate::tools::path::get_path;
 
-use crate::minecraft::config::get_config;
+use crate::instances::config::get_config;
 use crate::minecraft::library::lib_os;
 
 #[tauri::command(async)]

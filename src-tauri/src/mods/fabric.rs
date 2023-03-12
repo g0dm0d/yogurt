@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use tokio::io::AsyncReadExt;
 
 use crate::{
-    minecraft::config::get_config,
+    instances::config::get_config,
     tools::{download::download, path::get_path, request::get},
 };
 
@@ -19,6 +19,7 @@ struct Loader {
     version: String,
 }
 
+#[tauri::command(async)]
 pub async fn install_fabric(name: String) {
     let mut config = get_config(&name);
     // get last version loader from - https://meta.fabricmc.net/v2/versions/loader

@@ -6,6 +6,7 @@
 use std::fs;
 
 mod accounts;
+mod instances;
 mod minecraft;
 mod mods;
 mod tools;
@@ -20,8 +21,10 @@ fn main() {
             minecraft::get_minecraft::get_minecraft,
             accounts::add_account::add_account,
             accounts::account::get_all_users,
-            minecraft::config::get_all_instances,
+            instances::config::get_all_instances,
             minecraft::run_minecraft::run_minecraft,
+            instances::explorer::open_instance_folder,
+            mods::fabric::install_fabric,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
