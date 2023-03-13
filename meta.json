@@ -1,0 +1,11 @@
+{
+    "version": "0.0.1",
+    "notes": "Test version",
+    "pub_date": "2023-03-13T11:15:00Z",
+    "platforms": {
+      "linux-x86_64": {
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUSXAzZDgzQ01BSm5yZmRBWHZSRTZ3UkN1djM1SU05cjllOUJkTHFrZWVoYnhQY05pNHltK2tMNW1PSXZqOFRuSHozVE1mbzlLVkgzQkRSVlU1clJUNkdMUXdxNUUrUEFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc4NzA3NzYwCWZpbGU6eW9ndXJ0XzAuMC4xX2FtZDY0LkFwcEltYWdlLnRhci5negppdldPRExEcUh4WTU2YTlqZW5udWZ1b3E0U1pHdzl0MXpzWUZBalVjMHdteGNJZFBzWk1pb2J5Q1RxUkIzeFVoMjFxMlFDOERwSUp6MUpSRWprY1dEQT09Cg==",
+        "url": "https://github.com/g0dm0d/yogurt/releases/download/v0.0.1/yogurt_0.0.1_amd64.AppImage.tar.gz"
+      }
+    }
+}
