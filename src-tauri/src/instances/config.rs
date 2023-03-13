@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::io::Write;
-use std::{fs, path::PathBuf};
+use std::fs;
 use toml::to_string_pretty;
 
 use crate::tools::path::{self, get_path};

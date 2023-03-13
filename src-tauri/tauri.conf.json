@@ -15,7 +15,7 @@
       "all": false,
       "shell": {
         "all": false,
-        "open": true
+        "open": false
       }
     },
     "bundle": {
@@ -55,7 +55,12 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+          "https://raw.githubusercontent.com/g0dm0d/yogurt/master/meta.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2MDAyM0RDN0M3N0E3QzgKUldUSXAzZDgzQ01BSnVod3R0a3RXbEFWQWlwNWh5QnJHTGlPMU9KcFhmYklLVUFieTdBSDVsMVkK"
     },
     "windows": [
       {
