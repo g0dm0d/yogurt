@@ -21,7 +21,7 @@ fn main() {
             minecraft::get_minecraft::get_minecraft,
             accounts::add_account::add_account,
             accounts::account::get_all_users,
-            accounts::account::delete_user,
+            accounts::account::delete_account,
             instances::config::get_all_instances,
             minecraft::run_minecraft::run_minecraft,
             instances::explorer::open_instance_folder,

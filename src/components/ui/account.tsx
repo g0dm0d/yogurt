@@ -19,7 +19,7 @@ export function Account({ nickname }: AccountProps) {
 
     async function deleteAccount(nickname: string) {
         try {
-            await invoke('delete_account', { nickname: nickname });
+            await invoke('delete_account', { name: nickname });
         } catch (error) {
             console.error(error);
         }

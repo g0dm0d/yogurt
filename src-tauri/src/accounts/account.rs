@@ -63,7 +63,7 @@ struct Config {
 }
 
 #[tauri::command]
-pub fn delete_user(name: String) {
+pub fn delete_account(name: String) {
     let mut accounts_toml: Value = fs::read_to_string(path::get_path("accounts.toml"))
         .unwrap()
         .parse()

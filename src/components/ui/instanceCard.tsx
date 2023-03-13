@@ -34,7 +34,6 @@ async function startInstance(name: string, username: string | undefined) {
                 username: username,
                 instance: name
             });
-            console.log(Response);
         } catch (error) {
             console.error(error);
         }
@@ -48,7 +47,6 @@ async function deleteInstance(name: string) {
             await invoke('delete_instance', {
                 name
             });
-            console.log(Response);
         } catch (error) {
             console.error(error);
         }
@@ -61,7 +59,6 @@ async function openFolder(name: string) {
             await invoke('open_instance_folder', {
                 name: name
             });
-            console.log(Response);
         } catch (error) {
             console.error(error);
         }
