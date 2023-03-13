@@ -62,6 +62,16 @@ struct Config {
     users: std::collections::HashMap<String, User>,
 }
 
+#[tauri::command]
+pub fn delete_user(name: String) {
+    let mut accounts_toml: Value = fs::read_to_string(path::get_path("accounts.toml"))
+        .unwrap()
+        .parse()
+        .unwrap();
+    accounts_toml.as_table_mut().unwrap().remove(&name);
+    fs::write(path::get_path("accounts.toml"), accounts_toml.to_string()).unwrap();
+}
+
 pub fn get_user(username: &str) -> User {
     let toml = fs::read_to_string(path::get_path("accounts.toml")).unwrap();
     let config: Config = toml::from_str(&toml).unwrap();
@@ -100,10 +110,9 @@ impl User {
 
         let mut config_contents = String::new();
         config_file.read_to_string(&mut config_contents)?;
+        let mut accounts_toml: Value = toml::from_str(&config_contents)?;
 
-        let mut config: Value = toml::from_str(&config_contents)?;
-
-        let account = config
+        let account = accounts_toml
             .as_table_mut()
             .unwrap()
             .entry(&self.username)
@@ -133,10 +142,7 @@ impl User {
             Value::Integer(self.minecraft_exp),
         );
 
-        let mut config_file = OpenOptions::new()
-            .write(true)
-            .open(path::get_path("accounts.toml"))?;
-        config_file.write_all(toml::to_string(&config).unwrap().as_bytes())?;
+        config_file.write_all(toml::to_string(&accounts_toml).unwrap().as_bytes())?;
 
         Ok(())
     }
