@@ -14,8 +14,7 @@ export function Account({ nickname }: AccountProps) {
     const { changeNickname } = useContext(selectedAccount);
     
     function selectAccount(nickname: string) {
-        console.log(nickname);
-        changeNickname(nickname);
+        changeNickname?.(nickname);
     }
 
     async function deleteAccount(nickname: string) {

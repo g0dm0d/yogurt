@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         colors: {
             yogurt: ['#ffe2e2', '#ffd8d8', '#ffcfcf', '#ffc6c6', '#ffbdbd', '#ffb4b4', '#ffabab', '#ffa2a2', '#ff9999','#ff9090'],
         },
-        primaryColor: 'yogurt',
+        primaryColor: 'pink',
         globalStyles: (theme) => ({
             body: {
                 userSelect: 'none'

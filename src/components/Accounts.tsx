@@ -10,28 +10,22 @@ import { Account } from './ui/account';
 import { invoke } from '@tauri-apps/api/tauri'
 import { IconPlus } from '@tabler/icons-react';
 import { selectedAccount } from '../context/AccountContext';
-
-async function addAccount() {
-    try {
-        await invoke('add_account');
-    } catch (error) {
-        console.error(error);
-    }
-}
+import { useEventListener } from '@mantine/hooks';
 
 export function Accounts() {
     const [openModal, setOpenModal] = useState(false);
-
+    const { nickname, changeNickname } = useContext(selectedAccount)
     const [accounts, setAccounts] = useState<string[]>([]);
     async function getAccounts() {
         const accounts = await invoke<string[]>('get_all_users');
         setAccounts(accounts);
         if (!nickname) {
-            changeNickname(accounts[0]);
+            changeNickname?.(accounts[0]);
         }
     }
 
-    const { nickname, changeNickname } = useContext(selectedAccount)
+    const [count, setCount] = useState(0);
+    const ref = useEventListener('click', getAccounts);
 
     useEffect(() => {
         getAccounts();
@@ -56,11 +50,12 @@ export function Accounts() {
                     gap='md'
                     direction='column'
                     sx={{ width: '100%' }}
+                    ref={ref}
                 >
                     {accounts.map((account) =>
                         <Account nickname={account} key={account} />
                     )}
-                    <Button sx={{width: '100%', height: 40}} variant='outline' onClick={() => setOpenModal(true)}>
+                    <Button sx={{ width: '100%', height: 40 }} variant='outline' onClick={() => setOpenModal(true)}>
                         <IconPlus />
                     </Button>
                 </Flex>

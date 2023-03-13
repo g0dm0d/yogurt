@@ -64,12 +64,10 @@ export function Dashboard() {
         if (window.location.pathname === '/settings') {
             setActive(2);
         }
-        console.log(window.location.pathname)
     }
 
     useEffect(() => {
         setActiveLocation();
-        console.log(nickname);
     });
 
     const { classes } = useStyles();
@@ -90,12 +88,6 @@ export function Dashboard() {
                     </Link>
                 </Stack>
             </Navbar.Section>
-            {/* <Navbar.Section>
-                <Stack justify="center" spacing={0}>
-                    <DashboardButton Icon={IconSwitchHorizontal} label="Change account" />
-                    <DashboardButton Icon={IconLogout} label="Logout" />
-                </Stack>
-            </Navbar.Section> */}
         </Navbar >
     );
 }

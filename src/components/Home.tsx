@@ -17,7 +17,6 @@ interface Instance {
 async function getInstances(setInstances: React.Dispatch<React.SetStateAction<Instance[]>>) {
     try {
         const response = await invoke<Instance[]>('get_all_instances');
-        console.log(response);
         setInstances(response);
     } catch (error) {
         console.error(error);
