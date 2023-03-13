@@ -33,6 +33,10 @@ function App() {
         }
     }, [])
 
+    return (
+        <Welcome />
+    );
+
     if (nickname) {
         return (
             <BrowserRouter>
@@ -43,7 +47,6 @@ function App() {
                             display: 'flex', width: '100%', height: '100vh',
                             backgroundColor: theme.colors.dark[5], justifyContent: 'center', alignItems: 'center'
                         })}>
-                            {/* <TopBar /> */}
                             <AppRoutes />
                         </Box>
                     </Flex>
