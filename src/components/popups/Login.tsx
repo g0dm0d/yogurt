@@ -10,7 +10,6 @@ async function addAccount() {
     open(MICROSOFT_LINK)
     try {
         await invoke('add_account');
-        console.log(Response);
     } catch (error) {
         console.error(error);
     }

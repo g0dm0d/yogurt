@@ -10,7 +10,6 @@ async function addAccount() {
     open(MICROSOFT_LINK)
     try {
         await invoke('add_account');
-        console.log(Response);
     } catch (error) {
         console.error(error);
     }
@@ -19,16 +18,18 @@ async function addAccount() {
 export function Welcome() {
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Title order={1} sx={(theme) => ({ color: theme.primaryColor })}>
-                Welcome to yogurt Minecraft Launcher!
-            </Title>
-            <Title  order={3}>
-                Login with your Microsoft account to continue
-            </Title>
-            <Button onClick={addAccount} >
-                Login
-            </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100wh', height: '100vh' }} >
+            <Flex direction='column' gap={32} sx={{ display: 'flex', textAlign: 'center', justifyContent: 'center', alignContent: 'center', width: 400 }}>
+                <Title order={1} sx={(theme) => ({ color: theme.primaryColor })}>
+                    Welcome to yogurt Minecraft Launcher!
+                </Title>
+                <Title order={3}>
+                    Login with your Microsoft account to continue
+                </Title>
+                <Button onClick={addAccount} >
+                    Login
+                </Button>
+            </Flex>
         </Box>
     );
 }
