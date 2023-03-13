@@ -33,9 +33,9 @@ function App() {
         }
     }, [])
 
-    return (
-        <Welcome />
-    );
+    // return (
+    //     <Welcome />
+    // );
 
     if (nickname) {
         return (
