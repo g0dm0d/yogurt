@@ -69,7 +69,11 @@ pub fn delete_account(name: String) {
         .parse()
         .unwrap();
     accounts_toml.as_table_mut().unwrap().remove(&name);
-    fs::write(path::get_path("accounts.toml"), accounts_toml.to_string()).unwrap();
+    fs::write(
+        path::get_path("accounts.toml"),
+        toml::to_string(&accounts_toml).unwrap(),
+    )
+    .unwrap();
 }
 
 pub fn get_user(username: &str) -> User {
