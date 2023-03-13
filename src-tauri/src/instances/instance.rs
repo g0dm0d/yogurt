@@ -31,6 +31,6 @@ pub fn copy_recursively(source: PathBuf, destination: PathBuf) {
 
 #[tauri::command(async)]
 pub async fn delete_instance(name: String) {
-    fs::remove_dir_all(get_path(&format!("instances/{}", name))).unwrap();
     fs::remove_file(get_path(&format!("configs/{}.toml", name))).unwrap();
+    fs::remove_dir_all(get_path(&format!("instances/{}", name))).unwrap();
 }

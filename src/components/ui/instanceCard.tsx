@@ -16,7 +16,8 @@ import {
     IconTrash
 } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { selectedAccount } from '../../context/AccountContext';
 import { createInstance } from '../popups/AddInstance';
 import bg from '/bg.png';
 
@@ -26,7 +27,7 @@ interface InstanceCardProps {
     gameType: string;
 }
 
-async function startInstance(name: string, username: string) {
+async function startInstance(name: string, username: string | undefined) {
     if (name) {
         try {
             await invoke('run_minecraft', {
@@ -40,11 +41,12 @@ async function startInstance(name: string, username: string) {
     }
 }
 
-async function deleteInstance(name: string, username: string) {
+async function deleteInstance(name: string) {
     if (name) {
         try {
-            await invoke('delete_minecraft', {
-                instance: name
+            console.log(name);
+            await invoke('delete_instance', {
+                name
             });
             console.log(Response);
         } catch (error) {
@@ -102,13 +104,13 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
         },
     }));
     const { classes } = useStyles();
-    const [openMenu, setOpenMenu] = useState(false)
-    const [username, setUsername] = useState('');
+    const [openMenu, setOpenMenu] = useState(false);
+    const { nickname } = useContext(selectedAccount);
     return (
         <Menu opened={openMenu} onChange={setOpenMenu} withArrow>
             <Card p="lg" className={classes.card}>
                 <Card.Section>
-                    <Box ref={ref} display='flex' onClick={() => startInstance(name, username)}
+                    <Box ref={ref} display='flex' onClick={() => startInstance(name, nickname)}
                         sx={{
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -157,7 +159,9 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
                 </Menu.Item>
                 <Menu.Divider />
 
-                <Menu.Item color="red" icon={<IconTrash size={14} />}>Delete instance</Menu.Item>
+                <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={() => deleteInstance(name)}>
+                    Delete instance
+                </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
