@@ -9,7 +9,7 @@ const MICROSOFT_LINK = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/
 async function addAccount() {
     open(MICROSOFT_LINK)
     try {
-        await invoke('add_account', { MICROSOFT_LINK });
+        await invoke('add_account');
     } catch (error) {
         console.error(error);
     }
