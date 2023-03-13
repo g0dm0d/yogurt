@@ -5,7 +5,7 @@ use std::process::Command;
 
 use crate::accounts::account::get_user;
 use crate::minecraft::get_minecraft::Package;
-use crate::tools::path::get_path;
+use crate::tools::path::{fix_path, get_path};
 
 use crate::instances::config::get_config;
 use crate::minecraft::library::lib_os;
@@ -38,22 +38,28 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
             continue;
         }
         // create array for -cp arg
-        let path: String = get_path(&format!("libraries/{}", file.downloads.artifact.path))
-            .display()
-            .to_string();
+        let path: String = get_path(&fix_path(&format!(
+            "libraries/{}",
+            file.downloads.artifact.path
+        )))
+        .display()
+        .to_string();
         libraries.push(path)
     }
     libraries.push(
-        get_path(&format!("versions/{}/{}", config.version, config.client))
-            .display()
-            .to_string(),
+        get_path(&fix_path(&format!(
+            "versions/{}/{}",
+            config.version, config.client
+        )))
+        .display()
+        .to_string(),
     );
 
     let mut minecraft = Command::new(config.java_path);
     minecraft
         .arg(
             "-Djava.library.path=".to_owned()
-                + get_path(&format!("versions/{}/natives", config.version))
+                + get_path(&fix_path(&format!("versions/{}/natives", config.version)))
                     .to_str()
                     .unwrap(),
         )
