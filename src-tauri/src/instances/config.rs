@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
+use std::fs::{self, File};
 use std::io::Write;
-use std::fs;
 use toml::to_string_pretty;
 
 use crate::tools::path::{self, get_path};
@@ -14,6 +14,8 @@ pub struct Instance {
     pub arguments: String,
     pub fabric: bool,
     pub fabric_version: Option<String>,
+    #[serde(skip)]
+    pub name: Option<String>,
 }
 
 impl Instance {
@@ -23,6 +25,20 @@ impl Instance {
 
     pub fn set_fabric_status(&mut self, status: bool) {
         self.fabric = status;
+    }
+
+    pub fn set_java_path(&mut self, path: String) {
+        self.java_path = path
+    }
+
+    pub fn save_config(&mut self) {
+        let mut file = File::open(get_path(&format!(
+            "configs/{0}.toml",
+            self.name.clone().unwrap()
+        )))
+        .unwrap();
+        let toml_string = toml::to_string_pretty(self).unwrap();
+        file.write_all(toml_string.as_bytes()).unwrap();
     }
 }
 
@@ -47,7 +63,7 @@ pub async fn create_config(config: Instance, name: &str) {
         }
     }
 
-    let mut file = fs::File::create(&path.join(format!("{}.toml", &name))).unwrap();
+    let mut file = fs::File::create(&path.join(format!("{name}.toml"))).unwrap();
     let toml_string = to_string_pretty(&config).unwrap();
     file.write_all(toml_string.as_bytes()).unwrap();
 }
@@ -90,8 +106,9 @@ fn version_convector(version: bool) -> String {
 
 /// return info about instance by name
 pub fn get_config(name: &str) -> Instance {
-    let path = get_path(format!("configs/{}.toml", name).as_str());
+    let path = get_path(format!("configs/{name}.toml").as_str());
     let file = std::fs::read_to_string(path).unwrap();
-    let data: Instance = toml::from_str(&file).expect("Error parsing TOML");
+    let mut data: Instance = toml::from_str(&file).expect("Error parsing TOML");
+    data.name = Some(name.to_owned());
     return data;
 }

@@ -2,6 +2,12 @@ use std::process::Command;
 
 use crate::tools::path::get_path;
 
+#[cfg(any(target_os = "macos", target_os = "linux"))]
+const PATH: &str = "instances/";
+
+#[cfg(target_os = "windows")]
+const PATH: &str = "instances\\";
+
 #[cfg(target_os = "macos")]
 const OPEN_COMMAND: &str = "open";
 
@@ -15,7 +21,7 @@ const OPEN_COMMAND: &str = "xdg-open";
 #[tauri::command(async)]
 pub async fn open_instance_folder(name: String) {
     Command::new(OPEN_COMMAND)
-        .arg(get_path(&format!("instances/{}", name)))
+        .arg(get_path(&format!("{PATH}{name}")))
         .spawn()
         .unwrap();
 }

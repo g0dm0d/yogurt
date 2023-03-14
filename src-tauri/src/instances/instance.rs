@@ -6,12 +6,12 @@ use crate::tools::path::get_path;
 #[tauri::command(async)]
 pub async fn make_copy_instance(name: String) {
     copy_recursively(
-        get_path(&format!("instances/{}", name)),
-        get_path(&format!("instances/{}(copy)", name)),
+        get_path(&format!("instances/{name}")),
+        get_path(&format!("instances/{name}(copy)")),
     );
     fs::copy(
-        get_path(&format!("configs/{}.toml", name)),
-        get_path(&format!("configs/{}(copy).toml", name)),
+        get_path(&format!("configs/{name}.toml")),
+        get_path(&format!("configs/{name}(copy).toml")),
     )
     .unwrap();
 }
@@ -31,6 +31,6 @@ pub fn copy_recursively(source: PathBuf, destination: PathBuf) {
 
 #[tauri::command(async)]
 pub async fn delete_instance(name: String) {
-    fs::remove_file(get_path(&format!("configs/{}.toml", name))).unwrap();
-    fs::remove_dir_all(get_path(&format!("instances/{}", name))).unwrap();
+    fs::remove_file(get_path(&format!("configs/{name}.toml"))).unwrap();
+    fs::remove_dir_all(get_path(&format!("instances/{name}"))).unwrap();
 }

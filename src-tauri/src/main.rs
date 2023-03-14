@@ -28,6 +28,7 @@ fn main() {
             mods::fabric::install_fabric,
             instances::instance::make_copy_instance,
             instances::instance::delete_instance,
+            instances::java::install_java,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

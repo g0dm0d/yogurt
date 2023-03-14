@@ -47,7 +47,7 @@ pub async fn create_config(config: Instance, name: &str) {
         }
     }
 
-    let mut file = fs::File::create(&path.join(format!("{}.toml", &name))).unwrap();
+    let mut file = fs::File::create(&path.join(format!("{name}.toml"))).unwrap();
     let toml_string = to_string_pretty(&config).unwrap();
     file.write_all(toml_string.as_bytes()).unwrap();
 }
@@ -90,7 +90,7 @@ fn version_convector(version: bool) -> String {
 
 /// return info about instance by name
 pub fn get_config(name: &str) -> Instance {
-    let path = get_path(format!("configs/{}.toml", name).as_str());
+    let path = get_path(format!("configs/{name}.toml").as_str());
     let file = std::fs::read_to_string(path).unwrap();
     let data: Instance = toml::from_str(&file).expect("Error parsing TOML");
     return data;

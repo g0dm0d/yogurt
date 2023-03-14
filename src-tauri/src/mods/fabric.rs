@@ -25,22 +25,21 @@ pub async fn install_fabric(name: String) {
     // get last version loader from - https://meta.fabricmc.net/v2/versions/loader
     let loader = get_last_loader().await.unwrap();
 
-    let fabric_version = format!("fabric-{}-{}", loader, config.version);
+    let fabric_version = format!("fabric-{0}-{1}", loader, config.version);
 
     // Downloading json for fabric
     // as sample https://meta.fabricmc.net/v2/versions/loader/1.19.3/0.14.17/profile/json
     download(
         &format!(
-            "https://meta.fabricmc.net/v2/versions/loader/{}/{}/profile/json",
+            "https://meta.fabricmc.net/v2/versions/loader/{0}/{1}/profile/json",
             loader, config.version
         ),
         &get_path(&format!(
-            "versions/{}/{}.json",
-            fabric_version, fabric_version
+            "versions/{fabric_version}/{fabric_version}.json"
         ))
         .display()
         .to_string(),
-        &String::new(),
+        None,
     )
     .await;
 
@@ -50,7 +49,7 @@ pub async fn install_fabric(name: String) {
     config.set_fabric_version(fabric_version);
     config.set_fabric_status(true);
 
-    let mut file = File::open(get_path(&format!("configs/{}.toml", name))).unwrap();
+    let mut file = File::open(get_path(&format!("configs/{name}.toml"))).unwrap();
     let toml_string = toml::to_string_pretty(&config).unwrap();
     file.write_all(toml_string.as_bytes()).unwrap();
 }
@@ -81,10 +80,10 @@ fn parse_library(name: String) -> String {
     // Vec[2] = 0.3.0+build.17
     let library = name.split(":").collect::<Vec<&str>>();
     // Here I do concatenation to get the file name -> tiny-mappings-parser-0.3.0+build.17.jar
-    let filename = format!("{}-{}.jar", library[1], library[2]);
+    let filename = format!("{0}-{1}.jar", library[1], library[2]);
     // getting net/fabricmc/tiny-mappings-parser/0.3.0+build.17/tiny-mappings-parser-0.3.0+build.17.jar
     return format!(
-        "{}/{}/{}/{}",
+        "{0}/{1}/{2}/{3}",
         // Replacing it to get net/fabricmc
         library[0].replace(".", "/"),
         library[1],
@@ -108,7 +107,7 @@ fn parse_libraries(version: &str) -> Vec<String> {
 
 async fn download_libraries(libraries: Vec<String>) {
     for library in libraries {
-        let mut response = get(&format!("https://maven.fabricmc.net/{}.sha1", library))
+        let mut response = get(&format!("https://maven.fabricmc.net/{library}.sha1"))
             .await
             .unwrap();
         let mut buf = Vec::new();
@@ -116,9 +115,9 @@ async fn download_libraries(libraries: Vec<String>) {
         let sha1 = String::from_utf8(buf).unwrap();
         println!("{}", sha1);
         download(
-            &format!("https://maven.fabricmc.net/{}", library),
+            &format!("https://maven.fabricmc.net/{library}"),
             &library,
-            &sha1,
+            Some(sha1),
         )
         .await
     }

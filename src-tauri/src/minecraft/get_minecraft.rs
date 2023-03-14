@@ -119,8 +119,8 @@ use crate::tools::download::download;
 use crate::tools::path;
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
-    let path = format!("versions/{}/{}.json", id, id);
-    download(url, path.as_str(), &"".to_string()).await;
+    let path = format!("versions/{id}/{id}.json");
+    download(url, path.as_str(), None).await;
 
     let mut file = File::open(path::get_path(path.as_str())).unwrap();
     let mut buff = String::new();
@@ -132,7 +132,7 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
 
 use crate::minecraft::{assets::download_assets, library::download_library};
 
-use crate::instances::config::{Instance, create_config};
+use crate::instances::config::{create_config, Instance};
 
 #[tauri::command(async)]
 pub async fn get_minecraft(url: String, id: String, name: String, java_args: String, fabric: bool) {
@@ -144,24 +144,25 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
     // Downloading the client jar for the selected version of minecraft
     download(
         &package.downloads.client.url,
-        format!("versions/{}/{}.jar", &id, &id).as_str(),
-        &package.downloads.client.sha1,
+        format!("versions/{id}/{id}.jar").as_str(),
+        Some(package.downloads.client.sha1),
     )
     .await;
     create_config(
         Instance {
             version: id.clone(),
-            client: format!("{}.jar", id),
+            client: format!("{id}.jar"),
             java_path: "java".to_owned(),
             arguments: java_args,
             fabric: fabric,
             fabric_version: None,
+            name: None,
         },
         name.as_str(),
     )
     .await;
     // Create instance folder
-    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instances/{}", name))));
+    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instances/{name}"))));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }

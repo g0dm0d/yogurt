@@ -13,8 +13,8 @@ pub async fn download_library(libraries: Vec<crate::minecraft::get_minecraft::Li
         }
         download(
             &file.downloads.artifact.url,
-            &format!("libraries/{}", file.downloads.artifact.path),
-            &file.downloads.artifact.sha1,
+            &format!("libraries/{0}", file.downloads.artifact.path),
+            Some(file.downloads.artifact.sha1),
         )
         .await;
     }

@@ -10,11 +10,11 @@ use crate::tools::sha::verify_sha1sum;
 /// This func download file and save
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
-pub async fn download(url: &str, file_path: &str, sha1sum: &String) {
+pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) {
     let path = path::get_path(file_path);
 
-    if path.exists() {
-        if verify_sha1sum(&path, sha1sum) {
+    if path.exists() && sha1sum != None {
+        if verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default()) {
             println!("File {} alredy exist", &path.display().to_string());
             return;
         }
@@ -47,7 +47,7 @@ pub async fn download(url: &str, file_path: &str, sha1sum: &String) {
                 if result.is_err() {
                     panic!("Failed to copy file: {:?}", result.err());
                 }
-                if verify_sha1sum(&path, &sha1sum) {
+                if sha1sum == None || verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default()) {
                     break;
                 }
                 println!("Error sha1sum file: {}", &path.display().to_string())

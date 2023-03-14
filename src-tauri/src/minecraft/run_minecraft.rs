@@ -73,7 +73,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         .arg("--version")
         .arg(config.version)
         .arg("--gameDir")
-        .arg(get_path(&format!("instances/{}", instance)))
+        .arg(get_path(&format!("instances/{instance}")))
         .arg("--assetsDir")
         .arg(get_path("assets"))
         .arg("--assetIndex")
