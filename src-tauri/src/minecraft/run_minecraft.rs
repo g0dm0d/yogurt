@@ -5,7 +5,7 @@ use std::process::Command;
 
 use crate::accounts::account::get_user;
 use crate::minecraft::get_minecraft::Package;
-use crate::tools::path::{fix_path, get_path};
+use crate::tools::path::get_path;
 
 use crate::instances::config::get_config;
 use crate::minecraft::library::lib_os;
@@ -16,6 +16,11 @@ pub async fn run_minecraft(username: String, instance: String) {
     user.verify_minecraft_token().await;
     run(&username, &user.uuid, &user.minecraft_token, &instance);
 }
+
+#[cfg(target_os = "windows")]
+const SEP: &str = ";";
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+const SEP: &str = ":";
 
 pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     // Open instance configuration
@@ -38,19 +43,19 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
             continue;
         }
         // create array for -cp arg
-        let path: String = get_path(&fix_path(&format!(
+        let path: String = get_path(&format!(
             "libraries/{}",
             file.downloads.artifact.path
-        )))
+        ))
         .display()
         .to_string();
         libraries.push(path)
     }
     libraries.push(
-        get_path(&fix_path(&format!(
+        get_path(&format!(
             "versions/{}/{}",
             config.version, config.client
-        )))
+        ))
         .display()
         .to_string(),
     );
@@ -59,14 +64,14 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     minecraft
         .arg(
             "-Djava.library.path=".to_owned()
-                + get_path(&fix_path(&format!("versions/{}/natives", config.version)))
+                + get_path(&format!("versions/{}/natives", config.version))
                     .to_str()
                     .unwrap(),
         )
         .arg("-Dminecraft.launcher.brand=yogurt")
         .arg("-Dminecraft.launcher.version=0.1")
         .arg("-cp")
-        .arg(libraries.join(";"))
+        .arg(libraries.join(SEP))
         .arg("net.minecraft.client.main.Main")
         .arg("--username")
         .arg(username)
@@ -86,10 +91,11 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         .arg("microsoft")
         .arg("--versionType")
         .arg("release");
-    println!("{:?}", minecraft);
+
     let output = minecraft
         .output()
         .expect("Failed to start Minecraft client");
+
     println!("Minecraft client exited with status: {}", output.status);
     println!(
         "Minecraft client stdout: {:?}",
