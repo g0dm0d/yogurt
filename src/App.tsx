@@ -16,21 +16,27 @@ function App() {
     }
 
     async function getAccounts() {
-        const accounts = await invoke<string[]>('get_all_users');
-        setAccounts(accounts);
+        const allUsers = await invoke<string[]>('get_all_users');
+        console.log(allUsers);
+        setAccounts(allUsers);
+        if (!allUsers.length) {
+            localStorage.removeItem('selectedAccount');
+            setNickname(undefined);
+        } else {
+            if (!nickname) {
+                const localNickname = localStorage.getItem('selectedAccount')
+                if (localNickname) {
+                    setNickname(localNickname);
+                } else if (allUsers.length) {
+                    setNickname(allUsers[0]);
+                    localStorage.setItem('selectedAccount', allUsers[0]);
+                }
+            }
+        }
     }
 
     useEffect(() => {
         getAccounts();
-        if (!nickname) {
-            const localNickname = localStorage.getItem('selectedAccount')
-            if (localNickname) {
-                setNickname(localNickname);
-            } else if (accounts.length) {
-                setNickname(accounts[0]);
-                localStorage.setItem('selectedAccount', accounts[0]);
-            }
-        }
     }, [])
 
     // return (

@@ -15,7 +15,7 @@ const OPEN_COMMAND: &str = "xdg-open";
 #[tauri::command(async)]
 pub async fn open_instance_folder(name: String) {
     Command::new(OPEN_COMMAND)
-        .arg(get_path(&format!("instances/{}", name)))
+        .arg(get_path(&format!("instances\\{}", name)))
         .spawn()
         .unwrap();
 }

@@ -4,7 +4,7 @@ use crate::tools::path::get_path;
 
 /// Create a copy of the instance
 #[tauri::command(async)]
-pub async fn make_copy_instance(name: String) {
+pub async fn copy_instance(name: String) {
     copy_recursively(
         get_path(&format!("instances/{}", name)),
         get_path(&format!("instances/{}(copy)", name)),
