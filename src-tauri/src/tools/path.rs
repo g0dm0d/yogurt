@@ -1,10 +1,6 @@
 use std::path::{Path, PathBuf};
 
 const PATH: &str = ".yogurt";
-#[cfg(target_os = "windows")]
-const SEP: &str = "\\\\";
-#[cfg(any(target_os = "linux", target_os = "macos"))]
-const SEP: &str = "/";
 
 /// add to path ~/.yogurt/{path}
 pub fn get_path(path: &str) -> PathBuf {
@@ -25,10 +21,5 @@ pub fn get_path(path: &str) -> PathBuf {
 pub fn parse_path(path: &Path) -> PathBuf {
     let str_path = path.display().to_string();
     let components: Vec<&str> = str_path.split('/').collect();
-    return Path::new(&(components[..components.len() - 1]).join(SEP)).to_path_buf();
-}
-
-/// I hate windows, no comments...
-pub fn fix_path(path: &str) -> String {
-    return path.replace("/", SEP);
+    return Path::new(&(components[..components.len() - 1]).join("/")).to_path_buf();
 }
