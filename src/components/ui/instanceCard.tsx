@@ -18,7 +18,6 @@ import {
 import { invoke } from '@tauri-apps/api';
 import { useContext, useState } from 'react';
 import { selectedAccount } from '../../context/AccountContext';
-import { createInstance } from '../popups/AddInstance';
 import bg from '/bg.png';
 
 interface InstanceCardProps {
@@ -62,6 +61,45 @@ async function openFolder(name: string) {
         } catch (error) {
             console.error(error);
         }
+    }
+}
+
+async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
+    if (!url) {
+        fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    for (let i = 0; i < result.versions.length; i++) {
+                        if (result.versions[i].id === version) {
+                            url = result.versions[i].url;
+                        }
+                    }
+                    name = name + ' copy'
+                },
+                (error) => {
+                    console.error(error);
+                }
+            )
+            .then(() => {
+                getMinecraft();
+            })
+    } else {
+        getMinecraft();
+    }
+
+    async function getMinecraft() {
+        await invoke('get_minecraft', {
+            url: url,
+            id: version,
+            name: name,
+            javaArgs: '-Xmx4G',
+            fabric: type === 'fabric' ? true : false
+        })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => console.error(error))
     }
 }
 

@@ -46,7 +46,7 @@ export function Home() {
     }));
     const { classes } = useStyles();
     const [openModal, setOpenModal] = useState(false);
-
+    const [creating, setCreating] = useState<boolean>(true);
     const [instances, setInstances] = useState<Instance[]>([]);
 
     useEffect(() => {
@@ -70,10 +70,15 @@ export function Home() {
             height: '100%', width: '100%', padding: '80px', gap: '32px'
         }}>
             <Modal opened={openModal} onClose={() => setOpenModal(false)} title='Create Instance'>
-                <AddInstance />
+                <AddInstance setCreating={setCreating} />
             </Modal>
             <Grid justify="flex-start">
                 {instancesList}
+                <Grid.Col span='content' display={creating ? 'visible' : 'none'} >
+                    <Card ref={ref} p="lg" className={classes.card} onClick={() => setOpenModal(true)}>
+                        <IconSquarePlus size={hovered ? '48px' : '36px'} stroke={1} className={classes.addIcon} />
+                    </Card>
+                </Grid.Col>
                 <Grid.Col span='content'>
                     <Card ref={ref} p="lg" className={classes.card} onClick={() => setOpenModal(true)}>
                         <IconSquarePlus size={hovered ? '48px' : '36px'} stroke={1} className={classes.addIcon} />
