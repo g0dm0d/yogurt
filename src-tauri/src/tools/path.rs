@@ -1,9 +1,6 @@
 use std::path::{Path, PathBuf};
 
 const PATH: &str = ".yogurt";
-#[cfg(target_os = "windows")]
-const SEP: &str = "\\\\";
-#[cfg(any(target_os = "linux", target_os = "macos"))]
 const SEP: &str = "/";
 
 /// add to path ~/.yogurt/{path}

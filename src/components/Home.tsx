@@ -1,5 +1,5 @@
 import {
-    Box, Card, createStyles, Grid, Modal,
+    Box, Card, createStyles, Grid, Loader, Modal,
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { IconSquarePlus } from '@tabler/icons-react';
@@ -39,6 +39,21 @@ export function Home() {
             cursor: 'pointer',
         },
 
+        loadingCard: {
+            width: '216px',
+            height: '164px',
+            border: '2px dashed',
+            transition: '300ms',
+            borderColor: theme.colors.dark[3],
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
+            '&:hover': {
+                borderColor: theme.colors.dark[1],
+            },
+        },
+
         addIcon: {
             transition: '300ms',
             position: 'absolute',
@@ -46,7 +61,7 @@ export function Home() {
     }));
     const { classes } = useStyles();
     const [openModal, setOpenModal] = useState(false);
-    const [creating, setCreating] = useState<boolean>(true);
+    const [creating, setCreating] = useState<boolean>(false);
     const [instances, setInstances] = useState<Instance[]>([]);
 
     useEffect(() => {
@@ -75,8 +90,8 @@ export function Home() {
             <Grid justify="flex-start">
                 {instancesList}
                 <Grid.Col span='content' display={creating ? 'visible' : 'none'} >
-                    <Card ref={ref} p="lg" className={classes.card} onClick={() => setOpenModal(true)}>
-                        <IconSquarePlus size={hovered ? '48px' : '36px'} stroke={1} className={classes.addIcon} />
+                    <Card p="lg" className={classes.loadingCard}>
+                        <Loader className={classes.addIcon} />
                     </Card>
                 </Grid.Col>
                 <Grid.Col span='content'>

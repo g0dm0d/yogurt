@@ -66,7 +66,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         .arg("-Dminecraft.launcher.brand=yogurt")
         .arg("-Dminecraft.launcher.version=0.1")
         .arg("-cp")
-        .arg(libraries.join(":"))
+        .arg(libraries.join(";"))
         .arg("net.minecraft.client.main.Main")
         .arg("--username")
         .arg(username)
