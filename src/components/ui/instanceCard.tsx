@@ -18,7 +18,6 @@ import {
 import { invoke } from '@tauri-apps/api';
 import { useContext, useState } from 'react';
 import { selectedAccount } from '../../context/AccountContext';
-import { createInstance } from '../popups/AddInstance';
 import bg from '/bg.png';
 
 interface InstanceCardProps {
@@ -28,41 +27,32 @@ interface InstanceCardProps {
 }
 
 async function startInstance(name: string, username: string | undefined) {
-    if (name) {
-        try {
-            await invoke('run_minecraft', {
-                username: username,
-                instance: name
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    await invoke('run_minecraft', {
+        username: username,
+        instance: name
+    })
+        .catch((error) => console.error(error))
 }
 
 async function deleteInstance(name: string) {
-    if (name) {
-        try {
-            console.log(name);
-            await invoke('delete_instance', {
-                name
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    await invoke('delete_instance', {
+        name
+    })
+        .catch((error) => console.error(error))
 }
 
 async function openFolder(name: string) {
-    if (name) {
-        try {
-            await invoke('open_instance_folder', {
-                name: name
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    await invoke('open_instance_folder', {
+        name: name
+    })
+        .catch((error) => console.error(error))
+}
+
+async function copyInstance(name: string) {
+    await invoke('copy_instance', {
+        name: name
+    })
+        .catch((error) => console.error(error))
 }
 
 export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
@@ -151,7 +141,7 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
                 <Menu.Item icon={<IconFolder size={14} />} onClick={() => openFolder(name)} >
                     Folder
                 </Menu.Item>
-                <Menu.Item icon={<IconCopy size={14} />} onClick={() => createInstance(name, version, gameType)}>
+                <Menu.Item icon={<IconCopy size={14} />} onClick={() => copyInstance(name)}>
                     Make copy
                 </Menu.Item>
                 <Menu.Divider />

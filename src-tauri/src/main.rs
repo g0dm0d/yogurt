@@ -26,7 +26,7 @@ fn main() {
             minecraft::run_minecraft::run_minecraft,
             instances::explorer::open_instance_folder,
             mods::fabric::install_fabric,
-            instances::instance::make_copy_instance,
+            instances::instance::copy_instance,
             instances::instance::delete_instance,
             instances::java::install_java,
         ])

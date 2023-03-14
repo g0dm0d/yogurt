@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import FabricIcon from '../ui/icons/FabricIcon.svg'
 import MinecraftIcon from '../ui/icons/MinecraftIcon.svg'
 
@@ -19,49 +19,47 @@ type Version = {
     value: string;
 };
 
-export async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
-    if (!url) {
-        fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
-            .then(response => response.json())
-            .then(
-                (result) => {
-                    for (let i = 0; i < result.versions.length; i++) {
-                        if (result.versions[i].id === version) {
-                            url = result.versions[i].url;
+export function AddInstance({setCreating}: {setCreating: React.Dispatch<React.SetStateAction<boolean>>} ) {
+    async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
+        if (!url) {
+            fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
+                .then(response => response.json())
+                .then(
+                    (result) => {
+                        for (let i = 0; i < result.versions.length; i++) {
+                            if (result.versions[i].id === version) {
+                                url = result.versions[i].url;
+                            }
                         }
+                        name = name + ' copy'
+                    },
+                    (error) => {
+                        console.error(error);
                     }
-                    name = name + ' copy'
-                },
-                (error) => {
-                    console.error(error);
-                }
-            )
-            .then(() => {
-                console.log('Creating copy:', name, version, type, url)
-                getMinecraft();
-            })
-    } else {
-        console.log('Creating instance:', name, version, type, url)
-        getMinecraft();
-    }
+                )
+                .then(() => {
+                    getMinecraft();
+                })
+        } else {
+            getMinecraft();
+        }
 
-    async function getMinecraft() {
-        try {
+        async function getMinecraft() {
+            setCreating(true);
             await invoke('get_minecraft', {
                 url: url,
                 id: version,
                 name: name,
                 javaArgs: '-Xmx4G',
                 fabric: type === 'fabric' ? true : false
-            });
-            console.log(Response);
-        } catch (error) {
-            console.error(error);
+            })
+                .then((response) => {
+                    console.log(response);
+                    setCreating(false);
+                })
+                .catch((error) => console.error(error))
         }
     }
-}
-
-export function AddInstance() {
 
     const [type, setType] = useState('minecraft');
     const [name, setName] = useState('');
