@@ -24,7 +24,6 @@ export function Accounts() {
         }
     }
 
-    const [count, setCount] = useState(0);
     const ref = useEventListener('click', getAccounts);
 
     useEffect(() => {
