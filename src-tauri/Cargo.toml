@@ -27,6 +27,8 @@ http = "0.2.9"
 hyper = { version = "0.14.24", features = ["full"] }
 form_urlencoded = "1.1.0"
 zip = "0.6.4"
+flate2 = "1.0.25"
+tar = "0.4.38"
 
 [features]
 # by default Tauri runs in production mode

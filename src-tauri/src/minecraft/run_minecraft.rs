@@ -43,21 +43,15 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
             continue;
         }
         // create array for -cp arg
-        let path: String = get_path(&format!(
-            "libraries/{}",
-            file.downloads.artifact.path
-        ))
-        .display()
-        .to_string();
+        let path: String = get_path(&format!("libraries/{}", file.downloads.artifact.path))
+            .display()
+            .to_string();
         libraries.push(path)
     }
     libraries.push(
-        get_path(&format!(
-            "versions/{}/{}",
-            config.version, config.client
-        ))
-        .display()
-        .to_string(),
+        get_path(&format!("versions/{}/{}", config.version, config.client))
+            .display()
+            .to_string(),
     );
 
     let mut minecraft = Command::new(config.java_path);
@@ -106,3 +100,4 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+
