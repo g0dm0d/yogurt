@@ -5,6 +5,7 @@ import {
     Text,
     Box,
     Menu,
+    Modal,
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import {
@@ -18,6 +19,7 @@ import {
 import { invoke } from '@tauri-apps/api';
 import { useContext, useState } from 'react';
 import { selectedAccount } from '../../context/AccountContext';
+import { InstanceSettings } from '../popups/InstanceSettings';
 import bg from '/bg.png';
 
 interface InstanceCardProps {
@@ -92,6 +94,7 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
     }));
     const { classes } = useStyles();
     const [openMenu, setOpenMenu] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const { nickname } = useContext(selectedAccount);
     return (
         <Menu opened={openMenu} onChange={setOpenMenu} withArrow>
@@ -135,21 +138,24 @@ export function InstanceCard({ name, version, gameType }: InstanceCardProps) {
                 </Card.Section>
             </Card>
             <Menu.Dropdown >
-                <Menu.Item icon={<IconSettings size={14} />}>
+                <Menu.Item icon={<IconSettings size={14} />} onClick={() => setOpenModal(true)} >
                     Settings
                 </Menu.Item>
                 <Menu.Item icon={<IconFolder size={14} />} onClick={() => openFolder(name)} >
                     Folder
                 </Menu.Item>
-                <Menu.Item icon={<IconCopy size={14} />} onClick={() => copyInstance(name)}>
+                <Menu.Item icon={<IconCopy size={14} />} onClick={() => copyInstance(name)} >
                     Make copy
                 </Menu.Item>
                 <Menu.Divider />
 
-                <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={() => deleteInstance(name)}>
+                <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={() => deleteInstance(name)} >
                     Delete instance
                 </Menu.Item>
             </Menu.Dropdown>
+            <Modal opened={openModal} onClose={() => setOpenModal(false)} title='Instance Settings' >
+                <InstanceSettings />
+            </Modal>
         </Menu>
     );
 }

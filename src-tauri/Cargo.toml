@@ -1,8 +1,8 @@
 [package]
 name = "yogurt"
 version = "0.0.1"
-description = "A minecraft launcher"
-authors = ["godmod"]
+description = "Minecraft launcher"
+authors = ["godmod", "ModerNik"]
 license = "MIT"
 repository = ""
 edition = "2021"

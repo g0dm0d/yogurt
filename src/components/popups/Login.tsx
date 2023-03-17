@@ -1,5 +1,8 @@
 import {
-    Box, Button, Flex, Title
+    Box,
+    Button,
+    Flex,
+    Title
 } from '@mantine/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { open } from '@tauri-apps/api/shell';
