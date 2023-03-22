@@ -8,9 +8,6 @@ use tokio::net::TcpListener;
 /// After that, the server stops and starts the function to get the minecraft token, user name, uuid
 #[tauri::command(async)]
 pub async fn add_account() {
-    // BUG: THIS IS A TEMPORARY PIECE OF CODE UNTIL THE TAURI SHELL IS FIXED!!!
-    open::that("https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=d8e1d9bf-287f-4773-a176-e012722257f4&response_type=code&redirect_uri=http://localhost:9397&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED").unwrap();
-
     let addr: SocketAddr = ([127, 0, 0, 1], 9397).into();
     let tcp_listener = TcpListener::bind(addr).await.unwrap();
     let (tcp_stream, _) = tcp_listener.accept().await.unwrap();
