@@ -29,6 +29,7 @@ form_urlencoded = "1.1.0"
 zip = "0.6.4"
 flate2 = "1.0.25"
 tar = "0.4.38"
+futures = "0.3.27"
 
 [features]
 # by default Tauri runs in production mode

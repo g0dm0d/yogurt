@@ -7,12 +7,32 @@ struct Object {
     size: i32,
 }
 
+impl Object {
+    fn download_link(&self) -> String {
+        let download_link = format!(
+            "https://resources.download.minecraft.net/{0}/{1}",
+            &self.hash[0..2],
+            &self.hash
+        );
+        return download_link;
+    }
+
+    fn get_path(&self) -> String {
+        let object_path = format!(
+            "assets/objects/{0}/{1}",
+            &self.hash[0..2],
+            &self.hash
+        );
+        return object_path;
+    }
+}
+
 #[derive(Serialize, Deserialize)]
 struct Package {
     objects: HashMap<String, Object>,
 }
 
-use crate::tools::{download::download, path::get_path};
+use crate::tools::{download::{download, DownloadFile, multithreading_download}, path::get_path};
 
 use super::get_minecraft::AssetIndex;
 
@@ -27,17 +47,15 @@ pub async fn download_assets(assets_index: AssetIndex) {
     let file = std::fs::read_to_string(get_path(&assets_path))
         .expect("could not open the file with the index asstes");
     let assets: Package = serde_json::from_str(&file).expect("error json parsing");
+    let mut task: Vec<DownloadFile> = Vec::new();
     for (_, asset) in &assets.objects {
-        println!("{}", asset.hash);
-        download(
-            &format!(
-                "https://resources.download.minecraft.net/{0}/{1}",
-                &asset.hash[0..2],
-                &asset.hash
-            ),
-            &format!("assets/objects/{0}/{1}", &asset.hash[0..2], &asset.hash),
-            Some(asset.hash.clone()),
+        task.push(
+            DownloadFile { 
+                name: asset.download_link(),
+                path: asset.get_path(),
+                sha1: Some(asset.hash.clone())
+            }
         )
-        .await
     }
+    multithreading_download(task).await
 }
