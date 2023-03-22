@@ -3,9 +3,33 @@ use std::fs;
 use std::fs::File;
 use std::io;
 
+use futures::StreamExt;
+
 use crate::tools::path;
 use crate::tools::request;
 use crate::tools::sha::verify_sha1sum;
+
+pub struct DownloadFile {
+    pub name: String,
+    pub path: String,
+    pub sha1: Option<String>,
+}
+
+/// This is a func for multi-threaded downloads of large count of files
+pub async fn multithreading_download(files: Vec<DownloadFile>) {
+    let mut task = Vec::new();
+    for file in &files {
+        task.push(async move{
+            download(
+                &file.name,
+                &file.path,
+                file.sha1.clone(),
+            ).await
+        });
+    }
+    let stream = futures::stream::iter(task).buffer_unordered(10);
+    stream.collect::<Vec<_>>().await;
+} 
 
 /// This func download file and save
 /// Also checks if the file and its sha sum exist

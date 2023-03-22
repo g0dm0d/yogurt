@@ -1,6 +1,7 @@
 use std::fs::{self, File};
 use std::io::Read;
 use std::path::Path;
+use std::time::Instant;
 
 use reqwest::Error;
 use serde::{Deserialize, Serialize};
@@ -116,7 +117,7 @@ pub struct Package {
 }
 
 use crate::tools::download::download;
-use crate::tools::path;
+use crate::tools::path::{self, get_path};
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     let path = format!("versions/{id}/{id}.json");
@@ -130,7 +131,7 @@ async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
     Ok(package)
 }
 
-use crate::minecraft::{assets::download_assets, library::download_library};
+use crate::minecraft::{assets::download_assets, library::download_libraries};
 
 use crate::instances::config::{create_config, Instance};
 
@@ -138,9 +139,12 @@ use crate::instances::config::{create_config, Instance};
 pub async fn get_minecraft(url: String, id: String, name: String, java_args: String, fabric: bool) {
     let package = fetch_dependency(url.as_str(), id.as_str()).await.unwrap();
     // Downloading the library for the selected version of minecraft
-    download_library(package.libraries).await;
+    let start = Instant::now();
+    download_libraries(package.libraries).await;
     // Downloading the assets for the selected version of minecraft
     download_assets(package.asset_index).await;
+    let duration = start.elapsed();
+    println!("Total time is: {:?}", duration);
     // Downloading the client jar for the selected version of minecraft
     download(
         &package.downloads.client.url,
@@ -162,7 +166,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
     )
     .await;
     // Create instance folder
-    let result = fs::create_dir_all(path::parse_path(Path::new(&format!("instances/{name}"))));
+    let result = fs::create_dir_all(&get_path(&format!("instances/{name}/screenshots")));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }

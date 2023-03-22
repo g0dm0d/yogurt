@@ -12,7 +12,7 @@ mod mods;
 mod tools;
 
 fn main() {
-    let result = fs::create_dir_all(tools::path::get_path(""));
+    let result = fs::create_dir_all(tools::path::get_path("screenshots"));
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }
