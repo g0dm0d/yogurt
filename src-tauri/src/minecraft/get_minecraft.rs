@@ -114,8 +114,11 @@ pub struct Package {
     #[serde(rename = "javaVersion")]
     pub java_version: JavaVersion,
     pub libraries: Vec<Library>,
+    #[serde(rename = "mainClass")]
+    pub main_class: String,
 }
 
+use crate::mods::fabric::install_fabric;
 use crate::tools::download::download;
 use crate::tools::path::{self, get_path};
 

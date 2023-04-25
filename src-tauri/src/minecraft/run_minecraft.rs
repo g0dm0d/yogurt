@@ -56,7 +56,11 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         println!("{}", fabric_version);
         let libs = parse_libraries(&fabric_version);
         for lib in libs {
-            libraries.push(lib)
+            libraries.push(
+                get_path(&format!("libraries/{}", lib))
+                    .display()
+                    .to_string(),
+            )
         }
         let fabric_config = read_file(&format!(
             "versions/{}/{}.json",
@@ -65,11 +69,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         let fabric_data: FabricData = from_str(&fabric_config).unwrap();
         let jvm_args = fabric_data.arguments.jvm;
         for arg in jvm_args {
-            user_args.push(
-                get_path(&format!("libraries/{}", arg))
-                    .display()
-                    .to_string(),
-            )
+            user_args.push(arg)
         }
         main_class = fabric_data.main_class
     }
