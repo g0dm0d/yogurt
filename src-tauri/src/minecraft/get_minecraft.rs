@@ -114,11 +114,8 @@ pub struct Package {
     #[serde(rename = "javaVersion")]
     pub java_version: JavaVersion,
     pub libraries: Vec<Library>,
-    #[serde(rename = "mainClass")]
-    pub main_class: String,
 }
 
-use crate::mods::fabric::install_fabric;
 use crate::tools::download::download;
 use crate::tools::path::{self, get_path};
 
@@ -173,9 +170,22 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
     if fabric {
         install_fabric(name.clone()).await;
     }
-    // Create instance folder
-    let result = fs::create_dir_all(&get_path(&format!("instances/{name}/screenshots")));
+    // creating link for folder screenshots
+    link_screenshots(&name)
+}
+
+/// link screenshots folder of launcher and screenshots of instance
+fn link_screenshots(name: &str) {
+    let path = get_path(&format!("instances/{name}/screenshots"));
+    let result = fs::create_dir_all(&path);
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
+    }
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    let result = std::os::unix::fs::symlink(path, get_path(&format!("screenshots/{name}")));
+    #[cfg(target_os = "windows")]
+    let result = std::os::windows::fs::symlink_dir(path, get_path(&format!("screenshots/{name}")));
+    if result.is_err() {
+        println!("{:?}", result.err());
     }
 }
