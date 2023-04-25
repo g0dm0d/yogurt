@@ -4,11 +4,16 @@ use std::{
     io,
     path::PathBuf,
 };
+
+#[cfg(target_os = "linux")]
 use tar::Archive;
+#[cfg(target_os = "windows")]
 use zip::ZipArchive;
 
 use super::path::get_path;
 
+#[cfg(target_os = "windows")]
+/// function to unzip zip archives with java
 pub fn unzip(path: PathBuf) {
     let file = File::open(path).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
@@ -35,6 +40,8 @@ pub fn unzip(path: PathBuf) {
     }
 }
 
+#[cfg(target_os = "linux")]
+/// function to untar tar archives with java
 pub fn untar(path: PathBuf) {
     let tar_gz = File::open(path).unwrap();
     let tar = GzDecoder::new(tar_gz);

@@ -1,6 +1,6 @@
 use std::{
     fs::{self, OpenOptions},
-    io::{Read, Write},
+    io::Read,
 };
 
 use reqwest::Client;
@@ -10,7 +10,7 @@ use toml::Value;
 
 use crate::tools::path;
 
-use super::api_accounts::{get_access_token, get_minecraft_token};
+use super::api_accounts::{get_minecraft_token, update_access_token};
 
 /// The response from Minecraft when attempting to retrieve a users profile
 #[derive(Serialize, Deserialize, Debug)]
@@ -114,7 +114,7 @@ impl User {
 
         let mut config_contents = String::new();
         config_file.read_to_string(&mut config_contents)?;
-        let mut accounts_toml: Value = toml::from_str(&config_contents)?;
+        let mut accounts_toml: Value = config_contents.parse().unwrap();
 
         let account = accounts_toml
             .as_table_mut()
@@ -146,7 +146,10 @@ impl User {
             Value::Integer(self.minecraft_exp),
         );
 
-        config_file.write_all(toml::to_string(&accounts_toml).unwrap().as_bytes())?;
+        fs::write(
+            path::get_path("accounts.toml"),
+            toml::to_string(&accounts_toml).unwrap(),
+        )?;
 
         Ok(())
     }
@@ -176,6 +179,7 @@ impl User {
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
+            println!("minecraft token exp!");
             self.verify_access_token().await;
         }
         match self.get_info().await {
@@ -189,11 +193,12 @@ impl User {
 
     async fn verify_access_token(&self) {
         if self.access_exp
-            < SystemTime::now()
+            > SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
+            println!("access token is fine");
             match get_minecraft_token(
                 self.access_token.clone(),
                 self.access_exp as u64,
@@ -207,7 +212,8 @@ impl User {
                 }
             }
         } else {
-            match get_access_token(&self.refresh_token).await {
+            println!("access token exp!");
+            match update_access_token(&self.refresh_token).await {
                 Ok(_) => {}
                 Err(e) => {
                     println!("{}", e)

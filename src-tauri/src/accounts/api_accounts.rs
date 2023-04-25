@@ -60,6 +60,30 @@ struct MinecraftAuthenticationResponse {
 
 const CLIENT_ID: &str = "d8e1d9bf-287f-4773-a176-e012722257f4";
 
+/// Function for refresh tokens by refresh token
+/// Documentation: https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#refresh-the-access-token
+pub async fn update_access_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+
+    let authorization_token = client
+        .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token")
+        .form(&vec![
+            ("client_id", CLIENT_ID),
+            ("refresh_token", code),
+            ("grant_type", "refresh_token"),
+        ])
+        .send()
+        .await?
+        .json::<AuthorizationTokenResponse>()
+        .await?;
+    get_minecraft_token(
+        authorization_token.access_token,
+        authorization_token.expires_in,
+        authorization_token.refresh_token,
+    )
+    .await
+}
+
 /// get minecraft bearer/access token
 /// https://wiki.vg/Microsoft_Authentication_Scheme
 pub async fn get_access_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {

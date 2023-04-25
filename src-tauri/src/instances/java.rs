@@ -2,12 +2,13 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 
-use crate::tools::{
-    archives::{untar, unzip},
-    download::download,
-    path::get_path,
-    request::get,
-};
+use crate::tools::{download::download, path::get_path, request::get};
+
+#[cfg(target_os = "windows")]
+use crate::tools::archives::unzip;
+
+#[cfg(target_os = "linux")]
+use crate::tools::archives::untar;
 
 use super::config::get_config;
 

@@ -33,9 +33,7 @@ async fn code_grab(req: Request<Body>) -> Result<Response<Body>, Infallible> {
                 let code = v.into_owned();
                 println!("{}", code);
                 match crate::accounts::api_accounts::get_access_token(&code).await {
-                    Ok(_) => {
-                        println!("account added!")
-                    }
+                    Ok(_) => {}
                     Err(err) => println!("{}", err),
                 }
             }
