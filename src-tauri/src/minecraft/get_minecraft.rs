@@ -114,8 +114,11 @@ pub struct Package {
     #[serde(rename = "javaVersion")]
     pub java_version: JavaVersion,
     pub libraries: Vec<Library>,
+    #[serde(rename = "mainClass")]
+    pub main_class: String,
 }
 
+use crate::mods::fabric::install_fabric;
 use crate::tools::download::download;
 use crate::tools::path::{self, get_path};
 
@@ -152,6 +155,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
         Some(package.downloads.client.sha1),
     )
     .await;
+    // generate config
     create_config(
         Instance {
             version: id.clone(),
@@ -165,6 +169,10 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
         name.as_str(),
     )
     .await;
+    // install fabric if need
+    if fabric {
+        install_fabric(name.clone()).await;
+    }
     // Create instance folder
     let result = fs::create_dir_all(&get_path(&format!("instances/{name}/screenshots")));
     if result.is_err() {

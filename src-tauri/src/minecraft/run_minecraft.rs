@@ -1,10 +1,10 @@
 use serde_json::from_str;
-use std::fs::File;
-use std::io::Read;
 use std::process::Command;
 
 use crate::accounts::account::get_user;
 use crate::minecraft::get_minecraft::Package;
+use crate::mods::fabric::{parse_libraries, FabricData};
+use crate::tools::file::read_file;
 use crate::tools::path::get_path;
 
 use crate::instances::config::get_config;
@@ -27,14 +27,17 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     let config = get_config(instance);
 
     // Open version json file
-    let mut file = File::open(get_path(&format!(
+    let minecraft_config = read_file(&format!(
         "versions/{}/{}.json",
         config.version, config.version
-    )))
-    .unwrap();
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-    let data: Package = from_str(&contents).unwrap();
+    ));
+    let data: Package = from_str(&minecraft_config).unwrap();
+    let mut user_args: Vec<String> = config
+        .arguments
+        .split_whitespace()
+        .map(String::from)
+        .collect();
+    let mut main_class = data.main_class;
 
     let mut libraries = Vec::new();
     for file in data.libraries {
@@ -47,6 +50,24 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
             .display()
             .to_string();
         libraries.push(path)
+    }
+    if config.fabric {
+        let fabric_version = config.fabric_version.unwrap();
+        println!("{}", fabric_version);
+        let libs = parse_libraries(&fabric_version);
+        for lib in libs {
+            libraries.push(lib)
+        }
+        let fabric_config = read_file(&format!(
+            "versions/{}/{}.json",
+            fabric_version, fabric_version
+        ));
+        let fabric_data: FabricData = from_str(&fabric_config).unwrap();
+        let jvm_args = fabric_data.arguments.jvm;
+        for arg in jvm_args {
+            user_args.push(arg)
+        }
+        main_class = fabric_data.main_class
     }
     libraries.push(
         get_path(&format!("versions/{}/{}", config.version, config.client))
@@ -64,9 +85,10 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         )
         .arg("-Dminecraft.launcher.brand=yogurt")
         .arg("-Dminecraft.launcher.version=0.1")
+        .args(user_args)
         .arg("-cp")
         .arg(libraries.join(SEP))
-        .arg("net.minecraft.client.main.Main")
+        .arg(main_class)
         .arg("--username")
         .arg(username)
         .arg("--version")
@@ -100,4 +122,3 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
-

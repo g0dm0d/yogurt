@@ -8,10 +8,28 @@ use crate::{
     tools::{download::download, path::get_path, request::get},
 };
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Library {
-    name: String,
-    url: String,
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FabricData {
+    pub libraries: Vec<Library>,
+    #[serde(rename = "mainClass")]
+    pub main_class: String,
+    pub arguments: Arguments,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Arguments {
+    pub jvm: Vec<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Library {
+    pub name: String,
+    pub url: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Libraries {
+    pub libraries: Vec<Library>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -32,24 +50,22 @@ pub async fn install_fabric(name: String) {
     download(
         &format!(
             "https://meta.fabricmc.net/v2/versions/loader/{0}/{1}/profile/json",
-            loader, config.version
+            config.version, loader
         ),
-        &get_path(&format!(
-            "versions/{fabric_version}/{fabric_version}.json"
-        ))
-        .display()
-        .to_string(),
+        &get_path(&format!("versions/{fabric_version}/{fabric_version}.json"))
+            .display()
+            .to_string(),
         None,
     )
     .await;
 
-    let libraries = parse_libraries(&config.version);
+    let libraries = parse_libraries(&fabric_version);
     download_libraries(libraries).await;
 
     config.set_fabric_version(fabric_version);
     config.set_fabric_status(true);
 
-    let mut file = File::open(get_path(&format!("configs/{name}.toml"))).unwrap();
+    let mut file = File::create(get_path(&format!("configs/{name}.toml"))).unwrap();
     let toml_string = toml::to_string_pretty(&config).unwrap();
     file.write_all(toml_string.as_bytes()).unwrap();
 }
@@ -94,13 +110,17 @@ fn parse_library(name: String) -> String {
 
 /// This function parses all libraries in the json version
 /// This is need to run minecraft
-fn parse_libraries(version: &str) -> Vec<String> {
+pub fn parse_libraries(version: &str) -> Vec<String> {
     let file = std::fs::read_to_string(get_path(&format!("versions/{}/{}.json", version, version)))
         .expect("could not open the file with the index asstes");
-    let libraries: Vec<Library> = serde_json::from_str(&file).expect("error json parsing");
+    let libraries: Libraries = serde_json::from_str(&file).expect("error json parsing");
     let mut libraries_str: Vec<String> = Vec::new();
-    for library in libraries {
-        libraries_str.push(parse_library(library.name))
+    for library in libraries.libraries {
+        libraries_str.push(
+            get_path(&format!("libraries/{}", parse_library(library.name)))
+                .display()
+                .to_string(),
+        )
     }
     return libraries_str;
 }
