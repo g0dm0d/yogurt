@@ -65,7 +65,11 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
         let fabric_data: FabricData = from_str(&fabric_config).unwrap();
         let jvm_args = fabric_data.arguments.jvm;
         for arg in jvm_args {
-            user_args.push(arg)
+            user_args.push(
+                get_path(&format!("libraries/{}", arg))
+                    .display()
+                    .to_string(),
+            )
         }
         main_class = fabric_data.main_class
     }
