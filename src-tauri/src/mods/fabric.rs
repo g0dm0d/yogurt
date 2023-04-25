@@ -116,11 +116,7 @@ pub fn parse_libraries(version: &str) -> Vec<String> {
     let libraries: Libraries = serde_json::from_str(&file).expect("error json parsing");
     let mut libraries_str: Vec<String> = Vec::new();
     for library in libraries.libraries {
-        libraries_str.push(
-            get_path(&format!("libraries/{}", parse_library(library.name)))
-                .display()
-                .to_string(),
-        )
+        libraries_str.push(parse_library(library.name))
     }
     return libraries_str;
 }
@@ -136,7 +132,9 @@ async fn download_libraries(libraries: Vec<String>) {
         println!("{}", sha1);
         download(
             &format!("https://maven.fabricmc.net/{library}"),
-            &library,
+            &get_path(&format!("libraries/{}", library))
+                .display()
+                .to_string(),
             Some(sha1),
         )
         .await
