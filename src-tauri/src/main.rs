@@ -16,6 +16,11 @@ fn main() {
     if result.is_err() {
         panic!("Failed to create directory: {:?}", result.err());
     }
+    // TODO: make better
+    let result = fs::create_dir_all(tools::path::get_path("configs"));
+    if result.is_err() {
+        panic!("Failed to create directory: {:?}", result.err());
+    }
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             minecraft::get_minecraft::get_minecraft,
