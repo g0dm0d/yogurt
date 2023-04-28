@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::fs::{self, File};
+use std::fs;
 use std::io::Write;
 use toml::to_string_pretty;
 
@@ -32,13 +32,9 @@ impl Instance {
     }
 
     pub fn save_config(&mut self) {
-        let mut file = File::open(get_path(&format!(
-            "configs/{0}.toml",
-            self.name.clone().unwrap()
-        )))
-        .unwrap();
-        let toml_string = toml::to_string_pretty(self).unwrap();
-        file.write_all(toml_string.as_bytes()).unwrap();
+        let path = get_path(&format!("configs/{0}.toml", self.name.clone().unwrap()));
+        println!("{}", toml::to_string(&self).unwrap());
+        fs::write(path, toml::to_string(&self).unwrap()).unwrap()
     }
 }
 

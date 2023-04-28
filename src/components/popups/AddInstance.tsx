@@ -7,6 +7,7 @@ import {
     Select,
     Image,
     TextInput,
+    Checkbox,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
@@ -19,7 +20,7 @@ type Version = {
     value: string;
 };
 
-export function AddInstance({setCreating}: {setCreating: React.Dispatch<React.SetStateAction<boolean>>} ) {
+export function AddInstance({ setCreating }: { setCreating: React.Dispatch<React.SetStateAction<boolean>> }) {
     async function createInstance(name: string, version: string | undefined, type: string, url?: string | null) {
         if (!url) {
             fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
@@ -53,7 +54,13 @@ export function AddInstance({setCreating}: {setCreating: React.Dispatch<React.Se
                 javaArgs: '-Xmx4G',
                 fabric: type === 'fabric' ? true : false
             })
-                .then((response) => {
+                .then(async (response) => {
+                    console.log(java);
+                    if (java) {
+                        await invoke('install_java', {
+                            instanceName: name
+                        })
+                    }
                     console.log(response);
                     setCreating(false);
                 })
@@ -71,6 +78,8 @@ export function AddInstance({setCreating}: {setCreating: React.Dispatch<React.Se
     const [fabricVersions, setFabricVersions] = useState<Version[]>([]);
     const [fabricValue, setFabricValue] = useState<string | null>(null);
     const fabricLabel = fabricVersions.find((item) => item.value === fabricValue)?.label
+
+    const [java, setJava] = useState(true);
 
     const [loading, setLoading] = useState(false);
     async function getDefaultVersions() {
@@ -192,6 +201,7 @@ export function AddInstance({setCreating}: {setCreating: React.Dispatch<React.Se
                         required={type === 'fabric' ? true : false}
                         sx={{ display: type == 'fabric' ? 'visible' : 'none' }}
                     />
+                    <Checkbox label="Download Java" checked={java} onChange={() => setJava(!java)} />
                     <Button type='submit' variant='outline' >
                         Create
                     </Button>

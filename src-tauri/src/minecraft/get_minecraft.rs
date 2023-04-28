@@ -63,7 +63,7 @@ pub struct Library {
 pub struct JavaVersion {
     component: String,
     #[serde(rename = "majorVersion")]
-    major_version: i32,
+    pub major_version: i32,
 }
 
 /// Info about json assets
@@ -191,3 +191,4 @@ fn link_screenshots(name: &str) {
         println!("{:?}", result.err());
     }
 }
+
