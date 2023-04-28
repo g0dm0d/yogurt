@@ -41,6 +41,7 @@ const BINARY_FILE: &str = "java";
 
 /// THIS FUNC ONLY FOR WINDOWS and now Linux
 /// Downloading custom java for minecraft to make life easier for people who have windows
+#[cfg(any(target_os = "linux", target_os = "windows"))]
 #[tauri::command(async)]
 pub async fn install_java(instance_name: String) {
     println!("starting download java");
