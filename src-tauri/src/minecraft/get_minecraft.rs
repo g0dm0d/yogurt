@@ -5,7 +5,7 @@ use std::time::Instant;
 use reqwest::Error;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Download {
     /// Path is always a relative parent folder ($HOME/.yogurt)
     pub path: String,
@@ -19,7 +19,22 @@ pub struct Download {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LibraryDownloads {
-    pub artifact: Download,
+    pub artifact: Option<Download>,
+    pub classifiers: Option<Classifiers>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Classifiers {
+    #[serde(rename = "natives-linux")]
+    pub natives_linux: Option<Download>,
+    #[serde(rename = "natives-windows")]
+    pub natives_windows: Option<Download>,
+    #[serde(rename = "natives-windows-32")]
+    pub natives_windows_32: Option<Download>,
+    #[serde(rename = "natives-windows-64")]
+    pub natives_windows_64: Option<Download>,
+    #[serde(rename = "natives-osx")]
+    pub natives_osx: Option<Download>,
 }
 
 /// The structure that stores the name of the os for which this library is suitable
@@ -191,4 +206,3 @@ fn link_screenshots(name: &str) {
         println!("{:?}", result.err());
     }
 }
-

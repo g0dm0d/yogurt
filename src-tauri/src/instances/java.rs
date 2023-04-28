@@ -73,13 +73,14 @@ pub async fn install_java(instance_name: String) {
     let java: Vec<Java> = serde_json::from_str(&buff).unwrap();
     let path = &format!("java/{0}", java[0].release_name);
     download(&java[0].binary.package.link, &format!("{path}.tar"), None).await;
-    println!("Downloading is finish");
+    println!("java download complete");
 
     // This is necessary because linux releases are in tar.gz and windows releases are in .zip
     #[cfg(target_os = "windows")]
     unzip(get_path(&format!("{path}.tar")));
     #[cfg(target_os = "linux")]
     untar(get_path(&format!("{path}.tar")));
+    println!("java installation complete");
 
     // And save this to instance config
     config.set_java_path(
@@ -91,9 +92,7 @@ pub async fn install_java(instance_name: String) {
         .to_string(),
     );
     config.save_config();
-    println!("save success");
 
     // Deletes the archive. Since it is already garbage
     fs::remove_file(get_path(&format!("{path}.tar"))).unwrap();
-    println!("delete success");
 }

@@ -19,17 +19,11 @@ pub struct DownloadFile {
 pub async fn multithreading_download(files: Vec<DownloadFile>) {
     let mut task = Vec::new();
     for file in &files {
-        task.push(async move{
-            download(
-                &file.name,
-                &file.path,
-                file.sha1.clone(),
-            ).await
-        });
+        task.push(async move { download(&file.name, &file.path, file.sha1.clone()).await });
     }
     let stream = futures::stream::iter(task).buffer_unordered(10);
     stream.collect::<Vec<_>>().await;
-} 
+}
 
 /// This func download file and save
 /// Also checks if the file and its sha sum exist

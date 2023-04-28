@@ -8,7 +8,7 @@ use crate::tools::file::read_file;
 use crate::tools::path::get_path;
 
 use crate::instances::config::get_config;
-use crate::minecraft::library::lib_os;
+use crate::minecraft::library::library_filtering;
 
 #[tauri::command(async)]
 pub async fn run_minecraft(username: String, instance: String) {
@@ -40,17 +40,14 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     let mut main_class = data.main_class;
 
     let mut libraries = Vec::new();
-    for file in data.libraries {
-        if !lib_os(&file) {
-            println!("Library {} doesn't support", file.name);
-            continue;
-        }
+    for lib in library_filtering(&data.libraries) {
         // create array for -cp arg
-        let path: String = get_path(&format!("libraries/{}", file.downloads.artifact.path))
+        let path: String = get_path(&format!("libraries/{}", lib.path))
             .display()
             .to_string();
         libraries.push(path)
     }
+
     if config.fabric {
         let fabric_version = config.fabric_version.unwrap();
         println!("{}", fabric_version);
@@ -83,9 +80,7 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     minecraft
         .arg(
             "-Djava.library.path=".to_owned()
-                + get_path(&format!("versions/{}/natives", config.version))
-                    .to_str()
-                    .unwrap(),
+                + &format!("versions/{}/native/linux", config.version),
         )
         .arg("-Dminecraft.launcher.brand=yogurt")
         .arg("-Dminecraft.launcher.version=0.1")

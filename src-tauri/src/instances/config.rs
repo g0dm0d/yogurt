@@ -33,7 +33,6 @@ impl Instance {
 
     pub fn save_config(&mut self) {
         let path = get_path(&format!("configs/{0}.toml", self.name.clone().unwrap()));
-        println!("{}", toml::to_string(&self).unwrap());
         fs::write(path, toml::to_string(&self).unwrap()).unwrap()
     }
 }
