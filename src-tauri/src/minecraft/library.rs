@@ -53,25 +53,25 @@ pub fn find_classifiers_lib(library: &Library) -> Option<Download> {
         #[cfg(target_os = "windows")]
         if let Some(l) = &lib.natives_windows_32 {
             if std::env::consts::ARCH == "x86" {
-                return Some(l);
+                return Some(l.clone());
             }
         }
 
         #[cfg(target_os = "windows")]
         if let Some(l) = &lib.natives_windows_64 {
             if std::env::consts::ARCH == "x86_64" {
-                return Some(l);
+                return Some(l.clone());
             }
         }
 
         #[cfg(target_os = "windows")]
         if let Some(l) = &lib.natives_windows {
-            return Some(l);
+            return Some(l.clone());
         }
 
         #[cfg(target_os = "macos")]
         if let Some(l) = &lib.natives_osx {
-            return Some(l);
+            return Some(l.clone());
         }
 
         #[cfg(target_os = "linux")]
