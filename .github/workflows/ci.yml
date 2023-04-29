@@ -29,8 +29,6 @@ jobs:
           profile: minimal
           toolchain: stable
 
-      - name: Build project
-        uses: actions-rs/cargo@v1
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'
         run: |
@@ -40,7 +38,15 @@ jobs:
       - name: install frontend dependencies
         run: yarn install
 
-      - uses: tauri-apps/tauri-action@v0
+      # crash on windows
+      # - uses: tauri-apps/tauri-action@v0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      #     TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+
+      - name: build app
+        run: yarn tauri build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
