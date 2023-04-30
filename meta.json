@@ -1,11 +1,15 @@
 {
-    "version": "0.0.1",
-    "notes": "Test version",
-    "pub_date": "2023-03-13T11:15:00Z",
+    "version": "0.0.2",
+    "notes": "So much for...",
+    "pub_date": "2023-04-30T14:00:00Z",
     "platforms": {
       "linux-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUSXAzZDgzQ01BSm5yZmRBWHZSRTZ3UkN1djM1SU05cjllOUJkTHFrZWVoYnhQY05pNHltK2tMNW1PSXZqOFRuSHozVE1mbzlLVkgzQkRSVlU1clJUNkdMUXdxNUUrUEFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc4NzA3NzYwCWZpbGU6eW9ndXJ0XzAuMC4xX2FtZDY0LkFwcEltYWdlLnRhci5negppdldPRExEcUh4WTU2YTlqZW5udWZ1b3E0U1pHdzl0MXpzWUZBalVjMHdteGNJZFBzWk1pb2J5Q1RxUkIzeFVoMjFxMlFDOERwSUp6MUpSRWprY1dEQT09Cg==",
-        "url": "https://github.com/g0dm0d/yogurt/releases/download/v0.0.1/yogurt_0.0.1_amd64.AppImage.tar.gz"
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUSXAzZDgzQ01BSnMxZktuNUIvYjBUbWZPSVYrVVBjYjVDNHdMbmNzdDZPd05DYmRwNzlJeXJsenZYK2h5aHd5Vk5ZR3JPay9FNmk4M1FJN3dxMW1udDBYNXR6eWgrNVE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgyODUyMjQ1CWZpbGU6eW9ndXJ0XzAuMC4yX2FtZDY0LkFwcEltYWdlLnRhci5negowQjFrTEpNeEppQWwzZFMyUDRWcjgwend1N2k1QXQ1T0Z4WklaaTRsREFxVEhCME5TcEpjWVVyT0ViUmYxb1JLWS9nVUZpYS81WG1LQ1pTQjNNOWdDdz09Cg==",
+        "url": "https://github.com/g0dm0d/yogurt/releases/download/v0.0.2-alpha/yogurt_0.0.2_amd64.AppImage.tar.gz"
+      },
+      "windows-x86_64": {
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUSXAzZDgzQ01BSnJZN0JSYUdDbDVzdWxUbnR4UjJTbnNIdlk4c1d2RkZmU215eUx1MGRvck9meGZMUk1GUVdjOUFvZ2pnakpXYjV1TEZyWFdFK3l0TkNIdC9QeFBTNWdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgyODUyNDQ5CWZpbGU6eW9ndXJ0XzAuMC4yX3g2NF9lbi1VUy5tc2kuemlwCi81OXY5b0JTU1ZnZGJGVGxodjQwcUdxNHg4aTBIRWZMTlErSWtFVE1DSzJpZVp2ZmtOdXRrcjZQMU9xOGpUS3dTTVdOYUppN0YxTzhUb2xTU1B3R0NRPT0K",
+        "url": "https://github.com/g0dm0d/yogurt/releases/download/v0.0.2-alpha/yogurt_0.0.2_x64_en-US.msi.zip"
       }
     }
 }
