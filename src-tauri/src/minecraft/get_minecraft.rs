@@ -174,7 +174,7 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
         Instance {
             version: id.clone(),
             client: format!("{id}.jar"),
-            java_path: "java".to_owned(),
+            java_path: "javaw".to_owned(),
             arguments: java_args,
             fabric: fabric,
             fabric_version: None,

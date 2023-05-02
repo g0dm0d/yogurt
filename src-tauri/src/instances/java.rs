@@ -35,9 +35,9 @@ struct Package {
 }
 
 #[cfg(target_os = "windows")]
-const BINARY_FILE: &str = "java.exe";
+const BINARY_FILE: &str = "javaw.exe";
 #[cfg(target_os = "linux")]
-const BINARY_FILE: &str = "java";
+const BINARY_FILE: &str = "javaw";
 
 /// THIS FUNC ONLY FOR WINDOWS and now Linux
 /// Downloading custom java for minecraft to make life easier for people who have windows
