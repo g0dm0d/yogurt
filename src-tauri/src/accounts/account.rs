@@ -182,7 +182,7 @@ impl User {
                 .as_secs() as i64
         {
             println!("minecraft token exp!");
-            self.verify_access_token().await;
+            self.verify_access_token().await?;
         }
         match self.get_info().await {
             Ok(_) => {}

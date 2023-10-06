@@ -190,10 +190,10 @@ pub async fn get_minecraft(
         },
         name.as_str(),
     )
-    .await;
+    .await?;
     // install fabric if need
     if fabric {
-        install_fabric(name.clone()).await;
+        install_fabric(name.clone()).await?;
     }
     // creating link for folder screenshots
     link_screenshots(&name);

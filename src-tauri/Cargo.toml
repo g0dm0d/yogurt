@@ -15,7 +15,7 @@ tauri-build = { version = "2.0.0-alpha.4", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha.8", features = ["shell-open", "updater"] }
+tauri = { version = "2.0.0-alpha.8", features = ["shell-open"] }
 reqwest = { version = "0.11.14", features = ["json"] }
 tokio = { version = "1.25.0", features = ["full"] }
 home = "0.5.4"
