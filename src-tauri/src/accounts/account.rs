@@ -46,7 +46,7 @@ struct Accounts {
 
 const USERS_FILE: &str = "accounts.json";
 
-/// get all user names from the accounts.toml file
+/// get all user names from the accounts.json file
 #[tauri::command]
 pub fn get_all_users() -> Result<Vec<String>, String> {
     let users = load_users().map_err(|err| err.to_string())?;
@@ -100,6 +100,10 @@ fn load_users() -> Result<Accounts, String> {
         .read_to_string(&mut config_contents)
         .map_err(|err| err.to_string())?;
 
+    if config_contents == "" {
+        return Ok(Accounts { users: vec![] });
+    };
+
     let users: Accounts = serde_json::from_str(&config_contents).map_err(|err| err.to_string())?;
 
     Ok(users)
@@ -138,7 +142,7 @@ impl User {
         }
     }
 
-    /// save user to accounts.toml in launcher default foldert
+    /// save user to accounts.json in launcher default foldert
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         if update_user(&*self).is_ok() {
             return Ok(());
@@ -150,7 +154,7 @@ impl User {
 
         fs::write(
             path::get_path(USERS_FILE),
-            toml::to_string(&accounts).unwrap(),
+            serde_json::to_string(&accounts)?,
         )?;
 
         Ok(())

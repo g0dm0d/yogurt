@@ -201,8 +201,8 @@ pub async fn get_minecraft_token(
         Ok(_) => {
             println!("Account added!")
         }
-        Err(_) => {
-            println!("Error while save account")
+        Err(e) => {
+            println!("{}", e)
         }
     }
 
