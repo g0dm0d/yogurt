@@ -43,7 +43,7 @@ const BINARY_FILE: &str = "javaw";
 /// Downloading custom java for minecraft to make life easier for people who have windows
 #[cfg(any(target_os = "linux", target_os = "windows"))]
 #[tauri::command(async)]
-pub async fn install_java(instance_name: String) {
+pub async fn install_java(instance_name: String) -> Result<(), String> {
     println!("starting download java");
     let mut config = get_config(&instance_name);
 
@@ -51,11 +51,13 @@ pub async fn install_java(instance_name: String) {
     let id = &config.version;
     let path = &format!("versions/{id}/{id}.json");
 
-    let mut file = File::open(get_path(path)).unwrap();
+    let mut file = File::open(get_path(path)).map_err(|err| err.to_string())?;
     let mut buff = String::new();
-    file.read_to_string(&mut buff).unwrap();
+    file.read_to_string(&mut buff)
+        .map_err(|err| err.to_string())?;
 
-    let package: get_minecraft::Package = serde_json::from_str(&buff).unwrap();
+    let package: get_minecraft::Package =
+        serde_json::from_str(&buff).map_err(|err| err.to_string())?;
     let java_version = package.java_version.major_version.to_string();
 
     // I send a request to get the java version for this OS
@@ -65,13 +67,13 @@ pub async fn install_java(instance_name: String) {
             "https://api.adoptium.net/v3/assets/latest/{java_version}/hotspot?architecture={0}&os={1}&image_type=jdk", std::env::consts::ARCH, std::env::consts::OS
         ))
         .await
-        .unwrap(),
+        .map_err(|err| err.to_string())?,
         &mut buff,
     )
-    .unwrap();
+    .map_err(|err| err.to_string())?;
 
     // I take the very first element. Because if you specify the data exactly, it returns only 1 - the last version
-    let java: Vec<Java> = serde_json::from_str(&buff).unwrap();
+    let java: Vec<Java> = serde_json::from_str(&buff).map_err(|err| err.to_string())?;
     let path = &format!("java/{0}", java[0].release_name);
     download(&java[0].binary.package.link, &format!("{path}.tar"), None).await;
     println!("java download complete");
@@ -95,5 +97,6 @@ pub async fn install_java(instance_name: String) {
     config.save_config();
 
     // Deletes the archive. Since it is already garbage
-    fs::remove_file(get_path(&format!("{path}.tar"))).unwrap();
+    fs::remove_file(get_path(&format!("{path}.tar"))).map_err(|err| err.to_string())?;
+    Ok(())
 }

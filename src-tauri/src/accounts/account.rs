@@ -6,7 +6,6 @@ use std::{
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
-use toml::Value;
 
 use crate::tools::path;
 
@@ -21,7 +20,7 @@ struct MinecraftProfileResponse {
     name: String,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct User {
     /// uuid playr
     pub uuid: String,
@@ -39,48 +38,83 @@ pub struct User {
     pub minecraft_exp: i64,
 }
 
+#[derive(Serialize, Clone, Deserialize, Debug)]
+#[serde(transparent)]
+struct Accounts {
+    users: Vec<User>,
+}
+
+const USERS_FILE: &str = "accounts.json";
+
 /// get all user names from the accounts.toml file
 #[tauri::command]
-pub fn get_all_users() -> Vec<String> {
-    let path = path::get_path("accounts.toml");
-    if !path.exists() {
-        return Vec::new();
-    }
-    let config_file = fs::read_to_string(path).unwrap();
-    let toml: Value = config_file.parse().unwrap();
+pub fn get_all_users() -> Result<Vec<String>, String> {
+    let users = load_users().map_err(|err| err.to_string())?;
 
     let mut accounts = Vec::new();
-    for (key, _) in toml.as_table().unwrap().iter() {
-        accounts.push(key.to_owned());
+    for user in users.users {
+        accounts.push(user.username);
     }
-    return accounts;
+    Ok(accounts)
 }
 
-#[derive(Debug, Deserialize)]
-struct Config {
-    #[serde(flatten)]
-    users: std::collections::HashMap<String, User>,
-}
-
+// delete some user by username
 #[tauri::command]
-pub fn delete_account(name: String) {
-    let mut accounts_toml: Value = fs::read_to_string(path::get_path("accounts.toml"))
-        .unwrap()
-        .parse()
-        .unwrap();
-    accounts_toml.as_table_mut().unwrap().remove(&name);
-    fs::write(
-        path::get_path("accounts.toml"),
-        toml::to_string(&accounts_toml).unwrap(),
-    )
-    .unwrap();
+pub fn delete_user(name: &str) -> Result<(), String> {
+    let mut users = load_users().map_err(|err| err.to_string())?;
+
+    let index = users
+        .users
+        .iter()
+        .position(|u| u.username == name)
+        .ok_or("User not found")?;
+    users.users.remove(index);
+
+    let users_json = serde_json::to_string(&users).map_err(|err| err.to_string())?;
+    fs::write(path::get_path(USERS_FILE), users_json).map_err(|err| err.to_string())?;
+
+    Ok(())
 }
 
-pub fn get_user(username: &str) -> User {
-    let toml = fs::read_to_string(path::get_path("accounts.toml")).unwrap();
-    let config: Config = toml::from_str(&toml).unwrap();
-    let user_ref = config.users.get(username).unwrap();
-    return user_ref.clone();
+pub fn get_user(username: &str) -> Result<User, String> {
+    let users = load_users().map_err(|err| err.to_string())?;
+
+    let index = users
+        .users
+        .iter()
+        .position(|u| &u.username == username)
+        .ok_or("User not found")?;
+    Ok(users.users[index].clone())
+}
+
+fn load_users() -> Result<Accounts, String> {
+    let mut config_file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(path::get_path(USERS_FILE))
+        .map_err(|err| err.to_string())?;
+
+    let mut config_contents = String::new();
+    config_file
+        .read_to_string(&mut config_contents)
+        .map_err(|err| err.to_string())?;
+
+    let users: Accounts = serde_json::from_str(&config_contents).map_err(|err| err.to_string())?;
+
+    Ok(users)
+}
+
+fn update_user(user: &User) -> Result<(), String> {
+    let mut users = load_users().map_err(|err| err.to_string())?;
+    let index = users
+        .users
+        .iter()
+        .position(|u| u.username == user.username)
+        .ok_or("User not found")?;
+
+    users.users[index] = user.clone();
+    Ok(())
 }
 
 impl User {
@@ -106,49 +140,17 @@ impl User {
 
     /// save user to accounts.toml in launcher default foldert
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let mut config_file = OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open(path::get_path("accounts.toml"))?;
+        if update_user(&*self).is_ok() {
+            return Ok(());
+        }
 
-        let mut config_contents = String::new();
-        config_file.read_to_string(&mut config_contents)?;
-        let mut accounts_toml: Value = config_contents.parse().unwrap();
-
-        let account = accounts_toml
-            .as_table_mut()
-            .unwrap()
-            .entry(&self.username)
-            .or_insert(Value::Table(Default::default()));
-
-        let account_table = account.as_table_mut().unwrap();
-        account_table.insert("uuid".to_owned(), Value::String(self.uuid.to_owned()));
-        account_table.insert(
-            "refresh_token".to_owned(),
-            Value::String(self.refresh_token.to_owned()),
-        );
-        account_table.insert(
-            "username".to_owned(),
-            Value::String(self.username.to_owned()),
-        );
-        account_table.insert(
-            "access_token".to_owned(),
-            Value::String(self.access_token.to_owned()),
-        );
-        account_table.insert("access_exp".to_owned(), Value::Integer(self.access_exp));
-        account_table.insert(
-            "minecraft_token".to_owned(),
-            Value::String(self.minecraft_token.to_owned()),
-        );
-        account_table.insert(
-            "minecraft_exp".to_owned(),
-            Value::Integer(self.minecraft_exp),
-        );
+        let user = self.clone();
+        let mut accounts = load_users()?;
+        accounts.users.push(user);
 
         fs::write(
-            path::get_path("accounts.toml"),
-            toml::to_string(&accounts_toml).unwrap(),
+            path::get_path(USERS_FILE),
+            toml::to_string(&accounts).unwrap(),
         )?;
 
         Ok(())
@@ -172,7 +174,7 @@ impl User {
     }
 
     /// This function checks if the minecraft_token has expired, if it has, it checks if the access_token has expired, and if it has, it uses the refresh token before.
-    pub async fn verify_minecraft_token(&mut self) -> User {
+    pub async fn verify_minecraft_token(&mut self) -> Result<User, String> {
         if self.minecraft_exp
             < SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -188,10 +190,11 @@ impl User {
                 println!("{}", e)
             }
         }
-        get_user(&self.username)
+        let user = get_user(&self.username)?;
+        Ok(user)
     }
 
-    async fn verify_access_token(&self) {
+    async fn verify_access_token(&self) -> Result<(), String> {
         if self.access_exp
             > SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -199,26 +202,19 @@ impl User {
                 .as_secs() as i64
         {
             println!("access token is fine");
-            match get_minecraft_token(
+            get_minecraft_token(
                 self.access_token.clone(),
                 self.access_exp as u64,
                 self.refresh_token.clone(),
             )
             .await
-            {
-                Ok(_) => {}
-                Err(e) => {
-                    println!("{}", e)
-                }
-            }
+            .map_err(|err| err.to_string())?;
         } else {
             println!("access token exp!");
-            match update_access_token(&self.refresh_token).await {
-                Ok(_) => {}
-                Err(e) => {
-                    println!("{}", e)
-                }
-            }
+            update_access_token(&self.refresh_token)
+                .await
+                .map_err(|err| err.to_string())?;
         }
+        Ok(())
     }
 }

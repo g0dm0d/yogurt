@@ -7,10 +7,12 @@ use tokio::net::TcpListener;
 /// This is necessary to obtain a token to access the ms account
 /// After that, the server stops and starts the function to get the minecraft token, user name, uuid
 #[tauri::command(async)]
-pub async fn add_account() {
+pub async fn add_account() -> Result<(), String> {
     let addr: SocketAddr = ([127, 0, 0, 1], 9397).into();
-    let tcp_listener = TcpListener::bind(addr).await.unwrap();
-    let (tcp_stream, _) = tcp_listener.accept().await.unwrap();
+    let tcp_listener = TcpListener::bind(addr)
+        .await
+        .map_err(|err| err.to_string())?;
+    let (tcp_stream, _) = tcp_listener.accept().await.map_err(|err| err.to_string())?;
     tokio::task::spawn(async move {
         if let Err(http_err) = Http::new()
             .http1_only(true)
@@ -18,9 +20,11 @@ pub async fn add_account() {
             .serve_connection(tcp_stream, service_fn(code_grab))
             .await
         {
-            eprintln!("Error while serving HTTP connection: {}", http_err);
+            return Err(http_err.to_string());
         }
+        Ok(())
     });
+    Ok(())
 }
 
 /// This function is performed after receiving a get request

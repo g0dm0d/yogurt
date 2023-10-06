@@ -11,10 +11,11 @@ use crate::instances::config::get_config;
 use crate::minecraft::library::library_filtering;
 
 #[tauri::command(async)]
-pub async fn run_minecraft(username: String, instance: String) {
-    let mut user = get_user(&username);
-    user.verify_minecraft_token().await;
+pub async fn run_minecraft(username: String, instance: String) -> Result<(), String> {
+    let mut user = get_user(&username)?;
+    user.verify_minecraft_token().await?;
     run(&username, &user.uuid, &user.minecraft_token, &instance);
+    Ok(())
 }
 
 #[cfg(target_os = "windows")]
