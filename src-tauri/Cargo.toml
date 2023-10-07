@@ -10,26 +10,26 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha.4", features = [] }
+tauri-build = { version = "1.5.0", features = [] }
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha.8", features = ["shell-open"] }
+serde_json = "1.0.107"
+serde = { version = "1.0.188", features = ["derive"] }
+tauri = { version = "1.5.1", features = ["shell-open"] }
+
 reqwest = { version = "0.11.14", features = ["json"] }
 tokio = { version = "1.25.0", features = ["full"] }
-home = "0.5.4"
-sha1 = "0.10.5"
-bytes = "1.4.0"
-toml = "0.7.2"
+home = "0.5.5"
+sha1 = "0.10.6"
+bytes = "1.5.0"
+toml = "0.8.2"
 http = "0.2.9"
-hyper = { version = "0.14.24", features = ["full"] }
 form_urlencoded = "1.1.0"
-zip = "0.6.4"
-flate2 = "1.0.25"
-tar = "0.4.38"
-futures = "0.3.27"
-tauri-utils = "2.0.0-alpha.4"
+zip = "0.6.6"
+flate2 = "1.0.27"
+tar = "0.4.40"
+futures = "0.3.28"
+tauri-utils = "1.5.0"
 
 [features]
 # by default Tauri runs in production mode
