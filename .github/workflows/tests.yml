@@ -1,4 +1,4 @@
-name: Rust CI
+name: Rust integration test
 
 on:
   push:
@@ -20,7 +20,9 @@ jobs:
           override: true
 
       - name: Install dependencies
+        working-directory: ./src-tauri
         run: cargo build --verbose
 
       - name: Run tests
+        working-directory: ./src-tauri
         run: cargo test
