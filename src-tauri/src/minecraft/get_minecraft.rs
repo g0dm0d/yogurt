@@ -1,7 +1,10 @@
-use std::fs::{self, File};
-use std::io::Read;
+use std::fs;
 use std::time::Instant;
 
+use crate::mods::fabric::install_fabric;
+use crate::tools::download::download;
+use crate::tools::file::read_file;
+use crate::tools::path::get_path;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -131,20 +134,13 @@ pub struct Package {
     pub main_class: String,
 }
 
-use crate::mods::fabric::install_fabric;
-use crate::tools::download::download;
-use crate::tools::path::{self, get_path};
-
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, String> {
     let path = format!("versions/{id}/{id}.json");
     download(url, path.as_str(), None).await;
 
-    let mut file = File::open(path::get_path(path.as_str())).map_err(|err| err.to_string())?;
-    let mut buff = String::new();
-    file.read_to_string(&mut buff)
-        .map_err(|err| err.to_string())?;
+    let file = read_file(&get_path(&path));
 
-    let package: Package = serde_json::from_str(&buff).map_err(|err| err.to_string())?;
+    let package: Package = serde_json::from_str(&file).map_err(|err| err.to_string())?;
     Ok(package)
 }
 

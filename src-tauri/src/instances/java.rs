@@ -1,5 +1,4 @@
-use std::fs::{self, File};
-use std::io::Read;
+use std::fs;
 
 use serde::{Deserialize, Serialize};
 
@@ -44,6 +43,8 @@ const BINARY_FILE: &str = "javaw";
 #[cfg(any(target_os = "linux", target_os = "windows"))]
 #[tauri::command(async)]
 pub async fn install_java(instance_name: String) -> Result<(), String> {
+    use crate::tools::file::read_file;
+
     println!("starting download java");
     let mut config = get_config(&instance_name);
 
@@ -51,13 +52,10 @@ pub async fn install_java(instance_name: String) -> Result<(), String> {
     let id = &config.version;
     let path = &format!("versions/{id}/{id}.json");
 
-    let mut file = File::open(get_path(path)).map_err(|err| err.to_string())?;
-    let mut buff = String::new();
-    file.read_to_string(&mut buff)
-        .map_err(|err| err.to_string())?;
+    let file = read_file(&get_path(path));
 
     let package: get_minecraft::Package =
-        serde_json::from_str(&buff).map_err(|err| err.to_string())?;
+        serde_json::from_str(&file).map_err(|err| err.to_string())?;
     let java_version = package.java_version.major_version.to_string();
 
     // I send a request to get the java version for this OS
@@ -83,7 +81,6 @@ pub async fn install_java(instance_name: String) -> Result<(), String> {
     unzip(get_path(&format!("{path}.tar")));
     #[cfg(target_os = "linux")]
     untar(get_path(&format!("{path}.tar")));
-    println!("java installation complete");
 
     // And save this to instance config
     config.set_java_path(

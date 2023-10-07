@@ -28,10 +28,10 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
     let config = get_config(instance);
 
     // Open version json file
-    let minecraft_config = read_file(&format!(
+    let minecraft_config = read_file(&get_path(&format!(
         "versions/{}/{}.json",
         config.version, config.version
-    ));
+    )));
     let data: Package = from_str(&minecraft_config).unwrap();
     let mut user_args: Vec<String> = config
         .arguments
@@ -60,10 +60,10 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) {
                     .to_string(),
             )
         }
-        let fabric_config = read_file(&format!(
+        let fabric_config = read_file(&get_path(&format!(
             "versions/{}/{}.json",
             fabric_version, fabric_version
-        ));
+        )));
         let fabric_data: FabricData = from_str(&fabric_config).unwrap();
         let jvm_args = fabric_data.arguments.jvm;
         for arg in jvm_args {

@@ -14,9 +14,17 @@ pub fn get_path(path: &str) -> PathBuf {
 
 /// Parse path in Json of version
 ///
-/// sample:
+/// # Example:
+///
 /// ```
-/// parse_path("ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar") -> "ca/weblite/java-objc-bridge/1.1"
+/// use yogurt::tools::path::parse_path;
+/// use std::path::{Path, PathBuf};
+/// assert_eq!(
+///     PathBuf::from("ca/weblite/java-objc-bridge/1.1"),
+///     parse_path(Path::new(
+///         "ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar"
+///     ))
+/// );
 /// ```
 pub fn parse_path(path: &Path) -> PathBuf {
     let str_path = path.display().to_string();

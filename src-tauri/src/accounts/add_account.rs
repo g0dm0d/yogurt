@@ -60,12 +60,14 @@ async fn code_grab(mut stream: TcpStream) -> Result<(), String> {
 /// # Examples
 ///
 /// ```
-/// let url_path: &str = "/some?code=super.s3cret&foo=bar"
-/// let query = get_query_params(&url_param);
-/// assert_eq!(&"bar", query.get("FOO").unwrap());
+/// use yogurt::accounts::add_account::get_query_params;
+/// let url_param = "GET /path?code=super.s3cret&foo=bar HTTP/1.1";
+/// let query = get_query_params(url_param);
+///
+/// assert_eq!(&"bar", query.get("foo").unwrap());
 /// assert_eq!(&"super.s3cret", query.get("code").unwrap());
 /// ```
-fn get_query_params(path: &str) -> HashMap<&str, &str> {
+pub fn get_query_params(path: &str) -> HashMap<&str, &str> {
     let parsed_path: Vec<&str> = path.split_whitespace().collect();
     // [0]=GET [1]=/some?path= [2]=HTTP/1.1
     let url_path_query = parsed_path.get(1).unwrap().split_once('?').unwrap();
@@ -82,13 +84,7 @@ fn get_query_params(path: &str) -> HashMap<&str, &str> {
 }
 
 /// this function returns a response to the client
-///
-/// # EXAMPLE
-///
-/// ```
-/// write_answ(stream, &"200 OK", &"<h1>hello client!</h1>")
-/// ```
-fn write_answ(mut stream: TcpStream, status: &str, body: &str) {
+pub fn write_answ(mut stream: TcpStream, status: &str, body: &str) {
     let resp = format!(
         "HTTP/1.1 {status}\r\nContent-Length: {}\r\n\r\n{body}",
         body.len()

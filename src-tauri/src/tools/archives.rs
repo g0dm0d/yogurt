@@ -1,7 +1,6 @@
 use flate2::read::GzDecoder;
 use std::{
-    fs::{self, File},
-    io,
+    fs::{File},
     path::PathBuf,
 };
 
@@ -9,6 +8,11 @@ use std::{
 use tar::Archive;
 #[cfg(target_os = "windows")]
 use zip::ZipArchive;
+#[cfg(target_os = "windows")]
+use std::{
+    fs::{self},
+    io
+};
 
 use super::path::get_path;
 

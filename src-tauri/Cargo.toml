@@ -16,11 +16,9 @@ tauri-build = { version = "1.5.0", features = [] }
 serde_json = "1.0.107"
 serde = { version = "1.0.188", features = ["derive"] }
 tauri = { version = "1.5.1", features = ["shell-open"] }
-
 reqwest = { version = "0.11.14", features = ["json"] }
 tokio = { version = "1.25.0", features = ["full"] }
 home = "0.5.5"
-sha1 = "0.10.6"
 bytes = "1.5.0"
 toml = "0.8.2"
 http = "0.2.9"
@@ -30,6 +28,10 @@ flate2 = "1.0.27"
 tar = "0.4.40"
 futures = "0.3.28"
 tauri-utils = "1.5.0"
+sha1_smol = "1.0.0"
+
+[dev-dependencies]
+yogurt = { path = "./"}
 
 [features]
 # by default Tauri runs in production mode
