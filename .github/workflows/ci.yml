@@ -41,7 +41,9 @@ jobs:
       - name: Run integration test tests (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         working-directory: ./src-tauri
-        run: cargo test
+        run: |
+          mkdir ../dist
+          cargo test
 
 
       - name: install frontend dependencies
