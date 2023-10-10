@@ -1,77 +1,77 @@
 {
-    "build": {
-      "beforeDevCommand": "npm run dev",
-      "beforeBuildCommand": "npm run build",
-      "devPath": "http://localhost:1420",
-      "distDir": "../dist",
-      "withGlobalTauri": false
-    },
-    "package": {
-      "productName": "yogurt",
-      "version": "0.0.2"
-    },
-    "tauri": {
-      "allowlist": {
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "yogurt",
+    "version": "0.0.2"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
         "all": false,
-        "shell": {
-          "all": false,
-          "open": true
-        }
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Games",
+      "copyright": "",
+      "deb": {
+        "depends": []
       },
-      "bundle": {
-        "active": true,
-        "category": "Games",
-        "copyright": "",
-        "deb": {
-          "depends": []
-        },
-        "externalBin": [],
-        "icon": [
-          "icons/32x32.png",
-          "icons/128x128.png",
-          "icons/128x128@2x.png",
-          "icons/icon.icns",
-          "icons/icon.ico"
-        ],
-        "identifier": "com.godmod.yogurt",
-        "longDescription": "",
-        "macOS": {
-          "entitlements": null,
-          "exceptionDomain": "",
-          "frameworks": [],
-          "providerShortName": null,
-          "signingIdentity": null
-        },
-        "resources": [],
-        "shortDescription": "",
-        "targets": "all",
-        "windows": {
-          "certificateThumbprint": null,
-          "digestAlgorithm": "sha256",
-          "timestampUrl": ""
-        }
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "com.godmod.yogurt",
+      "longDescription": "",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
       },
-      "security": {
-        "csp": null
-      },
-      "updater": {
-        "active": true,
-        "endpoints": [
-            "https://raw.githubusercontent.com/g0dm0d/yogurt/master/meta.json"
-        ],
-        "dialog": true,
-        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2MDAyM0RDN0M3N0E3QzgKUldUSXAzZDgzQ01BSnVod3R0a3RXbEFWQWlwNWh5QnJHTGlPMU9KcFhmYklLVUFieTdBSDVsMVkK"
-      },
-      "windows": [
-        {
-          "fullscreen": false,
-          "resizable": true,
-          "title": "yogurt",
-          "width": 960,
-          "minWidth": 960,
-          "height": 540,
-          "minHeight": 540
-        }
-      ]
-    }
+      "resources": [],
+      "shortDescription": "",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false,
+      "endpoints": [
+        "https://raw.githubusercontent.com/g0dm0d/yogurt/master/meta.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDI2MDAyM0RDN0M3N0E3QzgKUldUSXAzZDgzQ01BSnVod3R0a3RXbEFWQWlwNWh5QnJHTGlPMU9KcFhmYklLVUFieTdBSDVsMVkK"
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "yogurt",
+        "width": 960,
+        "minWidth": 960,
+        "height": 540,
+        "minHeight": 540
+      }
+    ]
   }
+}

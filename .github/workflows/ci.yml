@@ -35,7 +35,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get upgrade -y
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libglib2.0-dev libjavascriptcoregtk-4.1-dev libssl-dev libsoup-3.0-dev
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+        # old 2.0
+        # sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libglib2.0-dev libjavascriptcoregtk-4.1-dev libssl-dev libsoup-3.0-dev
+      - name: Run integration test tests (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        working-directory: ./src-tauri
+        run: |
+          mkdir ../dist
+          cargo test
+
 
       - name: install frontend dependencies
         run: yarn install

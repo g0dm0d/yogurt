@@ -19,9 +19,10 @@ const OPEN_COMMAND: &str = "xdg-open";
 
 /// Open the folder with the game files of this instance
 #[tauri::command(async)]
-pub async fn open_instance_folder(name: String) {
+pub async fn open_instance_folder(name: String) -> Result<(), String> {
     Command::new(OPEN_COMMAND)
         .arg(get_path(&format!("{PATH}{name}")))
         .spawn()
-        .unwrap();
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }

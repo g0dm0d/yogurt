@@ -38,10 +38,10 @@ struct Loader {
 }
 
 #[tauri::command(async)]
-pub async fn install_fabric(name: String) {
+pub async fn install_fabric(name: String) -> Result<(), String> {
     let mut config = get_config(&name);
     // get last version loader from - https://meta.fabricmc.net/v2/versions/loader
-    let loader = get_last_loader().await.unwrap();
+    let loader = get_last_loader().await.map_err(|err| err.to_string())?;
 
     let fabric_version = format!("fabric-{0}-{1}", loader, config.version);
 
@@ -66,8 +66,10 @@ pub async fn install_fabric(name: String) {
     config.set_fabric_status(true);
 
     let mut file = File::create(get_path(&format!("configs/{name}.toml"))).unwrap();
-    let toml_string = toml::to_string_pretty(&config).unwrap();
-    file.write_all(toml_string.as_bytes()).unwrap();
+    let toml_string = toml::to_string_pretty(&config).map_err(|err| err.to_string())?;
+    file.write_all(toml_string.as_bytes())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }
 
 async fn get_last_loader() -> Result<String, reqwest::Error> {

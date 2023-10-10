@@ -47,20 +47,18 @@ pub struct FrontInstance {
 }
 
 /// generate default config
-pub async fn create_config(config: Instance, name: &str) {
+pub async fn create_config(config: Instance, name: &str) -> Result<(), String> {
     let path = path::get_path("configs");
     if !path.exists() {
-        match std::fs::create_dir_all(&path) {
-            Ok(_) => {}
-            Err(err) => {
-                panic!("{}", err)
-            }
-        }
+        std::fs::create_dir_all(&path).map_err(|err| err.to_string())?
     }
 
-    let mut file = fs::File::create(&path.join(format!("{name}.toml"))).unwrap();
-    let toml_string = to_string_pretty(&config).unwrap();
-    file.write_all(toml_string.as_bytes()).unwrap();
+    let mut file =
+        fs::File::create(&path.join(format!("{name}.toml"))).map_err(|err| err.to_string())?;
+    let toml_string = to_string_pretty(&config).map_err(|err| err.to_string())?;
+    file.write_all(toml_string.as_bytes())
+        .map_err(|err| err.to_string())?;
+    Ok(())
 }
 
 /// returns the names of all files in the configs folder (file name = instance name)

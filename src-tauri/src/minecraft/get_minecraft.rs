@@ -1,8 +1,10 @@
-use std::fs::{self, File};
-use std::io::Read;
+use std::fs;
 use std::time::Instant;
 
-use reqwest::Error;
+use crate::mods::fabric::install_fabric;
+use crate::tools::download::download;
+use crate::tools::file::read_file;
+use crate::tools::path::get_path;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -132,19 +134,13 @@ pub struct Package {
     pub main_class: String,
 }
 
-use crate::mods::fabric::install_fabric;
-use crate::tools::download::download;
-use crate::tools::path::{self, get_path};
-
-async fn fetch_dependency(url: &str, id: &str) -> Result<Package, Error> {
+async fn fetch_dependency(url: &str, id: &str) -> Result<Package, String> {
     let path = format!("versions/{id}/{id}.json");
     download(url, path.as_str(), None).await;
 
-    let mut file = File::open(path::get_path(path.as_str())).unwrap();
-    let mut buff = String::new();
-    file.read_to_string(&mut buff).unwrap();
+    let file = read_file(&get_path(&path));
 
-    let package: Package = serde_json::from_str(&buff).unwrap();
+    let package: Package = serde_json::from_str(&file).map_err(|err| err.to_string())?;
     Ok(package)
 }
 
@@ -153,8 +149,16 @@ use crate::minecraft::{assets::download_assets, library::download_libraries};
 use crate::instances::config::{create_config, Instance};
 
 #[tauri::command(async)]
-pub async fn get_minecraft(url: String, id: String, name: String, java_args: String, fabric: bool) {
-    let package = fetch_dependency(url.as_str(), id.as_str()).await.unwrap();
+pub async fn get_minecraft(
+    url: String,
+    id: String,
+    name: String,
+    java_args: String,
+    fabric: bool,
+) -> Result<(), String> {
+    let package = fetch_dependency(url.as_str(), id.as_str())
+        .await
+        .map_err(|err| err.to_string())?;
     // Downloading the library for the selected version of minecraft
     let start = Instant::now();
     download_libraries(package.libraries).await;
@@ -182,13 +186,14 @@ pub async fn get_minecraft(url: String, id: String, name: String, java_args: Str
         },
         name.as_str(),
     )
-    .await;
+    .await?;
     // install fabric if need
     if fabric {
-        install_fabric(name.clone()).await;
+        install_fabric(name.clone()).await?;
     }
     // creating link for folder screenshots
-    link_screenshots(&name)
+    link_screenshots(&name);
+    Ok(())
 }
 
 /// link screenshots folder of launcher and screenshots of instance
