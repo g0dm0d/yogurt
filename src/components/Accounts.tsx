@@ -28,7 +28,7 @@ export function Accounts() {
 
     useEffect(() => {
         getAccounts();
-    }, []);
+    }, [ref]);
 
     return (
         <Box sx={{
