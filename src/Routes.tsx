@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Accounts } from "./components/Accounts";
 import { Home } from "./components/Home";
 import { Settings } from "./components/Settings";
