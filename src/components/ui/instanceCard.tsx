@@ -23,7 +23,7 @@ import { invoke } from '@tauri-apps/api'
 import { useContext, useState } from 'react'
 import { selectedAccount } from '../../context/AccountContext'
 import { InstanceSettings } from '../popups/InstanceSettings'
-import bg from '../../../../../../../bg.png'
+import bg from '../ui/icons/bg.png'
 
 interface InstanceCardProps {
   name: string

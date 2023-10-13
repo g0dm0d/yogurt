@@ -1,4 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Flex } from '@mantine/core'
 import { BrowserRouter } from 'react-router-dom'
@@ -14,13 +15,6 @@ function App () {
   const [nickname, setNickname] = useState<string>()
   const changeNickname = (nickname: string) => {
     setNickname(nickname)
-  }
-
-function App() {
-  const [accounts, setAccounts] = useState<string[]>([]);
-  const [nickname, setNickname] = useState<string>();
-  const changeNickname = (nickname: string) => {
-    setNickname(nickname);
   }
 
   async function getAccounts () {
