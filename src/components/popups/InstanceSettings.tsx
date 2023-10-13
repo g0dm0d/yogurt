@@ -1,17 +1,12 @@
-import {
-    Box,
-    Button,
-    Flex,
-    Title
-} from '@mantine/core';
-import { invoke } from '@tauri-apps/api/tauri';
-import { SettingsDashboard } from './SettingsDashboard';
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import * as core from '@mantine/core'
+import { SettingsDashboard } from './SettingsDashboard'
 
-export function InstanceSettings() {
-
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', width: '80wh' }}>
+export function InstanceSettings () {
+  return (
+        <core.Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh', width: '80wh' }}>
             <SettingsDashboard />
-        </Box>
-    );
+        </core.Box>
+  )
 }
