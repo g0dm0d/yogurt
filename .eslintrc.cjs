@@ -6,11 +6,11 @@ module.exports = {
   },
   "extends": [
     "standard-with-typescript",
-    "plugin:react/recommended",
-    "plugin:@mantine/core/recommended",
-    "plugin:react-router-dom/recommended",
-    "plugin:@tauri-apps/api/recommended",
-    "plugin:@tabler/icons-reac/recommended",
+    // "plugin:react/recommended", React ^17 not need
+    // "plugin:@mantine/core/recommended",
+    // "plugin:react-router-dom/recommended",
+    // "plugin:@tauri-apps/api/recommended",
+    // "plugin:@tabler/icons-reac/recommended",
     "plugin:react/jsx-runtime"
   ],
   "overrides": [

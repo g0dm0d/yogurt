@@ -1,6 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box, Flex } from '@mantine/core'
 import { BrowserRouter } from 'react-router-dom'
 import AppRoutes from './Routes'
@@ -10,14 +7,14 @@ import { selectedAccount } from './context/AccountContext'
 import { invoke } from '@tauri-apps/api'
 import Welcome from './components/Welcome'
 
-function App () {
+function App (): JSX.Element {
   const [, setAccounts] = useState<string[]>([])
   const [nickname, setNickname] = useState<string>()
-  const changeNickname = (nickname: string) => {
+  const changeNickname = (nickname: string): void => {
     setNickname(nickname)
   }
 
-  async function getAccounts () {
+  async function getAccounts (): Promise<void> {
     const allUsers = await invoke<string[]>('get_all_users')
     console.log(allUsers)
     setAccounts(allUsers)
@@ -41,7 +38,7 @@ function App () {
     void getAccounts()
   }, [])
 
-  const onAddAccount = () => {
+  const onAddAccount = (): void => {
     void getAccounts()
   }
 

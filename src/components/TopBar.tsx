@@ -1,11 +1,9 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Box
 } from '@mantine/core'
 import { IconBrowser } from '@tabler/icons-react'
 
-export function TopBar () {
+export function TopBar (): JSX.Element {
   return (
         <Box sx={(theme) => ({
           display: 'flex',

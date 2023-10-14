@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Box,
   Button,
@@ -22,8 +20,8 @@ interface Version {
   value: string
 }
 
-export function AddInstance ({ setCreating }: { setCreating: React.Dispatch<React.SetStateAction<boolean>> }) {
-  async function createInstance (name: string, version: string | undefined, type: string, url?: string | null) {
+export function AddInstance ({ setCreating }: { setCreating: React.Dispatch<React.SetStateAction<boolean>> }): JSX.Element {
+  async function createInstance (name: string, version: string | undefined, type: string, url?: string | null): Promise<void> {
     if (url == null) {
       void fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
         .then(async response => await response.json())
@@ -47,7 +45,7 @@ export function AddInstance ({ setCreating }: { setCreating: React.Dispatch<Reac
       void getMinecraft()
     }
 
-    async function getMinecraft () {
+    async function getMinecraft (): Promise<void> {
       setCreating(true)
       await invoke('get_minecraft', {
         url,
@@ -84,7 +82,7 @@ export function AddInstance ({ setCreating }: { setCreating: React.Dispatch<Reac
   const [java, setJava] = useState(true)
 
   const [, setLoading] = useState(false)
-  async function getDefaultVersions () {
+  async function getDefaultVersions (): Promise<void> {
     setLoading(true)
     fetch('https://launchermeta.mojang.com/mc/game/version_manifest_v2.json')
       .then(async response => await response.json())
@@ -106,7 +104,7 @@ export function AddInstance ({ setCreating }: { setCreating: React.Dispatch<Reac
       )
   }
 
-  async function getFabcricVersions () {
+  async function getFabcricVersions (): Promise<void> {
     setLoading(true)
     fetch('https://meta.fabricmc.net/v2/versions/game')
       .then(async response => await response.json())

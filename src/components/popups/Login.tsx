@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Box,
   Button,
@@ -21,7 +19,7 @@ async function addAccount (): Promise<void> {
   }
 }
 
-export function Login () {
+export function Login (): JSX.Element {
   return (
         <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '30vh' }}>
             <Flex direction='column' gap='lg' justify='space-between' align='center' sx={{ textAlign: 'center' }}>

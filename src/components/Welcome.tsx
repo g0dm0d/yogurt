@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Box, Button, Flex, Title
 } from '@mantine/core'
@@ -14,7 +12,7 @@ interface WelcomePageProps {
 }
 
 const Welcome: FC<WelcomePageProps> = ({ onAddAccount }) => {
-  async function addAccount () {
+  async function addAccount (): Promise<void> {
   // open(MICROSOFT_LINK);
     await invoke('add_account')
       .then((response) => {

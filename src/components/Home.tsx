@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   Box, Card, createStyles, Grid, Loader, Modal
 } from '@mantine/core'
@@ -16,7 +14,7 @@ interface Instance {
   gameType: string
 }
 
-async function getInstances (setInstances: React.Dispatch<React.SetStateAction<Instance[]>>) {
+async function getInstances (setInstances: React.Dispatch<React.SetStateAction<Instance[]>>): Promise<void> {
   try {
     const response = await invoke<Instance[]>('get_all_instances')
     setInstances(response)
@@ -25,7 +23,7 @@ async function getInstances (setInstances: React.Dispatch<React.SetStateAction<I
   }
 }
 
-export function Home () {
+export function Home (): JSX.Element {
   const { hovered, ref } = useHover()
 
   const useStyles = createStyles((theme) => ({

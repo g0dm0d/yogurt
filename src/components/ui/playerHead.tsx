@@ -1,7 +1,3 @@
-/* eslint-disable no-unneeded-ternary */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Box } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import steveHead from './icons/SteveHead.png'
@@ -11,11 +7,11 @@ interface PlayerHeadProps {
   size?: number
 }
 
-export function PlayerHead ({ nickname, size = 50 }: PlayerHeadProps) {
+export function PlayerHead ({ nickname, size = 50 }: PlayerHeadProps): JSX.Element {
   const [head, setHead] = useState<string>()
   // const [uuid, setUuid] = useState((Boolean(nickname)) || undefined)
 
-  const fetchImage = async () => {
+  const fetchImage = async (): Promise<void> => {
     if ((nickname != null) && (head == null)) {
       const response = await fetch(`https://mc-heads.net/avatar/${nickname}/${size}`)
       const data = await response.blob()
@@ -33,7 +29,7 @@ export function PlayerHead ({ nickname, size = 50 }: PlayerHeadProps) {
 
   return (
         <Box>
-            <img src={head ? head : steveHead} width={size} height={size} />
+            <img src={head ?? steveHead} width={size} height={size} />
         </Box>
   )
 }
