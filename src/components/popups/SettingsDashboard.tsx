@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   useState
 } from 'react'
@@ -96,7 +94,7 @@ const LinksData = [
   { icon: IconSettings, label: 'Settings' }
 ]
 
-export function SettingsDashboard () {
+export function SettingsDashboard (): JSX.Element {
   const { classes, cx } = useStyles()
   const [active, setActive] = useState('Releases')
   // const [activeLink, setActiveLink] = useState('Settings')

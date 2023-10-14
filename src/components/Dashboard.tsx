@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { type ReactNode, useState, useEffect, useContext } from 'react'
 import { Navbar, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core'
 import {
@@ -40,7 +38,7 @@ interface DashboardButtonProps {
   onClick?: () => void
 }
 
-function DashboardButton ({ Icon, label, active, onClick }: DashboardButtonProps) {
+function DashboardButton ({ Icon, label, active, onClick }: DashboardButtonProps): JSX.Element {
   const { classes, cx } = useStyles()
   return (
         <Tooltip label={label} position="right" transitionDuration={0}>
@@ -51,11 +49,11 @@ function DashboardButton ({ Icon, label, active, onClick }: DashboardButtonProps
   )
 }
 
-export function Dashboard () {
+export function Dashboard (): JSX.Element {
   const [active, setActive] = useState(0)
   const { nickname } = useContext(selectedAccount)
 
-  function setActiveLocation () {
+  function setActiveLocation (): void {
     if (window.location.pathname === '/accounts') {
       setActive(0)
     }

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable react/react-in-jsx-scope */
 import { useContext, useEffect, useState } from 'react'
 import {
   Box,
@@ -14,11 +12,11 @@ import { IconPlus } from '@tabler/icons-react'
 import { selectedAccount } from '../context/AccountContext'
 import { useEventListener } from '@mantine/hooks'
 
-export function Accounts () {
+export function Accounts (): JSX.Element {
   const [openModal, setOpenModal] = useState(false)
   const { nickname, changeNickname } = useContext(selectedAccount)
   const [accounts, setAccounts] = useState<string[]>([])
-  async function getAccounts () {
+  async function getAccounts (): Promise<void> {
     const accounts = await invoke<string[]>('get_all_users')
     setAccounts(accounts)
     if (nickname == null) {
