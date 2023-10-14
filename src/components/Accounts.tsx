@@ -1,41 +1,44 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react'
 import {
-    Box,
-    Button,
-    Flex,
-    Modal
-} from '@mantine/core';
-import { Login } from './popups/Login';
-import { Account } from './ui/account';
+  Box,
+  Button,
+  Flex,
+  Modal
+} from '@mantine/core'
+import { Login } from './popups/Login'
+import { Account } from './ui/account'
 import { invoke } from '@tauri-apps/api/tauri'
-import { IconPlus } from '@tabler/icons-react';
-import { selectedAccount } from '../context/AccountContext';
-import { useEventListener } from '@mantine/hooks';
+import { IconPlus } from '@tabler/icons-react'
+import { selectedAccount } from '../context/AccountContext'
+import { useEventListener } from '@mantine/hooks'
 
-export function Accounts() {
-    const [openModal, setOpenModal] = useState(false);
-    const { nickname, changeNickname } = useContext(selectedAccount)
-    const [accounts, setAccounts] = useState<string[]>([]);
-    async function getAccounts() {
-        const accounts = await invoke<string[]>('get_all_users');
-        setAccounts(accounts);
-        if (!nickname) {
-            changeNickname?.(accounts[0]);
-        }
+export function Accounts (): JSX.Element {
+  const [openModal, setOpenModal] = useState(false)
+  const { nickname, changeNickname } = useContext(selectedAccount)
+  const [accounts, setAccounts] = useState<string[]>([])
+  async function getAccounts (): Promise<void> {
+    const accounts = await invoke<string[]>('get_all_users')
+    setAccounts(accounts)
+    if (nickname == null) {
+      changeNickname?.(accounts[0])
     }
+  }
 
-    const ref = useEventListener('click', getAccounts);
+  const ref = useEventListener('click', getAccounts)
 
-    useEffect(() => {
-        getAccounts();
-    }, [ref]);
+  useEffect(() => {
+    void getAccounts()
+  }, [ref])
 
-    return (
+  return (
         <Box sx={{
-            display: 'flex', justifyContent: 'center',
-            minHeight: '60vh', maxWidth: '40vh', width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          minHeight: '60vh',
+          maxWidth: '40vh',
+          width: '100%'
         }}>
-            <Modal opened={openModal} onClose={() => setOpenModal(false)} title='Login'>
+            <Modal opened={openModal} onClose={() => { setOpenModal(false) }} title='Login'>
                 <Login />
             </Modal>
 
@@ -54,11 +57,11 @@ export function Accounts() {
                     {accounts.map((account) =>
                         <Account nickname={account} key={account} />
                     )}
-                    <Button sx={{ width: '100%', height: 40 }} variant='outline' onClick={() => setOpenModal(true)}>
+                    <Button sx={{ width: '100%', height: 40 }} variant='outline' onClick={() => { setOpenModal(true) }}>
                         <IconPlus />
                     </Button>
                 </Flex>
             </Flex>
         </Box >
-    );
+  )
 }
