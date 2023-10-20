@@ -1,5 +1,10 @@
 import {
-  Box, Card, createStyles, Grid, Loader, Modal
+  Box,
+  Card,
+  createStyles,
+  Grid,
+  Loader,
+  Modal
 } from '@mantine/core'
 import { useHover } from '@mantine/hooks'
 import { IconSquarePlus } from '@tabler/icons-react'
@@ -14,7 +19,7 @@ interface Instance {
   gameType: string
 }
 
-async function getInstances (setInstances: React.Dispatch<React.SetStateAction<Instance[]>>): Promise<void> {
+async function getInstances(setInstances: React.Dispatch<React.SetStateAction<Instance[]>>): Promise<void> {
   try {
     const response = await invoke<Instance[]>('get_all_instances')
     setInstances(response)
@@ -23,7 +28,7 @@ async function getInstances (setInstances: React.Dispatch<React.SetStateAction<I
   }
 }
 
-export function Home (): JSX.Element {
+export function Home(): JSX.Element {
   const { hovered, ref } = useHover()
 
   const useStyles = createStyles((theme) => ({
@@ -68,43 +73,47 @@ export function Home (): JSX.Element {
     void getInstances(setInstances)
   }, [])
 
+  useEffect(() => {
+    setOpenModal(false)
+  }, [creating])
+
   const instancesList = instances.map((instance) =>
-        <Grid.Col span='content' key={instance.name}>
-            <InstanceCard
-                key={instance.name}
-                name={instance.name}
-                version={instance.version}
-                gameType={instance.gameType}
-            />
-        </Grid.Col>
+    <Grid.Col span='content' key={instance.name}>
+      <InstanceCard
+        key={instance.name}
+        name={instance.name}
+        version={instance.version}
+        gameType={instance.gameType}
+      />
+    </Grid.Col>
   )
 
   return (
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'start',
-          alignItems: 'start',
-          height: '100%',
-          width: '100%',
-          padding: '80px',
-          gap: '32px'
-        }}>
-            <Modal opened={openModal} onClose={() => { setOpenModal(false) }} title='Create Instance'>
-                <AddInstance setCreating={setCreating} />
-            </Modal>
-            <Grid justify="flex-start">
-                {instancesList}
-                <Grid.Col span='content' display={creating ? 'visible' : 'none'} >
-                    <Card p="lg" className={classes.loadingCard}>
-                        <Loader className={classes.addIcon} />
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span='content'>
-                    <Card ref={ref} p="lg" className={classes.card} onClick={() => { setOpenModal(true) }}>
-                        <IconSquarePlus size={hovered ? '48px' : '36px'} stroke={1} className={classes.addIcon} />
-                    </Card>
-                </Grid.Col>
-            </Grid>
-        </Box>
+    <Box sx={{
+      display: 'flex',
+      justifyContent: 'start',
+      alignItems: 'start',
+      height: '100%',
+      width: '100%',
+      padding: '32px',
+      gap: '32px'
+    }}>
+      <Modal opened={openModal} onClose={() => { setOpenModal(false) }} title='Create Instance'>
+        <AddInstance setCreating={setCreating} />
+      </Modal>
+      <Grid justify="flex-start">
+        {instancesList}
+        <Grid.Col span='content' display={creating ? 'visible' : 'none'} >
+          <Card p="lg" className={classes.loadingCard}>
+            <Loader className={classes.addIcon} />
+          </Card>
+        </Grid.Col>
+        <Grid.Col span='content'>
+          <Card ref={ref} p="lg" className={classes.card} onClick={() => { setOpenModal(true) }}>
+            <IconSquarePlus size={hovered ? '48px' : '36px'} stroke={1} className={classes.addIcon} />
+          </Card>
+        </Grid.Col>
+      </Grid>
+    </Box>
   )
 }

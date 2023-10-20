@@ -1,4 +1,6 @@
+#[cfg(target_os = "linux")]
 use flate2::read::GzDecoder;
+
 use std::{
     fs::{File},
     path::PathBuf,

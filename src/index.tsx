@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         }
       })
     }} >
-        <NotificationsProvider>
+        <NotificationsProvider autoClose={5000}>
             <App />
         </NotificationsProvider>
     </MantineProvider>

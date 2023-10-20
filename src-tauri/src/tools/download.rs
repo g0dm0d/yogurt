@@ -28,13 +28,12 @@ pub async fn multithreading_download(files: Vec<DownloadFile>) {
 /// This func download file and save
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
-pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) {
+pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Result<(), String> {
     let path = path::get_path(file_path);
 
     if path.exists() && sha1sum != None {
-        if verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default()) {
-            println!("File {} alredy exist", &path.display().to_string());
-            return;
+        if verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
+            return Ok(());
         }
         match fs::remove_file(&path) {
             Ok(_) => {
@@ -65,7 +64,7 @@ pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) {
                 if result.is_err() {
                     panic!("Failed to copy file: {:?}", result.err());
                 }
-                if sha1sum == None || verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default()) {
+                if sha1sum == None || verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
                     break;
                 }
                 println!("Error sha1sum file: {}", &path.display().to_string())
@@ -75,4 +74,6 @@ pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) {
             }
         }
     }
+
+    Ok(())
 }
