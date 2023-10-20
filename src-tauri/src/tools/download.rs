@@ -47,11 +47,11 @@ pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Re
 
     let result = fs::create_dir_all(path::parse_path(&path));
     if result.is_err() {
-        panic!("Failed to create directory: {:?}", result.err());
+        return Err(result.err());
     }
 
     let mut file = match File::create(&path) {
-        Err(why) => panic!("couldn't create {}", why),
+        Err(err) => return Err(err.to_string()),
         Ok(file) => file,
     };
 
