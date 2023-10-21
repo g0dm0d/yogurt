@@ -174,6 +174,7 @@ pub async fn get_minecraft(
         Some(package.downloads.client.sha1),
     )
     .await?;
+
     // generate config
     create_config(
         Instance {

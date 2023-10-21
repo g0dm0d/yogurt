@@ -125,7 +125,6 @@ pub async fn get_minecraft_token(
         "RelyingParty": "http://auth.xboxlive.com",
         "TokenType": "JWT"
     });
-    println!("{:#?}", xbox_authenticate_json);
 
     let xbox_resp: XboxLiveAuthenticationResponse = client
         .post("https://user.auth.xboxlive.com/user/authenticate")
@@ -137,8 +136,6 @@ pub async fn get_minecraft_token(
 
     let xbox_token = &xbox_resp.token;
     let user_hash = &xbox_resp.display_claims["xui"][0]["uhs"];
-
-    println!("{:#?}", xbox_resp);
 
     // step 4: convert xbox token into xbox security token
     let xbox_security_token_resp: XboxLiveAuthenticationResponse = client
@@ -157,8 +154,6 @@ pub async fn get_minecraft_token(
         .await?;
 
     let xbox_security_token = &xbox_security_token_resp.token;
-
-    println!("{:#?}", xbox_security_token_resp);
 
     // step 5: authenticate with minecraft
     let minecraft_resp: MinecraftAuthenticationResponse = client

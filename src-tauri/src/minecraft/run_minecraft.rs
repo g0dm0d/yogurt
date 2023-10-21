@@ -108,6 +108,8 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) -> Result<()
         .arg("--versionType")
         .arg("release");
 
+    println!("{:?}", minecraft);
+
     let output = minecraft
         .output()
         .expect("Failed to start Minecraft client");

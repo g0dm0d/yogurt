@@ -185,7 +185,6 @@ impl User {
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
-            println!("minecraft token exp!");
             self.verify_access_token().await?;
         }
         match self.get_info().await {
@@ -205,7 +204,6 @@ impl User {
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
-            println!("access token is fine");
             get_minecraft_token(
                 self.access_token.clone(),
                 self.access_exp as u64,
@@ -214,7 +212,6 @@ impl User {
             .await
             .map_err(|err| err.to_string())?;
         } else {
-            println!("access token exp!");
             update_access_token(&self.refresh_token)
                 .await
                 .map_err(|err| err.to_string())?;
