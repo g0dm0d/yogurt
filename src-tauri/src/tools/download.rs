@@ -29,13 +29,9 @@ pub async fn multithreading_download(files: Vec<DownloadFile>) {
 /// Also checks if the file and its sha sum exist
 /// You can leave an empty param sha1man to skip the check
 pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Result<(), String> {
-
     let path = path::get_path(file_path);
 
-    println!("find exist file");
     if path.exists() && sha1sum != None {
-        println!("sha1sum");
-
         if verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
             return Ok(());
         }
@@ -49,21 +45,15 @@ pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Re
         };
     }
 
-    println!("create dir");
-
     let result = fs::create_dir_all(path::parse_path(&path));
     if result.is_err() {
         return Err("Failed create dir".to_string());
     }
 
-    println!("init file");
-
     let mut file = match File::create(&path) {
         Err(err) => return Err(err.to_string()),
         Ok(file) => file,
     };
-
-    println!("download");
 
     loop {
         match request::get(url).await {

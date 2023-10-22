@@ -32,12 +32,15 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) -> Result<()
         "versions/{}/{}.json",
         config.version, config.version
     )))?;
+
     let data: Package = from_str(&minecraft_config).unwrap();
+
     let mut user_args: Vec<String> = config
         .arguments
         .split_whitespace()
         .map(String::from)
         .collect();
+
     let mut main_class = data.main_class;
 
     let mut libraries = Vec::new();
@@ -51,7 +54,6 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) -> Result<()
 
     if config.fabric {
         let fabric_version = config.fabric_version.unwrap();
-        println!("{}", fabric_version);
         let libs = parse_libraries(&fabric_version);
         for lib in libs {
             libraries.push(
@@ -108,20 +110,6 @@ pub fn run(username: &str, uuid: &str, token: &str, instance: &str) -> Result<()
         .arg("--versionType")
         .arg("release");
 
-    println!("{:?}", minecraft);
-
-    let output = minecraft
-        .output()
-        .expect("Failed to start Minecraft client");
-
-    println!("Minecraft client exited with status: {}", output.status);
-    println!(
-        "Minecraft client stdout: {:?}",
-        String::from_utf8_lossy(&output.stdout)
-    );
-    println!(
-        "Minecraft client stderr: {:?}",
-        String::from_utf8_lossy(&output.stderr)
-    );
+    minecraft.output().map_err(|err| err.to_string())?;
     Ok(())
 }

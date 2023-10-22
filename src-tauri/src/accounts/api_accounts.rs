@@ -14,7 +14,7 @@ use crate::accounts::account::User;
 // id_token: String, LEGACY???
 
 /// The response from authenticating with Microsoft OAuth flow
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 struct AuthorizationTokenResponse {
     /// The type of token for authentication
     token_type: String,
@@ -65,7 +65,7 @@ const CLIENT_ID: &str = "d8e1d9bf-287f-4773-a176-e012722257f4";
 pub async fn update_access_token(code: &str) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new();
 
-    let authorization_token = client
+    let authorization_token: AuthorizationTokenResponse = client
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token")
         .form(&vec![
             ("client_id", CLIENT_ID),
@@ -74,8 +74,9 @@ pub async fn update_access_token(code: &str) -> Result<(), Box<dyn std::error::E
         ])
         .send()
         .await?
-        .json::<AuthorizationTokenResponse>()
+        .json()
         .await?;
+
     get_minecraft_token(
         authorization_token.access_token,
         authorization_token.expires_in,
@@ -90,7 +91,7 @@ pub async fn get_access_token(code: &str) -> Result<(), Box<dyn std::error::Erro
     let client = Client::new();
 
     // step 2: convert authorization code into authorization token
-    let authorization_token = client
+    let authorization_token: AuthorizationTokenResponse = client
         .post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token")
         .form(&vec![
             ("client_id", CLIENT_ID),
@@ -100,7 +101,7 @@ pub async fn get_access_token(code: &str) -> Result<(), Box<dyn std::error::Erro
         ])
         .send()
         .await?
-        .json::<AuthorizationTokenResponse>()
+        .json()
         .await?;
     get_minecraft_token(
         authorization_token.access_token,
@@ -192,14 +193,13 @@ pub async fn get_minecraft_token(
     );
 
     user.get_info().await?;
+
     match user.save() {
         Ok(_) => {
-            println!("Account added!")
+            return Ok(());
         }
         Err(e) => {
-            println!("{}", e)
+            return Err(e);
         }
     }
-
-    Ok(())
 }
