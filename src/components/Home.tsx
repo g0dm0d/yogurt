@@ -19,7 +19,7 @@ interface Instance {
   gameType: string
 }
 
-async function getInstances(setInstances: React.Dispatch<React.SetStateAction<Instance[]>>): Promise<void> {
+async function getInstances (setInstances: React.Dispatch<React.SetStateAction<Instance[]>>): Promise<void> {
   try {
     const response = await invoke<Instance[]>('get_all_instances')
     setInstances(response)
@@ -28,7 +28,7 @@ async function getInstances(setInstances: React.Dispatch<React.SetStateAction<In
   }
 }
 
-export function Home(): JSX.Element {
+export function Home (): JSX.Element {
   const { hovered, ref } = useHover()
 
   const useStyles = createStyles((theme) => ({

@@ -30,7 +30,7 @@ interface InstanceCardProps {
   gameType: string
 }
 
-async function startInstance(name: string, username: string | undefined): Promise<void> {
+async function startInstance (name: string, username: string | undefined): Promise<void> {
   await invoke('run_minecraft', {
     username,
     instance: name
@@ -44,28 +44,28 @@ async function startInstance(name: string, username: string | undefined): Promis
     })
 }
 
-async function deleteInstance(name: string): Promise<void> {
+async function deleteInstance (name: string): Promise<void> {
   await invoke('delete_instance', {
     name
   })
     .catch((error) => { console.error(error) })
 }
 
-async function openFolder(name: string): Promise<void> {
+async function openFolder (name: string): Promise<void> {
   await invoke('open_instance_folder', {
     name
   })
     .catch((error) => { console.error(error) })
 }
 
-async function copyInstance(name: string): Promise<void> {
+async function copyInstance (name: string): Promise<void> {
   await invoke('copy_instance', {
     name
   })
     .catch((error) => { console.error(error) })
 }
 
-export function InstanceCard({ name, version, gameType }: InstanceCardProps): JSX.Element {
+export function InstanceCard ({ name, version, gameType }: InstanceCardProps): JSX.Element {
   const { hovered, ref } = useHover()
   const useStyles = createStyles((theme) => ({
     card: {
