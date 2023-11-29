@@ -9,6 +9,7 @@ import {
   Modal
 } from '@mantine/core'
 import { useHover } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
 import {
   IconAdjustmentsHorizontal,
   IconCopy,
@@ -34,7 +35,13 @@ async function startInstance (name: string, username: string | undefined): Promi
     username,
     instance: name
   })
-    .catch((error) => { console.error(error) })
+    .catch((error) => {
+      showNotification({
+        title: 'Error',
+        message: error,
+        color: 'red'
+      })
+    })
 }
 
 async function deleteInstance (name: string): Promise<void> {
@@ -98,65 +105,65 @@ export function InstanceCard ({ name, version, gameType }: InstanceCardProps): J
   const [openModal, setOpenModal] = useState(false)
   const { nickname } = useContext(selectedAccount)
   return (
-        <Menu opened={openMenu} onChange={setOpenMenu} withArrow>
-            <Card p="lg" className={classes.card}>
-                <Card.Section>
-                    <Box ref={ref} display='flex' onClick={async () => { await startInstance(name, nickname) }}
-                        sx={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          cursor: 'pointer'
-                        }} >
-                        <Image className={classes.image} src={bg} alt={name} height={100} />
-                        <Text size="sm" weight={700} className={classes.name}>
-                            {name}
-                        </Text>
-                        <IconPlayerPlay className={classes.playIcon} />
-                    </Box>
-                </Card.Section>
-                <Card.Section className={classes.footer}>
-                    <Box>
-                        <Text size="xs" color="dimmed">
-                            Version
-                        </Text>
-                        <Text weight={500} size="sm">
-                            {version}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Text size="xs" color="dimmed">
-                            Type
-                        </Text>
-                        <Text weight={500} size="sm">
-                            {gameType}
-                        </Text>
-                    </Box>
-                    <Box>
-                        <Menu.Target>
-                            <IconAdjustmentsHorizontal cursor='pointer' onClick={() => { setOpenMenu(true) }} />
-                        </Menu.Target>
-                    </Box>
-                </Card.Section>
-            </Card>
-            <Menu.Dropdown >
-                <Menu.Item icon={<IconSettings size={14} />} onClick={() => { setOpenModal(true) }} >
-                    Settings
-                </Menu.Item>
-                <Menu.Item icon={<IconFolder size={14} />} onClick={async () => { await openFolder(name) }} >
-                    Folder
-                </Menu.Item>
-                <Menu.Item icon={<IconCopy size={14} />} onClick={async () => { await copyInstance(name) }} >
-                    Make copy
-                </Menu.Item>
-                <Menu.Divider />
+    <Menu opened={openMenu} onChange={setOpenMenu} withArrow>
+      <Card p="lg" className={classes.card}>
+        <Card.Section>
+          <Box ref={ref} display='flex' onClick={async () => { await startInstance(name, nickname) }}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }} >
+            <Image className={classes.image} src={bg} alt={name} height={100} />
+            <Text size="sm" weight={700} className={classes.name}>
+              {name}
+            </Text>
+            <IconPlayerPlay className={classes.playIcon} />
+          </Box>
+        </Card.Section>
+        <Card.Section className={classes.footer}>
+          <Box>
+            <Text size="xs" color="dimmed">
+              Version
+            </Text>
+            <Text weight={500} size="sm">
+              {version}
+            </Text>
+          </Box>
+          <Box>
+            <Text size="xs" color="dimmed">
+              Type
+            </Text>
+            <Text weight={500} size="sm">
+              {gameType}
+            </Text>
+          </Box>
+          <Box>
+            <Menu.Target>
+              <IconAdjustmentsHorizontal cursor='pointer' onClick={() => { setOpenMenu(true) }} />
+            </Menu.Target>
+          </Box>
+        </Card.Section>
+      </Card>
+      <Menu.Dropdown >
+        <Menu.Item icon={<IconSettings size={14} />} onClick={() => { setOpenModal(true) }} >
+          Settings
+        </Menu.Item>
+        <Menu.Item icon={<IconFolder size={14} />} onClick={async () => { await openFolder(name) }} >
+          Folder
+        </Menu.Item>
+        <Menu.Item icon={<IconCopy size={14} />} onClick={async () => { await copyInstance(name) }} >
+          Make copy
+        </Menu.Item>
+        <Menu.Divider />
 
-                <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={async () => { await deleteInstance(name) }} >
-                    Delete instance
-                </Menu.Item>
-            </Menu.Dropdown>
-            <Modal opened={openModal} onClose={() => { setOpenModal(false) }} title='Instance Settings' >
-                <InstanceSettings />
-            </Modal>
-        </Menu>
+        <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={async () => { await deleteInstance(name) }} >
+          Delete instance
+        </Menu.Item>
+      </Menu.Dropdown>
+      <Modal opened={openModal} onClose={() => { setOpenModal(false) }} title='Instance Settings' >
+        <InstanceSettings />
+      </Modal>
+    </Menu>
   )
 }

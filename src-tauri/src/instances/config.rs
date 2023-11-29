@@ -49,12 +49,16 @@ pub struct FrontInstance {
 /// generate default config
 pub async fn create_config(config: Instance, name: &str) -> Result<(), String> {
     let path = path::get_path("configs");
+
     if !path.exists() {
-        std::fs::create_dir_all(&path).map_err(|err| err.to_string())?
+        fs::create_dir_all(&path).map_err(|err| err.to_string())?
     }
 
+    let config_file_path = path.join(format!("{name}.toml"));
+
+
     let mut file =
-        fs::File::create(&path.join(format!("{name}.toml"))).map_err(|err| err.to_string())?;
+        fs::File::create(&config_file_path).map_err(|err| err.to_string())?;
     let toml_string = to_string_pretty(&config).map_err(|err| err.to_string())?;
     file.write_all(toml_string.as_bytes())
         .map_err(|err| err.to_string())?;

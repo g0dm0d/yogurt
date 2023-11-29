@@ -19,6 +19,7 @@ mkShell {
     openssl
     sass
     glib
+    glibc
     cairo
     pango
     atk

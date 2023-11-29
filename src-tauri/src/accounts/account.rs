@@ -162,18 +162,21 @@ impl User {
 
     /// get user uuid and username by minecraft bearer token
     /// https://wiki.vg/Microsoft_Authentication_Scheme#Getting_the_profile
-    pub async fn get_info(&mut self) -> Result<&mut User, Box<dyn std::error::Error>> {
+    pub async fn get_info(&mut self) -> Result<&mut User, String> {
         let client = Client::new();
         let minecraft_profile_resp: MinecraftProfileResponse = client
             .get("https://api.minecraftservices.com/minecraft/profile")
             .bearer_auth(&self.minecraft_token)
             .send()
-            .await?
+            .await
+            .map_err(|err| err.to_string())?
             .json()
-            .await?;
-        serde_json::to_string(&minecraft_profile_resp)?;
+            .await
+            .map_err(|err| err.to_string())?;
+
         self.uuid = minecraft_profile_resp.id;
         self.username = minecraft_profile_resp.name;
+
         Ok(self)
     }
 
@@ -185,14 +188,7 @@ impl User {
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
-            println!("minecraft token exp!");
             self.verify_access_token().await?;
-        }
-        match self.get_info().await {
-            Ok(_) => {}
-            Err(e) => {
-                println!("{}", e)
-            }
         }
         let user = get_user(&self.username)?;
         Ok(user)
@@ -205,7 +201,6 @@ impl User {
                 .expect("error while generate unix time stamp")
                 .as_secs() as i64
         {
-            println!("access token is fine");
             get_minecraft_token(
                 self.access_token.clone(),
                 self.access_exp as u64,
@@ -214,7 +209,6 @@ impl User {
             .await
             .map_err(|err| err.to_string())?;
         } else {
-            println!("access token exp!");
             update_access_token(&self.refresh_token)
                 .await
                 .map_err(|err| err.to_string())?;

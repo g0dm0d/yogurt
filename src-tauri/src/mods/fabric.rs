@@ -57,10 +57,10 @@ pub async fn install_fabric(name: String) -> Result<(), String> {
             .to_string(),
         None,
     )
-    .await;
+    .await?;
 
     let libraries = parse_libraries(&fabric_version);
-    download_libraries(libraries).await;
+    download_libraries(libraries).await?;
 
     config.set_fabric_version(fabric_version);
     config.set_fabric_status(true);
@@ -123,7 +123,7 @@ pub fn parse_libraries(version: &str) -> Vec<String> {
     return libraries_str;
 }
 
-async fn download_libraries(libraries: Vec<String>) {
+async fn download_libraries(libraries: Vec<String>) -> Result<(), String> {
     for library in libraries {
         let mut response = get(&format!("https://maven.fabricmc.net/{library}.sha1"))
             .await
@@ -138,7 +138,7 @@ async fn download_libraries(libraries: Vec<String>) {
                 .display()
                 .to_string(),
             Some(sha1),
-        )
-        .await
+        ).await?
     }
+    Ok(())
 }

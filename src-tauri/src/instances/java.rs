@@ -36,7 +36,7 @@ struct Package {
 #[cfg(target_os = "windows")]
 const BINARY_FILE: &str = "javaw.exe";
 #[cfg(target_os = "linux")]
-const BINARY_FILE: &str = "javaw";
+const BINARY_FILE: &str = "java";
 
 /// THIS FUNC ONLY FOR WINDOWS and now Linux
 /// Downloading custom java for minecraft to make life easier for people who have windows
@@ -52,7 +52,7 @@ pub async fn install_java(instance_name: String) -> Result<(), String> {
     let id = &config.version;
     let path = &format!("versions/{id}/{id}.json");
 
-    let file = read_file(&get_path(path));
+    let file = read_file(&get_path(path))?;
 
     let package: get_minecraft::Package =
         serde_json::from_str(&file).map_err(|err| err.to_string())?;
@@ -73,7 +73,7 @@ pub async fn install_java(instance_name: String) -> Result<(), String> {
     // I take the very first element. Because if you specify the data exactly, it returns only 1 - the last version
     let java: Vec<Java> = serde_json::from_str(&buff).map_err(|err| err.to_string())?;
     let path = &format!("java/{0}", java[0].release_name);
-    download(&java[0].binary.package.link, &format!("{path}.tar"), None).await;
+    download(&java[0].binary.package.link, &format!("{path}.tar"), None).await?;
     println!("java download complete");
 
     // This is necessary because linux releases are in tar.gz and windows releases are in .zip

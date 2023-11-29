@@ -136,9 +136,9 @@ pub struct Package {
 
 async fn fetch_dependency(url: &str, id: &str) -> Result<Package, String> {
     let path = format!("versions/{id}/{id}.json");
-    download(url, path.as_str(), None).await;
+    download(url, path.as_str(), None).await?;
 
-    let file = read_file(&get_path(&path));
+    let file = read_file(&get_path(&path))?;
 
     let package: Package = serde_json::from_str(&file).map_err(|err| err.to_string())?;
     Ok(package)
@@ -159,11 +159,12 @@ pub async fn get_minecraft(
     let package = fetch_dependency(url.as_str(), id.as_str())
         .await
         .map_err(|err| err.to_string())?;
+
     // Downloading the library for the selected version of minecraft
     let start = Instant::now();
     download_libraries(package.libraries).await;
     // Downloading the assets for the selected version of minecraft
-    download_assets(package.asset_index).await;
+    download_assets(package.asset_index).await?;
     let duration = start.elapsed();
     println!("Total time is: {:?}", duration);
     // Downloading the client jar for the selected version of minecraft
@@ -172,7 +173,8 @@ pub async fn get_minecraft(
         format!("versions/{id}/{id}.jar").as_str(),
         Some(package.downloads.client.sha1),
     )
-    .await;
+    .await?;
+
     // generate config
     create_config(
         Instance {
@@ -187,6 +189,7 @@ pub async fn get_minecraft(
         name.as_str(),
     )
     .await?;
+
     // install fabric if need
     if fabric {
         install_fabric(name.clone()).await?;
