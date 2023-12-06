@@ -44,11 +44,9 @@ jobs:
 
       - name: Run rust-clippy
         working-directory: ./src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+          cargo clippy --all-targets --all-features -- -D warnings
         continue-on-error: true
-
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: rust-clippy-results.sarif
-          wait-for-processing: true
