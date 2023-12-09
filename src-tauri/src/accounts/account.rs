@@ -82,7 +82,7 @@ pub fn get_user(username: &str) -> Result<User, String> {
     let index = users
         .users
         .iter()
-        .position(|u| &u.username == username)
+        .position(|u| u.username == *username)
         .ok_or("User not found")?;
     Ok(users.users[index].clone())
 }
@@ -100,7 +100,7 @@ fn load_users() -> Result<Accounts, String> {
         .read_to_string(&mut config_contents)
         .map_err(|err| err.to_string())?;
 
-    if config_contents == "" {
+    if config_contents.is_empty() {
         return Ok(Accounts { users: vec![] });
     };
 

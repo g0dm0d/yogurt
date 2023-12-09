@@ -58,7 +58,7 @@ pub async fn create_config(config: Instance, name: &str) -> Result<(), String> {
 
 
     let mut file =
-        fs::File::create(&config_file_path).map_err(|err| err.to_string())?;
+        fs::File::create(config_file_path).map_err(|err| err.to_string())?;
     let toml_string = to_string_pretty(&config).map_err(|err| err.to_string())?;
     file.write_all(toml_string.as_bytes())
         .map_err(|err| err.to_string())?;
@@ -91,14 +91,14 @@ pub fn get_all_instances() -> Vec<FrontInstance> {
             println!("Could not get file name");
         }
     }
-    return instances;
+    instances
 }
 
 fn version_convector(version: bool) -> String {
     if version {
         return "fabric".to_owned();
     }
-    return "minecraft".to_owned();
+    "minecraft".to_owned()
 }
 
 /// return info about instance by name
@@ -107,5 +107,5 @@ pub fn get_config(name: &str) -> Instance {
     let file = std::fs::read_to_string(path).unwrap();
     let mut data: Instance = toml::from_str(&file).expect("Error parsing TOML");
     data.name = Some(name.to_owned());
-    return data;
+    data
 }
