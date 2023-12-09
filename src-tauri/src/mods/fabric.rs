@@ -96,18 +96,18 @@ fn parse_library(name: String) -> String {
     // Vec[0] = net.fabricmc
     // Vec[1] = tiny-mappings-parser
     // Vec[2] = 0.3.0+build.17
-    let library = name.split(":").collect::<Vec<&str>>();
+    let library = name.split(':').collect::<Vec<&str>>();
     // Here I do concatenation to get the file name -> tiny-mappings-parser-0.3.0+build.17.jar
     let filename = format!("{0}-{1}.jar", library[1], library[2]);
     // getting net/fabricmc/tiny-mappings-parser/0.3.0+build.17/tiny-mappings-parser-0.3.0+build.17.jar
-    return format!(
+    format!(
         "{0}/{1}/{2}/{3}",
         // Replacing it to get net/fabricmc
-        library[0].replace(".", "/"),
+        library[0].replace('.', "/"),
         library[1],
         library[2],
         filename
-    );
+    )
 }
 
 /// This function parses all libraries in the json version
@@ -120,7 +120,7 @@ pub fn parse_libraries(version: &str) -> Vec<String> {
     for library in libraries.libraries {
         libraries_str.push(parse_library(library.name))
     }
-    return libraries_str;
+    libraries_str
 }
 
 async fn download_libraries(libraries: Vec<String>) -> Result<(), String> {

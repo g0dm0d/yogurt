@@ -5,7 +5,7 @@ use super::file::read_file_binary;
 
 /// Verify sha1 sum of file
 pub fn verify_sha1sum(path: &PathBuf, expected_sha1sum: &str) -> Result<bool, String> {
-    if expected_sha1sum == "" {
+    if expected_sha1sum.is_empty() {
         return Ok(true);
     }
 
@@ -18,5 +18,5 @@ pub fn verify_sha1sum(path: &PathBuf, expected_sha1sum: &str) -> Result<bool, St
     if actual_sha1sum != expected_sha1sum {
         return Ok(false);
     }
-    return Ok(true);
+    Ok(true)
 }

@@ -195,11 +195,7 @@ pub async fn get_minecraft_token(
     user.get_info().await?;
 
     match user.save() {
-        Ok(_) => {
-            return Ok(());
-        }
-        Err(e) => {
-            return Err(e);
-        }
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
     }
 }

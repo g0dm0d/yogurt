@@ -22,29 +22,22 @@ pub async fn download_libraries(libraries: Vec<Library>) {
 pub fn library_filtering(libs: &Vec<Library>) -> Vec<Download> {
     let mut filtred_libs: Vec<Download> = Vec::new();
     for lib in libs {
-        if !lib_os(&lib) {
+        if !lib_os(lib) {
             println!("Library {} doesn't support", lib.name);
             continue;
         }
 
-        match find_classifiers_lib(&lib) {
-            Some(ref library) => filtred_libs.push(library.clone()),
-            None => {}
-        }
-
-        match find_artifact_lib(&lib) {
-            Some(ref library) => filtred_libs.push(library.clone()),
-            None => {}
-        }
+        if let Some(ref library) = find_classifiers_lib(lib) { filtred_libs.push(library.clone()) }
+        if let Some(ref library) = find_artifact_lib(lib) { filtred_libs.push(library.clone()) }
     }
-    return filtred_libs;
+    filtred_libs
 }
 
 pub fn find_artifact_lib(library: &Library) -> Option<Download> {
     if let Some(lib) = &library.downloads.artifact {
         return Some(lib.clone());
     }
-    return None;
+    None
 }
 
 /// this function is to check if there is a library for the given os. And if there is, then return it
@@ -80,7 +73,7 @@ pub fn find_classifiers_lib(library: &Library) -> Option<Download> {
         }
         return None;
     }
-    return None;
+    None
 }
 
 /// This is a function that this library is suitable for the current OS
