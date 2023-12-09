@@ -29,5 +29,6 @@ mkShell {
     webkitgtk
     librsvg
     patchelf
+    clippy
   ];
 }
