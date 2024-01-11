@@ -11,10 +11,10 @@ name: rust-clippy analyze
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   schedule:
     - cron: '41 10 * * 6'
 
@@ -39,14 +39,15 @@ jobs:
           override: true
 
       - name: Install required cargo
+        working-directory: ./src-tauri
         run: cargo install clippy-sarif sarif-fmt
 
       - name: Run rust-clippy
-        run: cargo clippy --all-features --message-format=json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
+        working-directory: ./src-tauri
+        run: |
+          mkdir ../dist
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+          cargo clippy --all-targets --all-features -- -D warnings
         continue-on-error: true
-
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: rust-clippy-results.sarif
-          wait-for-processing: true

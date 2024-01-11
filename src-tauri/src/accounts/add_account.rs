@@ -22,8 +22,8 @@ pub async fn add_account() -> Result<(), String> {
     // get here only tcp stream
     let result = code_grab(stream.0).await;
     match result {
-        Ok(_) => return Ok(()),
-        Err(err) => return Err(err),
+        Ok(_) => Ok(()),
+        Err(err) => Err(err),
     }
 }
 
@@ -42,7 +42,7 @@ async fn code_grab(mut stream: TcpStream) -> Result<(), String> {
     // reference: https://www.rfc-editor.org/rfc/rfc9110.html#name-example-message-exchange
     let url_param = http_request.get(0).unwrap();
 
-    let query = get_query_params(&url_param);
+    let query = get_query_params(url_param);
     let code = query.get("code").ok_or("code not found")?;
     let result = get_access_token(code).await;
     match result {
@@ -80,7 +80,7 @@ pub fn get_query_params(path: &str) -> HashMap<&str, &str> {
             query.insert(values[0], values[1]);
         }
     }
-    return query;
+    query
 }
 
 /// this function returns a response to the client

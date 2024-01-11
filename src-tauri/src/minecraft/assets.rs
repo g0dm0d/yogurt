@@ -14,7 +14,7 @@ impl Object {
             &self.hash[0..2],
             &self.hash
         );
-        return download_link;
+        download_link
     }
 
     fn get_path(&self) -> String {
@@ -23,7 +23,7 @@ impl Object {
             &self.hash[0..2],
             &self.hash
         );
-        return object_path;
+        object_path
     }
 }
 
@@ -48,7 +48,7 @@ pub async fn download_assets(assets_index: AssetIndex) -> Result<(), String>{
         .expect("could not open the file with the index asstes");
     let assets: Package = serde_json::from_str(&file).expect("error json parsing");
     let mut task: Vec<DownloadFile> = Vec::new();
-    for (_, asset) in &assets.objects {
+    for asset in assets.objects.values() {
         task.push(
             DownloadFile { 
                 name: asset.download_link(),

@@ -182,7 +182,7 @@ pub async fn get_minecraft(
             client: format!("{id}.jar"),
             java_path: "javaw".to_owned(),
             arguments: java_args,
-            fabric: fabric,
+            fabric,
             fabric_version: None,
             name: None,
         },

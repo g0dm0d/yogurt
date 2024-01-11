@@ -31,7 +31,7 @@ pub async fn multithreading_download(files: Vec<DownloadFile>) {
 pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Result<(), String> {
     let path = path::get_path(file_path);
 
-    if path.exists() && sha1sum != None {
+    if path.exists() && sha1sum.is_none() {
         if verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
             return Ok(());
         }
@@ -64,7 +64,7 @@ pub async fn download(url: &str, file_path: &str, sha1sum: Option<String>) -> Re
                 if result.is_err() {
                     panic!("Failed to copy file: {:?}", result.err());
                 }
-                if sha1sum == None || verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
+                if sha1sum.is_none() || verify_sha1sum(&path, &sha1sum.clone().unwrap_or_default())? {
                     break;
                 }
                 println!("Error sha1sum file: {}", &path.display().to_string())
