@@ -109,7 +109,7 @@ fn load_users() -> Result<Accounts, String> {
     Ok(users)
 }
 
-fn update_user(user: &User) -> Result<(), String> {
+fn update_user(user: &User) -> Result<Accounts, String> {
     let mut users = load_users().map_err(|err| err.to_string())?;
     let index = users
         .users
@@ -118,7 +118,7 @@ fn update_user(user: &User) -> Result<(), String> {
         .ok_or("User not found")?;
 
     users.users[index] = user.clone();
-    Ok(())
+    Ok(users)
 }
 
 impl User {
@@ -144,13 +144,7 @@ impl User {
 
     /// save user to accounts.json in launcher default foldert
     pub fn save(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        if update_user(&*self).is_ok() {
-            return Ok(());
-        }
-
-        let user = self.clone();
-        let mut accounts = load_users()?;
-        accounts.users.push(user);
+        let accounts = update_user(&self)?;
 
         fs::write(
             path::get_path(USERS_FILE),

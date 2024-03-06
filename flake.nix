@@ -15,7 +15,6 @@
           cairo
           gdk-pixbuf
           glib
-          glibc
           dbus
           openssl_3
           librsvg
@@ -28,7 +27,6 @@
           dbus
           openssl_3
           glib
-          glibc
           gtk3
           libsoup
           webkitgtk
